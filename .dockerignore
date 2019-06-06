@@ -1,0 +1,7 @@
+.git
+.gitignore
+*.gradle
+gradle
+gradlew
+gradlew.bat
+README.md

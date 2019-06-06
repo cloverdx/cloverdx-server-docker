@@ -26,10 +26,10 @@ ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.20/bin/apac
 
 WORKDIR $CATALINA_HOME
 
-#install gosu and fontconfig
+#install gosu, time zones, locale and fontconfig
 RUN set -eux; \
 	apt-get update; \
-	apt-get install -y gosu tzdata fontconfig locales libedit-dev; \
+	apt-get install -y gosu tzdata fontconfig locales; \
 	locale-gen en_US.UTF-8; \
 	rm -rf /var/lib/apt/lists/*; \
 #verify that the binary works

@@ -29,7 +29,7 @@ WORKDIR $CATALINA_HOME
 #install gosu, time zones, locale and fontconfig
 RUN set -eux; \
 	apt-get update; \
-	apt-get install -y gosu tzdata fontconfig locales; \
+	apt-get install -y gosu tzdata fontconfig locales dumb-init; \
 	locale-gen en_US.UTF-8; \
 	rm -rf /var/lib/apt/lists/*; \
 #verify that the binary works
@@ -59,4 +59,4 @@ VOLUME $CLOVER_DATA_DIR
 
 EXPOSE 8080 8686
 
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "./entrypoint.sh"]

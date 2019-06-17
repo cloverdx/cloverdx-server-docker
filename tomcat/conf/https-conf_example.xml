@@ -1,0 +1,18 @@
+<!--  
+<Connector 
+	port="8443"
+	maxHttpHeaderSize="7192"
+    maxThreads="150"
+    minSpareThreads="25"
+    enableLookups="false"
+    disableUploadTimeout="true"
+    acceptCount="100"
+    scheme="https"
+    secure="true"
+    clientAuth="false"
+    sslProtocol="TLS"
+	SSLEnabled="true"
+	protocol="org.apache.coyote.http11.Http11NioProtocol"
+	keystoreFile="/var/clover/conf/serverKS.jks"
+	keystorePass="<PASSWORD>" />
+ -->

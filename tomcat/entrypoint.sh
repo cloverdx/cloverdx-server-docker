@@ -180,16 +180,19 @@ if [ ! -f $CUSTOM_CFG_FILE ]; then
 	gosu $USER touch $CUSTOM_CFG_FILE
 fi
 
-#create empty JNDI config file
 if [ ! -f $JNDI_CONF_FILE ]; then
 	echo "Creating empty $JNDI_CONF_FILE"
-	gosu $USER touch $JNDI_CONF_FILE
+	gosu $USER cp "$DEFAULT_CONF_DIR/jndi-conf_example.xml" $JNDI_CONF_FILE
 fi
 
-#create empty HTTPS config file
+if [ ! -f $JMX_CONF_FILE ]; then
+	echo "Creating empty $JMX_CONF_FILE"
+	gosu $USER cp "$DEFAULT_CONF_DIR/jmx-conf_example.properties" $JMX_CONF_FILE
+fi
+
 if [ ! -f $HTTPS_CONF_FILE ]; then
 	echo "Creating empty $HTTPS_CONF_FILE"
-	gosu $USER touch $HTTPS_CONF_FILE
+	gosu $USER cp "$DEFAULT_CONF_DIR/https-conf_example.xml" $HTTPS_CONF_FILE
 fi
 
 if [ ! -d $CLOVER_HOME_DIR/tomcat-lib ]; then

@@ -14,13 +14,23 @@ ENV CLOVER_LIB_DIR /var/cloverlib
 
 #default configuration file
 ARG DEFAULT_CFG_DIR=$CATALINA_HOME/cloverconf
+ENV DEFAULT_CONF_DIR=$CATALINA_HOME/conf
+
 ENV DEFAULT_CFG_FILE $DEFAULT_CFG_DIR/default_clover.properties
+
+#directory for temporary files (fragments, config files etc.). This files are used during start container. 
+ENV DEFAULT_CONF $DEFAULT_CFG_DIR/default 
 
 #configuration files, which can be customized by user
 ENV CLOVER_HOME_CONF_DIR $CLOVER_HOME_DIR/conf
 ENV JNDI_CONF_FILE $CLOVER_HOME_CONF_DIR/jndi-conf.xml
+ENV JMX_CONF_FILE $CLOVER_HOME_CONF_DIR/jmx-conf.properties
 ENV HTTPS_CONF_FILE $CLOVER_HOME_CONF_DIR/https-conf.xml
+
 ENV CUSTOM_CFG_FILE $CLOVER_HOME_CONF_DIR/clover.properties
+
+ENV SERVER_KEY_STORE $CLOVER_HOME_CONF_DIR/serverKS.jks
+ENV DEFAULT_SERVER_KEY_STORE $DEFAULT_CONF/serverKS.jks
 
 ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.20/bin/apache-tomcat-9.0.20.tar.gz"
 

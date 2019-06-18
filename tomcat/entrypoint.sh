@@ -46,7 +46,7 @@ print_mem_info() {
 	OS memory:\t\t ${OS_MEM}MB\n
 	Server memory:\t\t ${CLOVER_SERVER_HEAP_SIZE}MB\n
 	Worker memory:\t\t ${CLOVER_WORKER_HEAP_SIZE}MB\n
-	ReservedCodeCacheSize:\t ${ReservedCodeCacheSize}MB"
+	ReservedCodeCacheSize:\t ${RESERVED_CODE_CACHE_SIZE}MB"
 	echo ${info}
 }
 
@@ -64,8 +64,8 @@ compute() {
     exit 1
 	elif [ ${available_mem_mb} -eq ${MINIMAL_MEMORY_SIZE} ]; then
 		local os_memory=896
-		export maxCachedBufferSize=65536
-		export ReservedCodeCacheSize=128
+		export MAX_CACHED_BUFFER_SIZE=65536
+		export RESERVED_CODE_CACHE_SIZE=128
 		if [ -z $CLOVER_SERVER_HEAP_SIZE ]; then
 			export CLOVER_SERVER_HEAP_SIZE=1024
 		fi
@@ -75,43 +75,43 @@ compute() {
 		else
 			local os_memory=$(($available_mem_mb/4))
 		fi
-		export maxCachedBufferSize=65536
-		export ReservedCodeCacheSize=128
+		export MAX_CACHED_BUFFER_SIZE=65536
+		export RESERVED_CODE_CACHE_SIZE=128
 		if [ -z $CLOVER_SERVER_HEAP_SIZE ]; then
 			export CLOVER_SERVER_HEAP_SIZE=1024
 		fi
 	elif [ ${available_mem_mb} -lt 8192 ]; then
 		local os_memory=$(($available_mem_mb/4))
-		export maxCachedBufferSize=65536
-		export ReservedCodeCacheSize=128
+		export MAX_CACHED_BUFFER_SIZE=65536
+		export RESERVED_CODE_CACHE_SIZE=128
 		if [ -z $CLOVER_SERVER_HEAP_SIZE ]; then
 			export CLOVER_SERVER_HEAP_SIZE=$(($available_mem_mb/4))
 		fi
 	elif [ ${available_mem_mb} -lt 16384 ]; then
-		export ReservedCodeCacheSize=256
-		local os_memory=$((($available_mem_mb / 4) - $ReservedCodeCacheSize))
-		export maxCachedBufferSize=65536
+		export RESERVED_CODE_CACHE_SIZE=256
+		local os_memory=$((($available_mem_mb / 4) - $RESERVED_CODE_CACHE_SIZE))
+		export MAX_CACHED_BUFFER_SIZE=65536
 		if [ -z $CLOVER_SERVER_HEAP_SIZE ]; then
 			export CLOVER_SERVER_HEAP_SIZE=$(($available_mem_mb/4))
 		fi
 	elif [ ${available_mem_mb} -lt 32768 ]; then
-		export ReservedCodeCacheSize=256
-		local os_memory=$((($available_mem_mb / 4) - $ReservedCodeCacheSize))
-		export maxCachedBufferSize=131072
+		export RESERVED_CODE_CACHE_SIZE=256
+		local os_memory=$((($available_mem_mb / 4) - $RESERVED_CODE_CACHE_SIZE))
+		export MAX_CACHED_BUFFER_SIZE=131072
 		if [ -z $CLOVER_SERVER_HEAP_SIZE ]; then
 			export CLOVER_SERVER_HEAP_SIZE=$(($available_mem_mb/4))
 		fi
 	elif [ ${available_mem_mb} -lt 65536 ]; then
-	export ReservedCodeCacheSize=256
-		local os_memory=$((8192 - $ReservedCodeCacheSize))
-		export maxCachedBufferSize=262144
+	export RESERVED_CODE_CACHE_SIZE=256
+		local os_memory=$((8192 - $RESERVED_CODE_CACHE_SIZE))
+		export MAX_CACHED_BUFFER_SIZE=262144
 		if [ -z $CLOVER_SERVER_HEAP_SIZE ]; then
 			export CLOVER_SERVER_HEAP_SIZE=8192
 		fi    
 	else
-		export ReservedCodeCacheSize=512
-		local os_memory=$((8192 - $ReservedCodeCacheSize))
-		export maxCachedBufferSize=262144
+		export RESERVED_CODE_CACHE_SIZE=512
+		local os_memory=$((8192 - $RESERVED_CODE_CACHE_SIZE))
+		export MAX_CACHED_BUFFER_SIZE=262144
 		if [ -z $CLOVER_SERVER_HEAP_SIZE ]; then
 			export CLOVER_SERVER_HEAP_SIZE=8192
 		fi
@@ -122,7 +122,7 @@ compute() {
 	export CLOVER_SERVER_HEAP_SIZE=$(parse_to_get_megabytes "$CLOVER_SERVER_HEAP_SIZE")
 
 	if [ -z $CLOVER_WORKER_HEAP_SIZE ]; then
-		export CLOVER_WORKER_HEAP_SIZE=$(($available_mem_mb - (${os_memory} + ${CLOVER_SERVER_HEAP_SIZE} + ${ReservedCodeCacheSize})))
+		export CLOVER_WORKER_HEAP_SIZE=$(($available_mem_mb - (${os_memory} + ${CLOVER_SERVER_HEAP_SIZE} + ${RESERVED_CODE_CACHE_SIZE})))
 	else
 		export CLOVER_WORKER_HEAP_SIZE=$(parse_to_get_megabytes "$CLOVER_WORKER_HEAP_SIZE")	
 	fi
@@ -139,7 +139,7 @@ compute() {
     exit 1
 	fi
 
-	if [ ${available_mem_mb} -lt $((${CLOVER_WORKER_HEAP_SIZE} + ${os_memory} + ${CLOVER_SERVER_HEAP_SIZE} + ${ReservedCodeCacheSize})) ]; then
+	if [ ${available_mem_mb} -lt $((${CLOVER_WORKER_HEAP_SIZE} + ${os_memory} + ${CLOVER_SERVER_HEAP_SIZE} + ${RESERVED_CODE_CACHE_SIZE})) ]; then
 		>&2 echo "Insufficient memory set."
 		>&2 echo -e $(print_mem_info)
     	exit 1

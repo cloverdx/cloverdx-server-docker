@@ -1,6 +1,14 @@
-export CATALINA_OPTS="$CATALINA_OPTS -Xms${CLOVER_SERVER_HEAP_SIZE}m -Xmx${CLOVER_SERVER_HEAP_SIZE}m"
-export CATALINA_OPTS="$CATALINA_OPTS -XX:ReservedCodeCacheSize=${ReservedCodeCacheSize}m"
-export CATALINA_OPTS="$CATALINA_OPTS -Djdk.nio.maxCachedBufferSize=${maxCachedBufferSize}"
+if [ ! -z ${CLOVER_SERVER_HEAP_SIZE} ]; then
+	export CATALINA_OPTS="$CATALINA_OPTS -Xms${CLOVER_SERVER_HEAP_SIZE}m -Xmx${CLOVER_SERVER_HEAP_SIZE}m"
+fi
+
+if [ ! -z ${RESERVED_CODE_CACHE_SIZE} ]; then
+	export CATALINA_OPTS="$CATALINA_OPTS -XX:ReservedCodeCacheSize=${RESERVED_CODE_CACHE_SIZE}m"
+fi
+	
+if [ ! -z ${MAX_CACHED_BUFFER_SIZE} ]; then	
+	export CATALINA_OPTS="$CATALINA_OPTS -Djdk.nio.maxCachedBufferSize=${MAX_CACHED_BUFFER_SIZE}"
+fi	
 
 export CATALINA_OPTS="$CATALINA_OPTS -XX:+UseG1GC"
 export CATALINA_OPTS="$CATALINA_OPTS -XX:ParallelGCThreads=4"

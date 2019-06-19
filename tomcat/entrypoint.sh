@@ -188,6 +188,7 @@ fi
 if [ ! -f $JMX_CONF_FILE ]; then
 	echo "Creating empty $JMX_CONF_FILE"
 	gosu $USER cp "$DEFAULT_CONF_DIR/jmx-conf_example.properties" $JMX_CONF_FILE
+	chmod 0400 $JMX_CONF_FILE # If the SSL is used the file jmx-conf.properties must be read only
 fi
 
 if [ ! -f $HTTPS_CONF_FILE ]; then

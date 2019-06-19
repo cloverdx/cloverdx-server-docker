@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #min memory limits in MB
-MIN_MEMORY_SIZE=3072
-MIN_SERVER_HEAP_SIZE=768
+MIN_MEMORY_SIZE=2048
+MIN_SERVER_HEAP_SIZE=512
 MIN_WORKER_HEAP_SIZE=1024
 
 available_memory() {
@@ -56,7 +56,6 @@ print_mem_info() {
 compute_memory() {
 	local available_mem_mb=$(available_memory)
 	export CLOVER_AVAILABLE_MEM=${available_mem_mb}
-	local minimal_memory_size_mb=${MIN_MEMORY_SIZE}
 
 	export CLOVER_SERVER_HEAP_SIZE=$(parse_to_get_megabytes "$CLOVER_SERVER_HEAP_SIZE")
 	export CLOVER_WORKER_HEAP_SIZE=$(parse_to_get_megabytes "$CLOVER_WORKER_HEAP_SIZE")
@@ -65,7 +64,7 @@ compute_memory() {
 		export CLOVER_SERVER_HEAP_SIZE=$(parse_to_get_megabytes "${BASH_REMATCH[1]}")
 	fi
 
-	if [ ${available_mem_mb} -lt ${minimal_memory_size_mb} ]; then
+	if [ ${available_mem_mb} -lt ${MIN_MEMORY_SIZE} ]; then
 		>&2 echo "Insufficient memory set, expected at least ${MIN_MEMORY_SIZE}MB, got ${available_mem_mb}MB."
 		exit 1
 	fi
@@ -111,8 +110,9 @@ compute_memory() {
 		exit 1
 	fi
 
-	if [ ${available_mem_mb} -lt $((${CLOVER_WORKER_HEAP_SIZE} + ${os_memory} + ${CLOVER_SERVER_HEAP_SIZE} + ${RESERVED_CODE_CACHE_SIZE})) ]; then
-		>&2 echo "Insufficient memory set."
+	local mem_sum=$((${CLOVER_WORKER_HEAP_SIZE} + ${os_memory} + ${CLOVER_SERVER_HEAP_SIZE} + ${RESERVED_CODE_CACHE_SIZE}))
+	if [ ${available_mem_mb} -lt ${mem_sum} ]; then
+		>&2 echo "Insufficient memory set. Available memory is ${available_mem_mb}MB, but CloverDX is configured to have ${mem_sum}MB."
 		>&2 echo -e $(print_mem_info)
 		exit 1
 	fi

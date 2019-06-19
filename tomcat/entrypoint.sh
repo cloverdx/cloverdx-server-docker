@@ -46,22 +46,26 @@ print_mem_info() {
 	OS memory:\t\t ${OS_MEM}MB\n
 	Server memory:\t\t ${CLOVER_SERVER_HEAP_SIZE}MB\n
 	Worker memory:\t\t ${CLOVER_WORKER_HEAP_SIZE}MB\n
-	ReservedCodeCacheSize:\t ${RESERVED_CODE_CACHE_SIZE}MB"
+	ReservedCodeCacheSize:\t ${RESERVED_CODE_CACHE_SIZE}MB\n
+	maxCachedBufferSize:\t ${MAX_CACHED_BUFFER_SIZE}"
 	echo ${info}
 }
 
-compute() {
+compute_memory() {
 	local available_mem_mb=$(available_memory)
 	export CLOVER_AVAILABLE_MEM=${available_mem_mb}
 	local minimal_memory_size_mb=${MINIMAL_MEMORY_SIZE}
 
-	if [[ $JAVA_OPTS =~ -Xmx([0-9]+[mMgG]?) ]]; then
+	export CLOVER_SERVER_HEAP_SIZE=$(parse_to_get_megabytes "$CLOVER_SERVER_HEAP_SIZE")
+	export CLOVER_WORKER_HEAP_SIZE=$(parse_to_get_megabytes "$CLOVER_WORKER_HEAP_SIZE")
+
+	if [[ ${SERVER_JAVA_OPTS} =~ -Xmx([0-9]+[mMgG]?) ]]; then
 		export CLOVER_SERVER_HEAP_SIZE=$(parse_to_get_megabytes "${BASH_REMATCH[1]}")
 	fi
 	
 	if [ ${available_mem_mb} -lt ${minimal_memory_size_mb} ]; then
 		>&2 echo "Insufficient memory set, expected at least ${MINIMAL_MEMORY_SIZE}MB, got ${available_mem_mb}MB."
-    exit 1
+		exit 1
 	elif [ ${available_mem_mb} -eq ${MINIMAL_MEMORY_SIZE} ]; then
 		local os_memory=896
 		export MAX_CACHED_BUFFER_SIZE=65536
@@ -119,8 +123,6 @@ compute() {
 
 	export OS_MEM=${os_memory}
 
-	export CLOVER_SERVER_HEAP_SIZE=$(parse_to_get_megabytes "$CLOVER_SERVER_HEAP_SIZE")
-
 	if [ -z $CLOVER_WORKER_HEAP_SIZE ]; then
 		export CLOVER_WORKER_HEAP_SIZE=$(($available_mem_mb - (${os_memory} + ${CLOVER_SERVER_HEAP_SIZE} + ${RESERVED_CODE_CACHE_SIZE})))
 	else
@@ -130,7 +132,7 @@ compute() {
 	if [ ${CLOVER_SERVER_HEAP_SIZE} -lt 900 ]; then
 		>&2 echo "Server's heap memory is too low. It must be at least 900MB."
 		>&2 echo -e $(print_mem_info)
-    exit 1
+		exit 1
 	fi
 
 	if [ ${CLOVER_WORKER_HEAP_SIZE} -lt 1024 ]; then
@@ -142,11 +144,11 @@ compute() {
 	if [ ${available_mem_mb} -lt $((${CLOVER_WORKER_HEAP_SIZE} + ${os_memory} + ${CLOVER_SERVER_HEAP_SIZE} + ${RESERVED_CODE_CACHE_SIZE})) ]; then
 		>&2 echo "Insufficient memory set."
 		>&2 echo -e $(print_mem_info)
-    	exit 1
+		exit 1
 	fi
 }
 
-compute
+compute_memory
 #print info about memory settings
 #echo -e $(print_mem_info)
 

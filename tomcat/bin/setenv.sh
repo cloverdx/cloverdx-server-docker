@@ -21,7 +21,7 @@ export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.config.file=$JMX_CONF_
 export CATALINA_OPTS="$CATALINA_OPTS -Djava.rmi.server.hostname=${RMI_HOSTNAME}"
 
 export CATALINA_OPTS="$CATALINA_OPTS -Dclover.default.config.file=$DEFAULT_CONF_FILE"
-export CATALINA_OPTS="$CATALINA_OPTS -Dclover.config.file=$CUSTOM_CFG_FILE"
+export CATALINA_OPTS="$CATALINA_OPTS -Dclover.config.file=$CUSTOM_CONF_FILE"
 export CATALINA_OPTS="$CATALINA_OPTS -Dclover.clover.home=$CLOVER_HOME_DIR"
 export CATALINA_OPTS="$CATALINA_OPTS -Dclover.lib=$CLOVER_LIB_DIR"
 export CATALINA_OPTS="$CATALINA_OPTS -Dclover.log4j2.appender.stdout.level=info"

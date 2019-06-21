@@ -176,24 +176,24 @@ if [ ! -d $CLOVER_HOME_CONF_DIR ]; then
 fi	
 
 #create empty configuration file if it does not exist
-if [ ! -f $CUSTOM_CFG_FILE ]; then
-	gosu $USER touch $CUSTOM_CFG_FILE
+if [ ! -f $CUSTOM_CONF_FILE ]; then
+	gosu $USER touch $CUSTOM_CONF_FILE
 fi
 
 if [ ! -f $JNDI_CONF_FILE ]; then
-	echo "Creating empty $JNDI_CONF_FILE"
-	gosu $USER cp "$DEFAULT_CONF_DIR/jndi-conf_example.xml" $JNDI_CONF_FILE
+	echo "Creating default $JNDI_CONF_FILE"
+	gosu $USER cp "$CATALINA_CONF_DIR/jndi-conf_example.xml" $JNDI_CONF_FILE
 fi
 
 if [ ! -f $JMX_CONF_FILE ]; then
-	echo "Creating empty $JMX_CONF_FILE"
-	gosu $USER cp "$DEFAULT_CONF_DIR/jmx-conf_example.properties" $JMX_CONF_FILE
-	chmod 0400 $JMX_CONF_FILE # If the SSL is used the file jmx-conf.properties must be read only
+	echo "Creating default $JMX_CONF_FILE"
+	gosu $USER cp "$CATALINA_CONF_DIR/jmx-conf_example.properties" $JMX_CONF_FILE
+	chmod 0400 $JMX_CONF_FILE # If the SSL is used the file jmx-conf.properties must be only readeable for user
 fi
 
 if [ ! -f $HTTPS_CONF_FILE ]; then
-	echo "Creating empty $HTTPS_CONF_FILE"
-	gosu $USER cp "$DEFAULT_CONF_DIR/https-conf_example.xml" $HTTPS_CONF_FILE
+	echo "Creating default $HTTPS_CONF_FILE"
+	gosu $USER cp "$CATALINA_CONF_DIR/https-conf_example.xml" $HTTPS_CONF_FILE
 fi
 
 if [ ! -d $CLOVER_HOME_DIR/tomcat-lib ]; then

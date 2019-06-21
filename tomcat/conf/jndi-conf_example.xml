@@ -1,14 +1,16 @@
 <!-- 
+ 	Define a JNDI Datasource in an application server
+-->
+<!--
 <Resource name="jdbc/clover_server"
-          auth="Container"
-          factory="com.cloveretl.secure.tomcatresource.Tomcat8SecureDataSourceFactory"
-          secureAlgorithm="PBEWithSHA1AndDESede"
-          type="javax.sql.DataSource"
-          driverClassName="org.postgresql.Driver"
-          url="jdbc:postgresql://127.0.0.1:5432/clover_db?charSet=UTF-8"
-          username="<USERNAME>"
-          password="<PASSWORD>"
-          maxTotal="20"
-          maxIdle="10"
-          maxWaitMillis="-1" />
-           -->
+            auth="Container"
+            type="javax.sql.DataSource"
+            factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+            driverClassName="org.postgresql.Driver"
+            url="jdbc:postgresql://127.0.0.1:5432/clover_db"
+            username="<USERNAME>"
+            password="<PASSWORD>"
+            maxTotal="20"
+            maxIdle="10"
+            maxWaitMillis="-1"/>
+-->

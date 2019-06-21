@@ -1,3 +1,10 @@
+ <!-- 
+ 	Define a HTTPS Connector on port 8443
+ 	
+ 	You have to change attributes:
+ 	 * keystoreFile
+	 * keystorePass
+-->
 <!--  
 <Connector 
 	port="8443"
@@ -13,6 +20,6 @@
     sslProtocol="TLS"
 	SSLEnabled="true"
 	protocol="org.apache.coyote.http11.Http11NioProtocol"
-	keystoreFile="/var/clover/conf/serverKS.jks"
+	keystoreFile="<PATH_TO_KEYSTORE>"
 	keystorePass="<PASSWORD>" />
  -->

@@ -13,13 +13,10 @@ ENV CLOVER_DATA_DIR /var/cloverdata
 ENV CLOVER_LIB_DIR /var/cloverlib
 
 #default configuration file
-ARG DEFAULT_CFG_DIR=$CATALINA_HOME/cloverconf
-ENV DEFAULT_CONF_DIR=$CATALINA_HOME/conf
+ARG CLOVER_CONF_DIR=$CATALINA_HOME/cloverconf
+ENV CATALINA_CONF_DIR=$CATALINA_HOME/conf
 
-ENV DEFAULT_CFG_FILE $DEFAULT_CFG_DIR/default_clover.properties
-
-#directory for temporary files (fragments, config files etc.). This files are used during start container. 
-ENV DEFAULT_CONF $DEFAULT_CFG_DIR/default 
+ENV DEFAULT_CONF_FILE $CLOVER_CONF_DIR/default_clover.properties
 
 #configuration files, which can be customized by user
 ENV CLOVER_HOME_CONF_DIR $CLOVER_HOME_DIR/conf
@@ -27,10 +24,9 @@ ENV JNDI_CONF_FILE $CLOVER_HOME_CONF_DIR/jndi-conf.xml
 ENV JMX_CONF_FILE $CLOVER_HOME_CONF_DIR/jmx-conf.properties
 ENV HTTPS_CONF_FILE $CLOVER_HOME_CONF_DIR/https-conf.xml
 
-ENV CUSTOM_CFG_FILE $CLOVER_HOME_CONF_DIR/clover.properties
+ENV CUSTOM_CONF_FILE $CLOVER_HOME_CONF_DIR/clover.properties
 
 ENV SERVER_KEY_STORE $CLOVER_HOME_CONF_DIR/serverKS.jks
-ENV DEFAULT_SERVER_KEY_STORE $DEFAULT_CONF/serverKS.jks
 
 ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.20/bin/apache-tomcat-9.0.20.tar.gz"
 
@@ -54,7 +50,7 @@ ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 #change permisions for the writable directories - CLO-16457
 #remove the unused directories
 RUN curl "$TOMCAT_URL" | tar -xz --strip-components=1 && \
-	mkdir -p $DEFAULT_CFG_DIR $CLOVER_HOME_DIR $CLOVER_DATA_DIR $CATALINA_TMPDIR && \
+	mkdir -p $CLOVER_CONF_DIR $CLOVER_HOME_DIR $CLOVER_DATA_DIR $CATALINA_TMPDIR && \
 	chmod -R o+x $CATALINA_HOME/work $CATALINA_HOME/webapps $CATALINA_HOME/logs $CATALINA_HOME/temp && \
 	rm -rf $CATALINA_HOME/webapps/* 
 

@@ -68,6 +68,16 @@ compute_memory() {
 		>&2 echo "Insufficient memory set, expected at least ${MIN_MEMORY_SIZE}MB, got ${available_mem_mb}MB."
 		exit 1
 	fi
+	
+	if [ -z ${CLOVER_SERVER_HEAP_SIZE} ] && [ ! -z ${CLOVER_WORKER_HEAP_SIZE} ]; then
+		>&2 echo "Parameter CLOVER_SERVER_HEAP_SIZE is not set."
+		exit 1
+	fi
+
+	if [ ! -z ${CLOVER_SERVER_HEAP_SIZE} ] && [ -z ${CLOVER_WORKER_HEAP_SIZE} ]; then
+		>&2 echo "Parameter CLOVER_WORKER_HEAP_SIZE is not set."
+		exit 1
+	fi
 
 	QUARTER_OF_MEMORY=$((${available_mem_mb}/4))
 
@@ -106,13 +116,6 @@ compute_memory() {
 
 	if [ ${CLOVER_WORKER_HEAP_SIZE} -lt ${MIN_WORKER_HEAP_SIZE} ]; then
 		>&2 echo "Worker's heap memory is too low. It must be at least ${MIN_WORKER_HEAP_SIZE}MB."
-		>&2 echo -e $(print_mem_info)
-		exit 1
-	fi
-
-	local mem_sum=$((${CLOVER_WORKER_HEAP_SIZE} + ${os_memory} + ${CLOVER_SERVER_HEAP_SIZE} + ${RESERVED_CODE_CACHE_SIZE}))
-	if [ ${available_mem_mb} -lt ${mem_sum} ]; then
-		>&2 echo "Insufficient memory set. Available memory is ${available_mem_mb}MB, but CloverDX is configured to have ${mem_sum}MB."
 		>&2 echo -e $(print_mem_info)
 		exit 1
 	fi

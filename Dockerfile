@@ -26,12 +26,16 @@ ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.20/bin/apac
 
 WORKDIR $CATALINA_HOME
 
+#change the default shell to Bash
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+RUN set -eux && \
+	ln -sfv /bin/bash /bin/sh && \
 #install gosu, time zones, locale and fontconfig
-RUN set -eux; \
-	apt-get update; \
-	apt-get install -y gosu tzdata fontconfig locales dumb-init; \
-	locale-gen en_US.UTF-8; \
-	rm -rf /var/lib/apt/lists/*; \
+	apt-get update && \
+	apt-get install -y gosu tzdata fontconfig locales dumb-init && \
+	locale-gen en_US.UTF-8 && \
+	rm -rf /var/lib/apt/lists/* && \
 #verify that the binary works
 	gosu nobody true
 	

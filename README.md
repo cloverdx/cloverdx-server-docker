@@ -143,13 +143,33 @@ The automatic memory settings can be overridden by setting both properties:
 
 ## CPU
 
+TODO
 
 ## Libraries and Classpath
 
+Libraries are added to the classpath of Tomcat (ie Server Core) and Worker via the mounted volume. This action does not modify the build of the Docker image. Place the JARs to the following directories in the volume:
+
+* ``tomcat-lib`` - libraries to add to Tomcat and Server Core classpath (e.g. JDBC drivers)
+* ``worker-lib`` - libraries to add to Worker classpath (e.g. libraries used by jobs)
+
+
 ## Tomcat Configuration
+
+
 
 ## Timezone
 
+Default timezone of the container instance is UTC. The timezone is NOT inherited from the Docker host. To set a specific timezone, set the environment variable ``TZ`` when running the container:
+
+``docker run -e TZ=Europe/Amsterdam ...``
+
 # Monitoring
+
+The docker container exposes ports by default for JMX monitoring via tools such as VisualVM. The JMX monitoring tools are useful to analyse threads, memory usage, classloaders etc.
+
+JMX exported ports:
+
+* ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyse behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc.
+* ``8687`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows etc
 
 # Security

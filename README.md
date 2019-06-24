@@ -22,7 +22,7 @@ standalone CloverDX Server with good defaults, in a recommended environment.
 * Start CloverDX Server:
 
     ```
-    $ docker run -d --name cloverdx --memory=3g -p 8080:8080 -e "TZ=America/New_York" -e LOCAL_USER_ID=`id -u $USER` --mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover cloverdx-server:latest
+    $ docker run -d --name cloverdx --memory=3g -p 8080:8080 -e LOCAL_USER_ID=`id -u $USER` --mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover cloverdx-server:latest
     ```  
 The container requires at least 2 GB memory.
 

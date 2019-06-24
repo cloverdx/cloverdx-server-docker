@@ -157,9 +157,11 @@ Libraries are added to the classpath of Tomcat (ie Server Core) and Worker via t
 
 The mounted volume will contain fragments of Tomcat configuration files after the first run of the Docker container. These configuration files contain commented-out examples on how to enable and configure some aspects of Tomcat:
 
-* ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is inserted into ``server.xml`` when running the container. Uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 9 HTTPS connector (TODO link).
-* ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL (disabled by default).
+* ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is inserted into ``server.xml`` when running the container. Uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 9 HTTPS connector (TODO link). Export the port of the connector from the container (port 8443 by default). Put the keystore in the mounted volume, e.g. if it's in ``conf/keystore.jks`` in the volume, then the path to it in the ``https-conf.xml`` file is ``/var/clover/conf/keystore.jks``.
+* ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL (disabled by default). Put the keystore in the mounted volume, e.g. if it's in ``conf/keystore.jks`` in the volume, then the path to it in the ``https-conf.xml`` file is ``/var/clover/conf/keystore.jks``.
 * ``conf/jndi-conf.xml`` - configuration of JNDI resources of Tomcat, is inserted into ``server.xml`` (TODO or context.xml?) when running the container. See the commented ``<Resource>`` example on how to add a JNDI resource. We recommend to use JNDI to connect to server's system database.
+
+TODO the default (commented out) versions of these files are in this repo - no need to start the container first.
 
 ## Timezone
 
@@ -177,3 +179,13 @@ JMX exported ports:
 * ``8687`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows etc
 
 # Security
+
+By default, the ports exposed by the container (8080, 8686, 8687) do not use SSL. To secure them via SSL, additional configuration is needed:
+
+## HTTP(S) port
+
+To enable HTTPS, modify the file ``conf/https-conf.xml`` in the mounted volume, place the keystore in the mounted volume and export the HTTPS port (8443 be default). See ``conf/https-conf.xml`` in (#tomcat-configuration).
+
+## JMX ports
+
+To enable JMX monitoring over SSL, modify the file ``jmx-conf.properties`` in the mounted volume and place the keystore in the mounted volume. See ``conf/jmx-conf.properties`` in (#tomcat-configuration).

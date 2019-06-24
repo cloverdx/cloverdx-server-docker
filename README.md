@@ -195,4 +195,4 @@ To enable HTTPS, modify the file ``conf/https-conf.xml`` in the mounted volume, 
 
 ## JMX ports
 
-To enable JMX monitoring over SSL, modify the file ``jmx-conf.properties`` in the mounted volume and place the keystore in the mounted volume. See ``conf/jmx-conf.properties`` in (#tomcat-configuration).
+To enable JMX monitoring over SSL, modify the file ``conf/jmx-conf.properties`` in the mounted volume and place the keystore in the mounted volume. See ``conf/jmx-conf.properties`` in (#tomcat-configuration).

@@ -143,7 +143,14 @@ The automatic memory settings can be overridden by setting both properties:
 
 ## CPU
 
-TODO
+The docker image follows CPU constraints assigned to it, e.g. it sees just a limited number of CPU cores and is assigned a portion of CPU cycles of the host machine.
+
+Usefull options of the ``docker run`` commands (see [documentation](https://docs.docker.com/config/containers/resource_constraints/)):
+
+* ``--cpus=<value>`` - portion of host CPUs the container can use. E.g. ``--cpus=1.5`` allows at most one and a half CPU from all the hosts CPUs. Available in Docker 1.13 and higher.
+* ``--cpu-shares=<value>`` - value is weight of the container, and containers running on a host get their share of CPU cycles based on their weight. Default weight is ``1024``, which also translates into 1 CPU core from the point of view of Java. For example setting this to ``4096`` will cause Java to see 4 CPU cores.
+
+We recommend setting multiple CPU cores for the docker image, e.g. 4 via ``--cpus=4``.
 
 ## Libraries and Classpath
 

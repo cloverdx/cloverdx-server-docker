@@ -38,18 +38,18 @@ files will be inside)
 
 The container expects a mounted volume that will contain its state and configuration. The volume should be mounted into the ``/var/clover`` directory. Contents of the volume:
 
-* ``conf`` - configuration of the server, e.g. connection to the system database
-* ``sandboxes`` - sandboxes with jobs, metadata, data etc
-* ``cloverlogs`` - server logs
-* ``tomcatlogs`` - Tomcat logs
-* ``tomcat-lib`` - libraries to add to Tomcat and Server Core classpath
-* ``worker-lib`` - libraries to add to Worker classpath
+* ``conf/`` - configuration of the server, e.g. connection to the system database
+* ``sandboxes/`` - sandboxes with jobs, metadata, data etc
+* ``cloverlogs/`` - server logs
+* ``tomcatlogs/`` - Tomcat logs
+* ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath
+* ``worker-lib/`` - libraries to add to Worker classpath
 
 Internal structure of the container:
 
-* ``/opt/tomcat`` - installation directory of Tomcat running the server
-* ``/var/clover`` - directory with persistent data, visible to users (config, jobs, logs, ...). It is expected that a volume is mounted into this directory from the host. See above for its structure
-* ``/var/cloverdata`` - directory with non-persistent data, not visible to users
+* ``/opt/tomcat/`` - installation directory of Tomcat running the server
+* ``/var/clover/`` - directory with persistent data, visible to users (config, jobs, logs, ...). It is expected that a volume is mounted into this directory from the host. See above for its structure
+* ``/var/cloverdata/`` - directory with non-persistent data, not visible to users
 
 Environment:
 
@@ -67,7 +67,7 @@ Exposed ports:
 
 ## Data Volume
 
-CloverDX Server needs a persistent storage for its data and configuration, so that the files are not lost when the container is restarted or updated to a newer version. By default, sandboxes, logs and configuration files are stored in an anonymous Docker volume. This makes them persistent across container restarts, but not across updates. You can bind a host directory to `/var/clover` or mount a named Docker volume:
+CloverDX Server needs a persistent storage for its data and configuration, so that the files are not lost when the container is restarted or updated to a newer version. By default, sandboxes, logs and configuration files are stored in an anonymous Docker volume. This makes them persistent across container restarts, but not across updates. You can bind a host directory to `/var/clover/` or mount a named Docker volume:
 
 ```bash
 # bind host directory: 
@@ -116,9 +116,9 @@ Environment variable values are set when running the container:
 
 By default, CloverDX Server will use an embedded Derby database. In order to use an external database, the container needs a JDBC driver and a configuration file:
 
-1. If necessary, put additional JDBC drivers to `var/dbdrivers` before building the image and then build the image.
-2. Put [database configuration properties](https://doc.cloverdx.com/latest/server/examples-db-connection-configuration.html) into `clover.properties` configuration file and place it into `/data/your-host-clover-data-dir/conf` directory in your host file system.
-3. Bind `/data/your-host-clover-data-dir` to `/var/clover` (see above) and start the container.
+1. If necessary, put additional JDBC drivers to `var/dbdrivers/` before building the image and then build the image.
+2. Put [database configuration properties](https://doc.cloverdx.com/latest/server/examples-db-connection-configuration.html) into `clover.properties` configuration file and place it into `/data/your-host-clover-data-dir/conf/` directory in your host file system.
+3. Bind `/data/your-host-clover-data-dir/` to `/var/clover/` (see above) and start the container.
 
 TODO update this section, does it belong here?
 
@@ -152,8 +152,8 @@ We recommend setting multiple CPU cores for the docker image, e.g. 4 via ``--cpu
 
 Libraries are added to the classpath of Tomcat (ie Server Core) and Worker via the mounted volume. This action does not modify the build of the Docker image. Place the JARs to the following directories in the volume:
 
-* ``tomcat-lib`` - libraries to add to Tomcat and Server Core classpath (e.g. JDBC drivers)
-* ``worker-lib`` - libraries to add to Worker classpath (e.g. libraries used by jobs)
+* ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath (e.g. JDBC drivers)
+* ``worker-lib/`` - libraries to add to Worker classpath (e.g. libraries used by jobs)
 
 
 ## Tomcat Configuration

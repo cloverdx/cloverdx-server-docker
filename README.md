@@ -111,7 +111,6 @@ Server's configuration properties can be set via environment variables in 2 ways
 Environment variable values are set when running the container:
 ``docker run -e "clover.sandboxes.home=/some/path" image_name``
 
-
 ## System Database Configuration
 
 By default, CloverDX Server will use an embedded Derby database. In order to use an external database, the container needs a JDBC driver and a configuration file:
@@ -121,6 +120,25 @@ By default, CloverDX Server will use an embedded Derby database. In order to use
 3. Bind `/data/your-host-clover-data-dir/` to `/var/clover/` (see above) and start the container.
 
 TODO update this section, does it belong here?
+
+## Libraries and Classpath
+
+Libraries are added to the classpath of Tomcat (ie Server Core) and Worker via the mounted volume. This action does not modify the build of the Docker image. Place the JARs to the following directories in the volume:
+
+* ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath (e.g. JDBC drivers)
+* ``worker-lib/`` - libraries to add to Worker classpath (e.g. libraries used by jobs)
+
+## Tomcat Configuration
+
+The mounted volume contains fragments of Tomcat configuration files that configure various aspects of Tomcat. If the files are not found during the start of the Docker container, the container will create commented-out examples of them.
+
+Configuration files:
+
+* ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is inserted into ``server.xml`` when running the container. Uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 9 HTTPS connector (see [documentation](https://tomcat.apache.org/tomcat-9.0-doc/ssl-howto.html)). Export the port of the connector from the container (port 8443 by default). Put the keystore in the mounted volume, e.g. if it's in ``conf/keystore.jks`` in the volume, then the path to it in the ``https-conf.xml`` file is ``/var/clover/conf/keystore.jks``.
+* ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL (disabled by default). Put the keystore in the mounted volume, e.g. if it's in ``conf/keystore.jks`` in the volume, then the path to it in the ``jmx-conf.properties`` file is ``/var/clover/conf/keystore.jks``.
+* ``conf/jndi-conf.xml`` - configuration of JNDI resources of Tomcat, is inserted into ``server.xml``when running the container. See the commented ``<Resource>`` example on how to add a JNDI resource. We recommend to use JNDI to connect to server's system database.
+
+Examples of these files are in this repo (see ``tomcat/conf/*example*`` files) - the examples can be used as a starting point for the configuration files before the first start of the container.
 
 ## Memory
 
@@ -147,26 +165,6 @@ Usefull options of the ``docker run`` commands (see [documentation](https://docs
 * ``--cpu-shares=<value>`` - value is weight of the container, and containers running on a host get their share of CPU cycles based on their weight. Default weight is ``1024``, which also translates into 1 CPU core from the point of view of Java. For example setting this to ``4096`` will cause Java to see 4 CPU cores.
 
 We recommend setting multiple CPU cores for the docker image, e.g. ``--cpus=4``.
-
-## Libraries and Classpath
-
-Libraries are added to the classpath of Tomcat (ie Server Core) and Worker via the mounted volume. This action does not modify the build of the Docker image. Place the JARs to the following directories in the volume:
-
-* ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath (e.g. JDBC drivers)
-* ``worker-lib/`` - libraries to add to Worker classpath (e.g. libraries used by jobs)
-
-
-## Tomcat Configuration
-
-The mounted volume contains fragments of Tomcat configuration files that configure various aspects of Tomcat. If the files are not found during the start of the Docker container, the container will create commented-out examples of them.
-
-Configuration files:
-
-* ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is inserted into ``server.xml`` when running the container. Uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 9 HTTPS connector (see [documentation](https://tomcat.apache.org/tomcat-9.0-doc/ssl-howto.html)). Export the port of the connector from the container (port 8443 by default). Put the keystore in the mounted volume, e.g. if it's in ``conf/keystore.jks`` in the volume, then the path to it in the ``https-conf.xml`` file is ``/var/clover/conf/keystore.jks``.
-* ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL (disabled by default). Put the keystore in the mounted volume, e.g. if it's in ``conf/keystore.jks`` in the volume, then the path to it in the ``jmx-conf.properties`` file is ``/var/clover/conf/keystore.jks``.
-* ``conf/jndi-conf.xml`` - configuration of JNDI resources of Tomcat, is inserted into ``server.xml``when running the container. See the commented ``<Resource>`` example on how to add a JNDI resource. We recommend to use JNDI to connect to server's system database.
-
-Examples of these files are in this repo (see ``tomcat/conf/*example*`` files) - the examples can be used as a starting point for the configuration files before the first start of the container.
 
 ## Timezone
 

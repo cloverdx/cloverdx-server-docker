@@ -28,6 +28,8 @@ The container requires at least 2 GB memory.
 
 **Success**. CloverDX Server is now available at <http://localhost:8080/clover>. The Server is running with default settings, ie. embedded Derby system database, and should be configured further - see below.
 
+---
+
 # Architecture
 
 This Docker container is designed to run a standalone CloverDX Server instance. It has external dependencies:
@@ -62,6 +64,8 @@ Exposed ports:
 * 8080 - HTTP port of the Server Console and Server's API
 * 8686 - JMX port for monitoring of Server Core
 * 8687 - JMX port for monitoring of Worker
+
+---
 
 # Configuration
 
@@ -178,6 +182,8 @@ Default timezone of the container instance is UTC. The timezone is NOT inherited
 
 ``docker run -e TZ=Europe/Amsterdam ...``
 
+---
+
 # Monitoring
 
 The docker container exposes ports by default for JMX monitoring via tools such as [VisualVM](https://visualvm.github.io/). The JMX monitoring tools are useful to analyse threads, memory usage, classloaders etc.
@@ -186,6 +192,8 @@ Exported JMX ports:
 
 * ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyse behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc.
 * ``8687`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows etc
+
+---
 
 # Security
 

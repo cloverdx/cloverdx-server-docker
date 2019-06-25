@@ -9,8 +9,8 @@ standalone CloverDX Server with good defaults, in a recommended environment.
  
 # Quick Start
  
-* Download `clover.war` for Tomcat from <https://www.cloverdx.com>
 * Checkout or download this repository
+* Download `clover.war` for Tomcat from <https://www.cloverdx.com>
 * Put `clover.war` into `tomcat/webapps` directory.
 * Optional: run `gradlew` to download additional dependencies, e.g. JDBC drivers.
 * Build the Docker image:
@@ -26,7 +26,7 @@ standalone CloverDX Server with good defaults, in a recommended environment.
     ```  
 The container requires at least 2 GB memory.
 
-**Success**. CloverDX Server is now available at <http://localhost:8080/clover>.
+**Success**. CloverDX Server is now available at <http://localhost:8080/clover>. The Server is running with default settings, ie. embedded Derby system database, and should be configured further - see below.
 
 # Architecture
 
@@ -54,7 +54,7 @@ Internal structure of the container:
 Environment:
 
 * Ubuntu Linux
-* OpenJDK 11 from AdoptOpenJDK (slim version ... TODO what is it?)
+* OpenJDK 11 from AdoptOpenJDK (slim JDK build with removed functionality that's typically not needed in cloud)
 * Tomcat 9
 
 Exposed ports:
@@ -62,10 +62,6 @@ Exposed ports:
 * 8080 - HTTP port of the Server Console and Server's API
 * 8686 - JMX port for monitoring of Server Core
 * 8687 - JMX port for monitoring of Worker
-
-# Step by Step Guide
-
-More detailed step by step guide?
 
 # Configuration
 
@@ -162,13 +158,15 @@ Libraries are added to the classpath of Tomcat (ie Server Core) and Worker via t
 
 ## Tomcat Configuration
 
-The mounted volume will contain fragments of Tomcat configuration files after the first run of the Docker container. These configuration files contain commented-out examples on how to enable and configure some aspects of Tomcat:
+The mounted volume contains fragments of Tomcat configuration files that configure various aspects of Tomcat. If the files are not found during the start of the Docker container, the container will create commented-out examples of them.
 
-* ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is inserted into ``server.xml`` when running the container. Uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 9 HTTPS connector (TODO link). Export the port of the connector from the container (port 8443 by default). Put the keystore in the mounted volume, e.g. if it's in ``conf/keystore.jks`` in the volume, then the path to it in the ``https-conf.xml`` file is ``/var/clover/conf/keystore.jks``.
+Configuration files:
+
+* ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is inserted into ``server.xml`` when running the container. Uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 9 HTTPS connector (see [documentation](https://tomcat.apache.org/tomcat-9.0-doc/ssl-howto.html)). Export the port of the connector from the container (port 8443 by default). Put the keystore in the mounted volume, e.g. if it's in ``conf/keystore.jks`` in the volume, then the path to it in the ``https-conf.xml`` file is ``/var/clover/conf/keystore.jks``.
 * ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL (disabled by default). Put the keystore in the mounted volume, e.g. if it's in ``conf/keystore.jks`` in the volume, then the path to it in the ``jmx-conf.properties`` file is ``/var/clover/conf/keystore.jks``.
-* ``conf/jndi-conf.xml`` - configuration of JNDI resources of Tomcat, is inserted into ``server.xml`` (TODO or context.xml?) when running the container. See the commented ``<Resource>`` example on how to add a JNDI resource. We recommend to use JNDI to connect to server's system database.
+* ``conf/jndi-conf.xml`` - configuration of JNDI resources of Tomcat, is inserted into ``server.xml``when running the container. See the commented ``<Resource>`` example on how to add a JNDI resource. We recommend to use JNDI to connect to server's system database.
 
-TODO the default (commented out) versions of these files are in this repo - no need to start the container first.
+Examples of these files are in this repo (see ``tomcat/conf/*example*`` files) - the examples can be used as a starting point for the configuration files before the first start of the container.
 
 ## Timezone
 

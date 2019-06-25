@@ -128,6 +128,12 @@ Libraries are added to the classpath of Tomcat (ie Server Core) and Worker via t
 * ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath (e.g. JDBC drivers)
 * ``worker-lib/`` - libraries to add to Worker classpath (e.g. libraries used by jobs)
 
+## Sandboxes
+
+The container automatically imports all directories from ``sandboxes/`` directory in the mounted volume as sandboxes. This helps with initial set-up of the container, just place your sandboxes and their content into ``sandboxes/`` in the volume and the container automatically imports them without additional configuration needed.
+
+This feature is enabled by default in the container, not in vanilla CloverDX Server. It can be enabled/disabled via the ``sandboxes.autoimport`` configuration property (``true``/``false``). Sandboxes are imported from the ``sandboxes.home`` path, which is set to ``sandboxes/`` in the mounted volume.
+
 ## Tomcat Configuration
 
 The mounted volume contains fragments of Tomcat configuration files that configure various aspects of Tomcat. If the files are not found during the start of the Docker container, the container will create commented-out examples of them.

@@ -124,7 +124,7 @@ TODO update this section, does it belong here?
 
 ## Memory
 
-Important memory settings inside the container are heap size for Server Core, heap size for Worker and sizes of additional java memory spaces. The memory settings are automatically calculated based on the memory assigned to the container instance. 
+Important memory settings inside the container are Java heap size for Server Core, Java heap size for Worker and sizes of additional Java memory spaces. The memory settings are automatically calculated based on the memory assigned to the container instance. 
 
 For example, if running the container with 4GB of RAM:
 

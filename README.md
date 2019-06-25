@@ -174,9 +174,9 @@ Default timezone of the container instance is UTC. The timezone is NOT inherited
 
 # Monitoring
 
-The docker container exposes ports by default for JMX monitoring via tools such as VisualVM. The JMX monitoring tools are useful to analyse threads, memory usage, classloaders etc.
+The docker container exposes ports by default for JMX monitoring via tools such as [VisualVM](https://visualvm.github.io/). The JMX monitoring tools are useful to analyse threads, memory usage, classloaders etc.
 
-JMX exported ports:
+Exported JMX ports:
 
 * ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyse behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc.
 * ``8687`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows etc
@@ -187,8 +187,8 @@ By default, the ports exposed by the container (8080, 8686, 8687) do not use SSL
 
 ## HTTP(S) port
 
-To enable HTTPS, modify the file ``conf/https-conf.xml`` in the mounted volume, place the keystore in the mounted volume and export the HTTPS port (8443 be default). See ``conf/https-conf.xml`` in (#tomcat-configuration).
+To enable HTTPS, modify the file ``conf/https-conf.xml`` in the mounted volume, place the keystore in the mounted volume and export the HTTPS port (8443 be default). See ``conf/https-conf.xml`` in (#tomcat-configuration) for more details.
 
 ## JMX ports
 
-To enable JMX monitoring over SSL, modify the file ``conf/jmx-conf.properties`` in the mounted volume and place the keystore in the mounted volume. See ``conf/jmx-conf.properties`` in (#tomcat-configuration).
+To enable JMX monitoring over SSL, modify the file ``conf/jmx-conf.properties`` in the mounted volume and place the keystore in the mounted volume. See ``conf/jmx-conf.properties`` in (#tomcat-configuration) for more details.

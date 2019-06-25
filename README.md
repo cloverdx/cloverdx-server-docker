@@ -128,7 +128,7 @@ Libraries are added to the classpath of Tomcat (ie Server Core) and Worker via t
 * ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath (e.g. JDBC drivers)
 * ``worker-lib/`` - libraries to add to Worker classpath (e.g. libraries used by jobs)
 
-## <a name="tomcat-conf"></a> Tomcat Configuration
+## Tomcat Configuration
 
 The mounted volume contains fragments of Tomcat configuration files that configure various aspects of Tomcat. If the files are not found during the start of the Docker container, the container will create commented-out examples of them.
 
@@ -187,8 +187,8 @@ By default, the ports exposed by the container (8080, 8686, 8687) do not use SSL
 
 ## HTTP(S) port
 
-To enable HTTPS, modify the file ``conf/https-conf.xml`` in the mounted volume, place the keystore in the mounted volume and export the HTTPS port (8443 be default). See [above](#tomcat-conf) for more details.
+To enable HTTPS, modify the file ``conf/https-conf.xml`` in the mounted volume, place the keystore in the mounted volume and export the HTTPS port (8443 be default). See ``conf/https-conf.xml`` in *Tomcat Configuration* section above for more details.
 
 ## JMX ports
 
-To enable JMX monitoring over SSL, modify the file ``conf/jmx-conf.properties`` in the mounted volume and place the keystore in the mounted volume. See [above](#tomcat-conf) for more details.
+To enable JMX monitoring over SSL, modify the file ``conf/jmx-conf.properties`` in the mounted volume and place the keystore in the mounted volume. See ``conf/jmx-conf.properties`` in *Tomcat Configuration* section above for more details.

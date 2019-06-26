@@ -32,7 +32,11 @@ The container requires at least 2 GB memory.
 
 # Architecture
 
-This Docker container is designed to run a standalone CloverDX Server instance. It has external dependencies:
+This Docker container is designed to run a standalone CloverDX Server instance. 
+
+![Container architecture](/docker-architecture.png)
+
+It has external dependencies:
 
 * *system database* - database for storing server's settings, state, history etc. must be available somewhere. The container does not spin-up the database (except the default embedded Derby that should be used only for evaluation).
 * *data sources/data targets* - the data sources/targets to be processed are expected to be outside of the container (temporary files will be inside)

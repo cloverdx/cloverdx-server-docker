@@ -35,8 +35,7 @@ The container requires at least 2 GB memory.
 This Docker container is designed to run a standalone CloverDX Server instance. It has external dependencies:
 
 * *system database* - database for storing server's settings, state, history etc. must be available somewhere. The container does not spin-up the database (except the default embedded Derby that should be used only for evaluation).
-* *data sources/data targets* - the data sources/targets to be processed are expected to be outside of the container (temporary
-files will be inside)
+* *data sources/data targets* - the data sources/targets to be processed are expected to be outside of the container (temporary files will be inside)
 
 The container expects a mounted volume that will contain its state and configuration. The volume should be mounted into the ``/var/clover`` directory. Contents of the volume:
 

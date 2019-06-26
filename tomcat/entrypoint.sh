@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#min memory limits in MB
-MIN_MEMORY_SIZE=2048
+#min memory limits in bytes
+MIN_MEMORY_SIZE=2147483648
 MIN_SERVER_HEAP_SIZE=512
 MIN_WORKER_HEAP_SIZE=1024
 
@@ -11,14 +11,14 @@ available_memory() {
 	if [[ -r "${mem_file}" && -r "${mem_file_soft}" ]]; then
 		local max_mem_cgroup="$(cat ${mem_file})"
 		local max_mem_cgroup_soft="$(cat ${mem_file_soft})"
-
 		if [ ${max_mem_cgroup:-0} -lt ${max_mem_cgroup_soft:-0} ]; then
-				echo $(bytes_to_megabytes "${max_mem_cgroup}")
+			export SYSTEM_TOTAL_MEMORY=${max_mem_cgroup}
+			echo ${max_mem_cgroup}
 		else
-				echo ${MIN_MEMORY_SIZE}
+			echo ""
 		fi
 	else
-		echo ${MIN_MEMORY_SIZE}
+		echo ""
 	fi
 }
 
@@ -44,7 +44,7 @@ parse_to_get_megabytes() {
 }
 
 print_mem_info() {
-	local info="Total available memory:\t ${CLOVER_AVAILABLE_MEM}MB\n
+	local info="Total available memory:\t ${SYSTEM_TOTAL_MEMORY_MB}MB\n
 	OS memory:\t\t ${OS_MEM}MB\n
 	Server memory:\t\t ${CLOVER_SERVER_HEAP_SIZE}MB\n
 	Worker memory:\t\t ${CLOVER_WORKER_HEAP_SIZE}MB\n
@@ -54,19 +54,24 @@ print_mem_info() {
 }
 
 compute_memory() {
-	local available_mem_mb=$(available_memory)
-	export CLOVER_AVAILABLE_MEM=${available_mem_mb}
+	local available_mem=$(available_memory)
+	
+	if [ ! -z ${available_mem} ]; then
+		export SYSTEM_TOTAL_MEMORY=${available_mem}
+		SYSTEM_TOTAL_MEMORY_MB=$(bytes_to_megabytes "${available_mem}")
+		if [ ${available_mem} -lt ${MIN_MEMORY_SIZE} ]; then
+			>&2 echo "Insufficient memory set, expected at least $(bytes_to_megabytes "${MIN_MEMORY_SIZE}")MB, got ${SYSTEM_TOTAL_MEMORY_MB}MB."
+			exit 1
+		fi	
+	else
+		SYSTEM_TOTAL_MEMORY_MB=$(bytes_to_megabytes "${MIN_MEMORY_SIZE}")
+	fi
 
 	export CLOVER_SERVER_HEAP_SIZE=$(parse_to_get_megabytes "$CLOVER_SERVER_HEAP_SIZE")
 	export CLOVER_WORKER_HEAP_SIZE=$(parse_to_get_megabytes "$CLOVER_WORKER_HEAP_SIZE")
 
 	if [[ ${SERVER_JAVA_OPTS} =~ -Xmx([0-9]+[mMgG]?) ]]; then
 		export CLOVER_SERVER_HEAP_SIZE=$(parse_to_get_megabytes "${BASH_REMATCH[1]}")
-	fi
-
-	if [ ${available_mem_mb} -lt ${MIN_MEMORY_SIZE} ]; then
-		>&2 echo "Insufficient memory set, expected at least ${MIN_MEMORY_SIZE}MB, got ${available_mem_mb}MB."
-		exit 1
 	fi
 	
 	if [ -z ${CLOVER_SERVER_HEAP_SIZE} ] && [ ! -z ${CLOVER_WORKER_HEAP_SIZE} ]; then
@@ -79,22 +84,22 @@ compute_memory() {
 		exit 1
 	fi
 
-	QUARTER_OF_MEMORY=$((${available_mem_mb}/4))
+	QUARTER_OF_MEMORY=$((${SYSTEM_TOTAL_MEMORY_MB}/4))
 
 	if [ -z ${CLOVER_SERVER_HEAP_SIZE} ]; then
 		export CLOVER_SERVER_HEAP_SIZE=$(($QUARTER_OF_MEMORY > 8192 ? 8192 : $QUARTER_OF_MEMORY))
 	fi
 
-	if [ ${available_mem_mb} -lt 8192 ]; then
+	if [ ${SYSTEM_TOTAL_MEMORY_MB} -lt 8192 ]; then
 		export RESERVED_CODE_CACHE_SIZE=128
 		export MAX_CACHED_BUFFER_SIZE=65536
-	elif [ ${available_mem_mb} -lt 16384 ]; then
+	elif [ ${SYSTEM_TOTAL_MEMORY_MB} -lt 16384 ]; then
 		export RESERVED_CODE_CACHE_SIZE=256
 		export MAX_CACHED_BUFFER_SIZE=65536
-	elif [ ${available_mem_mb} -lt 32768 ]; then
+	elif [ ${SYSTEM_TOTAL_MEMORY_MB} -lt 32768 ]; then
 		export RESERVED_CODE_CACHE_SIZE=256
 		export MAX_CACHED_BUFFER_SIZE=131072
-	elif [ ${available_mem_mb} -lt 65536 ]; then
+	elif [ ${SYSTEM_TOTAL_MEMORY_MB} -lt 65536 ]; then
 		export RESERVED_CODE_CACHE_SIZE=256
 		export MAX_CACHED_BUFFER_SIZE=262144
 	else
@@ -105,7 +110,7 @@ compute_memory() {
 	export OS_MEM=$(($QUARTER_OF_MEMORY-$RESERVED_CODE_CACHE_SIZE > 8192 ? 8192 : $QUARTER_OF_MEMORY-$RESERVED_CODE_CACHE_SIZE))
 
 	if [ -z $CLOVER_WORKER_HEAP_SIZE ]; then
-		export CLOVER_WORKER_HEAP_SIZE=$(($available_mem_mb - (${OS_MEM} + ${CLOVER_SERVER_HEAP_SIZE} + ${RESERVED_CODE_CACHE_SIZE})))
+		export CLOVER_WORKER_HEAP_SIZE=$((${SYSTEM_TOTAL_MEMORY_MB} - (${OS_MEM} + ${CLOVER_SERVER_HEAP_SIZE} + ${RESERVED_CODE_CACHE_SIZE})))
 	fi
 
 	if [ ${CLOVER_SERVER_HEAP_SIZE} -lt ${MIN_SERVER_HEAP_SIZE} ]; then

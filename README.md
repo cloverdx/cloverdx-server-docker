@@ -101,8 +101,7 @@ jdbc.password=pass
 jdbc.dialect=org.hibernate.dialect.MySQLDialect
 ```
 
-Put the ``clover.properties`` file in the ``conf`` directory of the data volume and it will be automatically recognized. If the file does not exist in the volume, server will create an empty
-one and use default settings. It is possible to modify the file via Setup page in Server Console.
+Put the ``clover.properties`` file in the ``conf`` directory of the data volume and it will be automatically recognized. If the file does not exist in the volume, server will create an empty one and use default settings. It is possible to modify the file via Setup page in Server Console.
 
 ### Configuration via environment variables
 

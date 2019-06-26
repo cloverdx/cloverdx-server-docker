@@ -17,7 +17,7 @@ export CATALINA_OPTS="$CATALINA_OPTS -XX:InitiatingHeapOccupancyPercent=30"
 export CATALINA_OPTS="$CATALINA_OPTS -XX:G1ReservePercent=10"
 export CATALINA_OPTS="$CATALINA_OPTS -XX:MaxGCPauseMillis=100"
  
-export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.config.file=$JMX_CONF_FILE"
+export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.config.file=/opt/tomcat/cloverconf/jmx-conf.properties"
 export CATALINA_OPTS="$CATALINA_OPTS -Djava.rmi.server.hostname=${RMI_HOSTNAME}"
 
 export CATALINA_OPTS="$CATALINA_OPTS -Dclover.default.config.file=$DEFAULT_CONF_FILE"

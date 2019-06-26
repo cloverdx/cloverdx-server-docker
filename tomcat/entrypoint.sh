@@ -168,8 +168,10 @@ fi
 if [ ! -f $JMX_CONF_FILE ]; then
 	echo "Creating default $JMX_CONF_FILE"
 	gosu $USER cp "$CATALINA_CONF_DIR/jmx-conf_example.properties" $JMX_CONF_FILE
-	chmod 0400 $JMX_CONF_FILE # If the SSL is used the file jmx-conf.properties must be only readeable for user
 fi
+
+gosu $USER cp $JMX_CONF_FILE /opt/tomcat/cloverconf
+chmod 0400 /opt/tomcat/cloverconf/jmx-conf.properties # If SSL is used, jmx-conf.properties must be only readable by the owner (r--,---,---)
 
 if [ ! -f $HTTPS_CONF_FILE ]; then
 	echo "Creating default $HTTPS_CONF_FILE"

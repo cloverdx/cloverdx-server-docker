@@ -34,14 +34,14 @@ The container requires at least 2 GB memory.
 
 This Docker container is designed to run a standalone CloverDX Server instance. It has external dependencies:
 
-* *system database* - database for storing server's settings, state, history etc must be available somewhere. The container does not spin-up the database (except the default embedded Derby that should be used only for evaluation).
+* *system database* - database for storing server's settings, state, history etc. must be available somewhere. The container does not spin-up the database (except the default embedded Derby that should be used only for evaluation).
 * *data sources/data targets* - the data sources/targets to be processed are expected to be outside of the container (temporary
 files will be inside)
 
 The container expects a mounted volume that will contain its state and configuration. The volume should be mounted into the ``/var/clover`` directory. Contents of the volume:
 
 * ``conf/`` - configuration of the server, e.g. connection to the system database
-* ``sandboxes/`` - sandboxes with jobs, metadata, data etc
+* ``sandboxes/`` - sandboxes with jobs, metadata, data etc.
 * ``cloverlogs/`` - server logs
 * ``tomcatlogs/`` - Tomcat logs
 * ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath
@@ -191,7 +191,7 @@ The docker container exposes ports by default for JMX monitoring via tools such 
 Exported JMX ports:
 
 * ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyse behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc.
-* ``8687`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows etc
+* ``8687`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows etc.
 
 ---
 

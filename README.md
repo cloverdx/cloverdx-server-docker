@@ -173,7 +173,7 @@ For example, if running the container with 4GB of RAM:
 
 Then Server Core will have 1GB heap, Worker will have 2GB heap, and the rest is left for additional Java memory spaces and the OS.
 
-The automatic memory settings can be overridden by setting both properties:
+The automatic memory settings can be overridden by setting **BOTH** environment properties:
 
 * ``CLOVER_SERVER_HEAP_SIZE`` - heap size of Server Core, value as for the -Xmx Java argument
 * ``CLOVER_WORKER_HEAP_SIZE``  - heap size of Worker, value as for the -Xmx Java argument

@@ -151,6 +151,18 @@ The container automatically imports all directories from ``sandboxes/`` director
 
 This feature is enabled by default in the container, not in vanilla CloverDX Server. It can be enabled/disabled via the ``sandboxes.autoimport`` configuration property (``true``/``false``). Sandboxes are imported from the ``sandboxes.home`` path, which is set to ``sandboxes/`` in the mounted volume.
 
+## License
+
+CloverDX Server requires a valid license to function. The license can be set via the Server Console in the browser, or via a file. Using a file is better suited in automated container environment.
+
+Setting a license via a file:
+
+* store ``license.dat`` file (containing the license key itself) in the mounted volume, e.g. in ``conf/license.dat``
+* set the ``license.file`` configuration property to the path to the license file, e.g. to ``/var/clover/conf/license.dat`` (this is the path to the file in volume inside the container). There are several ways to set the property:
+
+    * modify the ``conf/clover.properties`` file in the mounted volume
+    * set the ``clover.license.file`` environment variable: ``docker run -e clover.license.file=/var/clover/conf/license.dat``
+
 ## Tomcat Configuration
 
 The mounted volume contains fragments of Tomcat configuration files that configure various aspects of Tomcat. If the files are not found during the start of the Docker container, the container will create commented-out examples of them.

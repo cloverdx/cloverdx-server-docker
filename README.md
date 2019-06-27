@@ -169,8 +169,8 @@ The mounted volume contains fragments of Tomcat configuration files that configu
 
 Configuration files:
 
-* ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is referenced from ``server.xml`` when running the container. Uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 9 HTTPS connector (see [documentation](https://tomcat.apache.org/tomcat-9.0-doc/ssl-howto.html)). Export the port of the connector from the container (port 8443 by default). Put the keystore in the mounted volume, e.g. if it's in ``conf/keystore.jks`` in the volume, then the path to it in the ``https-conf.xml`` file is ``/var/clover/conf/keystore.jks``. We recommend to not expose the unsecured HTTP port (8080 by default) in case HTTPS is enabled.
-* ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL (disabled by default). Put the keystore in the mounted volume, e.g. if it's in ``conf/keystore.jks`` in the volume, then the path to it in the ``jmx-conf.properties`` file is ``/var/clover/conf/keystore.jks``.
+* ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is referenced from ``server.xml`` when running the container. See *Security* / *HTTPS* section below.
+* ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL.  See *Security* / *JMX over SSL* section below.
 * ``conf/jndi-conf.xml`` - configuration of JNDI resources of Tomcat, is referenced from ``server.xml``when running the container. See the commented ``<Resource>`` example on how to add a JNDI resource. We recommend to use JNDI to connect to server's system database.
 
 Examples of these files are in this repo (see ``tomcat/conf/*example*`` files) - the examples can be used as a starting point for the configuration files before the first start of the container.
@@ -233,10 +233,19 @@ Exported JMX ports:
 
 By default, the ports exposed by the container (8080, 8686, 8687) do not use SSL. To secure them via SSL, additional configuration is needed:
 
-## HTTP(S) port
+## HTTPS
 
-To enable HTTPS, modify the file ``conf/https-conf.xml`` in the mounted volume, place the keystore in the mounted volume and export the HTTPS port (8443 be default). See ``conf/https-conf.xml`` in *Tomcat Configuration* section above for more details.
+To enable HTTPS:
 
-## JMX ports
+1. place the keystore in ``conf/serverKS.jks`` file in the mounted volume
+1. modify the file ``conf/https-conf.xml`` in the mounted volume - uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 9 HTTPS connector (see [documentation](https://tomcat.apache.org/tomcat-9.0-doc/ssl-howto.html)).
+1. publish the HTTPS port (8443 be default) when running the container (e.g. ``docker run -p 8443:8443 ...``)
+1. we recommend to not publish the unsecured HTTP port (8080 by default) in case HTTPS is enabled.
 
-To enable JMX monitoring over SSL, modify the file ``conf/jmx-conf.properties`` in the mounted volume and place the keystore in the mounted volume. See ``conf/jmx-conf.properties`` in *Tomcat Configuration* section above for more details.
+## JMX over SSL
+
+To enable JMX monitoring over SSL:
+
+1. place the keystore in ``conf/serverKS.jks`` file in the mounted volume
+1. modify the file ``conf/jmx-conf.properties`` in the mounted volume
+1. publish the JMX ports (8686 for Server Core, 8687 for Worker) when running the container (e.g. ``docker run -p 8686:8686 p 8687:8687 ...``)

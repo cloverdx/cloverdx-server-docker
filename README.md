@@ -24,7 +24,16 @@ standalone CloverDX Server with good defaults, in a recommended environment.
     ```
     $ docker run -d --name cloverdx --memory=3g -p 8080:8080 -e LOCAL_USER_ID=`id -u $USER` --mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover cloverdx-server:latest
     ```  
-The container requires at least 2 GB memory.
+
+    Explanation:
+    
+    * ``-d`` - detached mode, the container exits when Server exits
+    * ``--name`` - name to identify the running container
+    * ``--memory=3g`` - allow 3 GB of memory for the container, the container requires at least 2 GB memory.
+    * ``-p 8080:8080`` - publish exposed container port
+    * ```-e LOCAL_USER_ID=`id -u $USER``` - set an environment variable, in this case user ID to be used for permissions
+    * ``--mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover`` - mount the ``/data/your-host-clover-home-dir`` directory from the host as a data volume into ``/var/clover`` path inside the container, this will contain the persistent data, configuration etc
+    * ``cloverdx-server:latest`` - name of the image to run as a container
 
 **Success**. CloverDX Server is now available at <http://localhost:8080/clover>. The Server is running with default settings, and **should be configured further** to get it into production quality (i.e. it should use external database).
 

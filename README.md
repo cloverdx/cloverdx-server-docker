@@ -71,11 +71,13 @@ Environment:
 * OpenJDK 11 from AdoptOpenJDK (slim JDK build with removed functionality that's typically not needed in cloud)
 * Tomcat 9
 
-Exposed ports:
+Default exposed ports:
 
 * 8080 - HTTP port of the Server Console and Server's API
 * 8686 - JMX port for monitoring of Server Core
 * 8687 - JMX port for monitoring of Worker
+
+Used ports need to be published when running the container via the ``-p HOST_PORT:CONTAINER_PORT`` (this maps the inside ``CONTAINER_PORT`` to be visible from the outside as ``HOST_PORT``). If you enable additional ports (e.g. 8443 for HTTPS), do not forget to publish them.
 
 ---
 

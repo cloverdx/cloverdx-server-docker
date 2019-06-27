@@ -22,9 +22,6 @@ ENV JNDI_CONF_FILE $CLOVER_CONF_DIR/jndi-conf.xml
 ENV JMX_CONF_FILE $CLOVER_CONF_DIR/jmx-conf.properties
 ENV HTTPS_CONF_FILE $CLOVER_CONF_DIR/https-conf.xml
 
-# Default SSL keystore location
-ENV SERVER_KEY_STORE $CLOVER_CONF_DIR/serverKS.jks
-
 # Set default locale to en_US; see also 'locale-gen' command below
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 

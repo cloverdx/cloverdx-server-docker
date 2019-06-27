@@ -20,6 +20,6 @@
 	sslProtocol="TLS"
 	SSLEnabled="true"
 	protocol="org.apache.coyote.http11.Http11NioProtocol"
-	keystoreFile="<PATH_TO_KEYSTORE>"
+	keystoreFile="/var/clover/conf/serverKS.jks"
 	keystorePass="<PASSWORD>" />
 -->

@@ -130,9 +130,6 @@ compute_memory
 #print info about memory settings
 #echo -e $(print_mem_info)
 
-#change permissions for the writable directories - CLO-16457
-chmod -R o-x $CATALINA_HOME/work $CATALINA_HOME/webapps $CATALINA_HOME/logs $CATALINA_HOME/temp
-
 USER=cloverdx
 USER_ID=${LOCAL_USER_ID:-1000}
 

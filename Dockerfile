@@ -4,8 +4,6 @@ ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.20/bin/apac
 
 # Tomcat home directory
 ENV CATALINA_HOME /opt/tomcat
-# Worker does not start when CATALINA_TMPDIR=$CATALINA_HOME/temp and user is not root
-ENV CATALINA_TMPDIR $CATALINA_HOME/tmpdir
 
 # Directory with persistent data, visible to users (sandboxes, logs, configuration files)
 ENV CLOVER_HOME_DIR /var/clover
@@ -49,7 +47,7 @@ RUN set -eux && \
 	# Download and extract Tomcat
 	curl "$TOMCAT_URL" | tar -xz --strip-components=1 && \
 	# Create directories
-	mkdir -p $CLOVER_CONF_DIR $CLOVER_HOME_DIR $CLOVER_DATA_DIR $CATALINA_TMPDIR && \
+	mkdir -p $CLOVER_CONF_DIR $CLOVER_HOME_DIR $CLOVER_DATA_DIR && \
 	# Change permisions for the writable directories - CLO-16457
 	chmod -R o+x $CATALINA_HOME/work $CATALINA_HOME/webapps $CATALINA_HOME/logs $CATALINA_HOME/temp && \
 	# Remove unused directories

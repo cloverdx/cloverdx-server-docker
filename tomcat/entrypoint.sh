@@ -151,13 +151,13 @@ chown -R $USER:$USER $CLOVER_HOME_DIR
 chown -R $USER:$USER $CLOVER_DATA_DIR
 
 #create empty folder for config files
-if [ ! -d $CLOVER_HOME_CONF_DIR ]; then
-	gosu $USER mkdir -p $CLOVER_HOME_CONF_DIR
+if [ ! -d $CLOVER_CONF_DIR ]; then
+	gosu $USER mkdir -p $CLOVER_CONF_DIR
 fi	
 
 #create empty configuration file if it does not exist
-if [ ! -f $CUSTOM_CONF_FILE ]; then
-	gosu $USER touch $CUSTOM_CONF_FILE
+if [ ! -f $CLOVER_CONF_FILE ]; then
+	gosu $USER touch $CLOVER_CONF_FILE
 fi
 
 if [ ! -f $JNDI_CONF_FILE ]; then
@@ -170,8 +170,8 @@ if [ ! -f $JMX_CONF_FILE ]; then
 	gosu $USER cp "$CATALINA_CONF_DIR/jmx-conf_example.properties" $JMX_CONF_FILE
 fi
 
-gosu $USER cp $JMX_CONF_FILE /opt/tomcat/cloverconf
-chmod 0400 /opt/tomcat/cloverconf/jmx-conf.properties # If SSL is used, jmx-conf.properties must be only readable by the owner (r--,---,---)
+gosu $USER cp $JMX_CONF_FILE $CATALINA_HOME/cloverconf
+chmod 0400 $CATALINA_HOME/cloverconf/jmx-conf.properties # If SSL is used, jmx-conf.properties must be only readable by the owner (r--,---,---)
 
 if [ ! -f $HTTPS_CONF_FILE ]; then
 	echo "Creating default $HTTPS_CONF_FILE"

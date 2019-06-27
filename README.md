@@ -163,6 +163,15 @@ Configuration files:
 
 Examples of these files are in this repo (see ``tomcat/conf/*example*`` files) - the examples can be used as a starting point for the configuration files before the first start of the container.
 
+## Java Tuning
+
+The container starts two Java processes - one for Tomcat running CloverDX Server Core and one for Worker running jobs. The container sets good default options for Java. For additional tuning of the command line options, use the following environment variables:
+
+* ``SERVER_JAVA_OPTS`` - additional Java command line options for Server Core and Tomcat
+* ``WORKER_JAVA_OPTS`` - additional Java command line options for Worker
+
+The command line options in the above environment variables are added to the options that the container sets by default. It's mostly meant for customizing garbage collector, Java performance logging etc. Do not use this to extend the classpath - see *Libraries and Classpath* section above for that.
+
 ## Memory
 
 Important memory settings inside the container are Java heap size for Server Core, Java heap size for Worker and sizes of additional Java memory spaces. The memory settings are automatically calculated based on the memory assigned to the container instance. 

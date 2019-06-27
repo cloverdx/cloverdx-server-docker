@@ -94,7 +94,7 @@ CloverDX Server needs a persistent storage for its data and configuration, so th
 --mount type=volume,source=name-of-your-volume,target=/var/clover
 ```
 
-If you bind a directory from the host OS, the data files will be owned by user with UID 9001. You should override this by setting `LOCAL_USER_ID` environment variable:
+If you bind a directory from the host OS, the data files will be owned by user with UID 1000. You should override this by setting `LOCAL_USER_ID` environment variable:
 
 ```bash
 -e LOCAL_USER_ID=`id -u $USER`

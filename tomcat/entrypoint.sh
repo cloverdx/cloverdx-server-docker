@@ -152,9 +152,14 @@ if [ ! -d $CLOVER_CONF_DIR ]; then
 	gosu $USER mkdir -p $CLOVER_CONF_DIR
 fi	
 
-#create empty configuration file if it does not exist
+if [ ! -d $CLOVER_HOME_DIR ]; then
+	echo "Creating empty folder for config files $CLOVER_HOME_DIR"
+	gosu $USER mkdir -p $CLOVER_HOME_DIR
+fi	
+
 if [ ! -f $CLOVER_CONF_FILE ]; then
-	gosu $USER touch $CLOVER_CONF_FILE
+	echo "Creating default $CLOVER_CONF_FILE"
+	gosu $USER cp "$CATALINA_CONF_DIR/clover_example.properties" $CLOVER_CONF_FILE
 fi
 
 if [ ! -f $JNDI_CONF_FILE ]; then

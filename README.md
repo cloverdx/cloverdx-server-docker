@@ -26,7 +26,7 @@ standalone CloverDX Server with good defaults, in a recommended environment.
     ```  
 The container requires at least 2 GB memory.
 
-**Success**. CloverDX Server is now available at <http://localhost:8080/clover>. The Server is running with default settings, ie. embedded Derby system database, and should be configured further - see below.
+**Success**. CloverDX Server is now available at <http://localhost:8080/clover>. The Server is running with default settings, and **should be configured further** to get it into production quality (i.e. it should use external database).
 
 ---
 

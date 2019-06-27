@@ -9,7 +9,7 @@ standalone CloverDX Server with good defaults, in a recommended environment.
  
 # Quick Start
  
-* Checkout or download this repository
+* Checkout or download this repository (Checkout via ``git clone https://github.com/cloverdx/cloverdx-server-docker.git``)
 * Download `clover.war` for Tomcat from <https://www.cloverdx.com>
 * Put `clover.war` into `tomcat/webapps` directory.
 * Optional: run `gradlew` to download additional dependencies, e.g. JDBC drivers.

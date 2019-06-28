@@ -85,13 +85,11 @@ Used ports need to be published when running the container via the ``-p HOST_POR
 
 ## Data Volume
 
-CloverDX Server needs a persistent storage for its data and configuration, so that the files are not lost when the container is restarted or updated to a newer version. By default, sandboxes, logs and configuration files are stored in an anonymous Docker volume. This makes them persistent across container restarts, but not across updates. You can bind a host directory to `/var/clover/` or mount a named Docker volume:
+CloverDX Server needs a persistent storage for its data and configuration, so that the files are not lost when the container is restarted or updated to a newer version. You should bind a host directory to `/var/clover/` inside the container ad a mounted volume:
 
 ```bash
 # bind host directory: 
 --mount type=bind,source=/data/your-host-clover-data-dir,target=/var/clover
-# mount a named volume:
---mount type=volume,source=name-of-your-volume,target=/var/clover
 ```
 
 If you bind a directory from the host OS, the data files will be owned by user with UID 1000. You should override this by setting `LOCAL_USER_ID` environment variable:
@@ -102,7 +100,7 @@ If you bind a directory from the host OS, the data files will be owned by user w
 
 ## Server Configuration
 
-CloverDX Server is configured via configuration properties - e.g. connection information to the system database.
+CloverDX Server is configured via configuration properties - e.g. connection information to the system database. See [documentation](https://doc.cloverdx.com/latest/server/list-of-properties.html) for available configuration properties.
 
 ### Configuration via clover.properties
 
@@ -126,17 +124,15 @@ Server's configuration properties can be set via environment variables in 2 ways
 * *placeholders* - configuration properties can reference environment variables using the ``${ENVIRONMENT_VARIABLE}`` syntax. For example, ``sandboxes.home=${SANDBOXES_ROOT}``.
 
 Environment variable values are set when running the container:
-``docker run -e "clover.sandboxes.home=/some/path" image_name``
+``docker run -e "clover.sandboxes.home=/some/path" ...``
 
 ## System Database Configuration
 
 By default, CloverDX Server will use an embedded Derby database. In order to use an external database, the container needs a JDBC driver and a configuration file:
 
-1. If necessary, put additional JDBC drivers to `var/dbdrivers/` before building the image and then build the image.
+1. If necessary, put additional JDBC drivers to `var/dbdrivers/` before building the image and then build the image. The ``gradlew`` build script in this repository downloads some default JDBC drivers.
 2. Put [database configuration properties](https://doc.cloverdx.com/latest/server/examples-db-connection-configuration.html) into `clover.properties` configuration file and place it into `/data/your-host-clover-data-dir/conf/` directory in your host file system.
 3. Bind `/data/your-host-clover-data-dir/` to `/var/clover/` (see above) and start the container.
-
-TODO update this section, does it belong here?
 
 ## Libraries and Classpath
 
@@ -151,6 +147,8 @@ The container automatically imports all directories from ``sandboxes/`` director
 
 This feature is enabled by default in the container, not in vanilla CloverDX Server. It can be enabled/disabled via the ``sandboxes.autoimport`` configuration property (``true``/``false``). Sandboxes are imported from the ``sandboxes.home`` path, which is set to ``sandboxes/`` in the mounted volume.
 
+The container does not create default example sandboxes by default. To enable them, set the ``installer.BundledSandboxesInstaller.enabled`` configuration property to ``true``.
+
 ## License
 
 To activate CloverDX Server, the container by default searches for a license file (text file containing the license key itself) in the ``conf/license.dat`` path in the mounted volume.
@@ -162,7 +160,7 @@ Alternative options:
 
 ## Tomcat Configuration
 
-The mounted volume contains fragments of Tomcat configuration files that configure various aspects of Tomcat. If the files are not found during the start of the Docker container, the container will create commented-out examples of them.
+The mounted volume contains fragments of Tomcat configuration files that configure various aspects of Tomcat. If the files are not found during the start of the container, the container will create commented-out examples of them.
 
 Configuration files:
 

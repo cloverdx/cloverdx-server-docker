@@ -153,7 +153,7 @@ This feature is enabled by default in the container, not in vanilla CloverDX Ser
 
 ## License
 
-To active CloverDX Server, the container by default searches for a license file (text file containing the license key itself) in the ``conf/license.dat`` path in the mounted volume.
+To activate CloverDX Server, the container by default searches for a license file (text file containing the license key itself) in the ``conf/license.dat`` path in the mounted volume.
 
 Alternative options:
 

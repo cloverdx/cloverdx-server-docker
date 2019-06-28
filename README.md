@@ -153,15 +153,12 @@ This feature is enabled by default in the container, not in vanilla CloverDX Ser
 
 ## License
 
-CloverDX Server requires a valid license to function. The license can be set via the Server Console in the browser, or via a file. Using a file is better suited in automated container environment.
+To active CloverDX Server, the container by default searches for a license file (text file containing the license key itself) in the ``conf/license.dat`` path in the mounted volume.
 
-Setting a license via a file:
+Alternative options:
 
-* store ``license.dat`` file (containing the license key itself) in the mounted volume, e.g. in ``conf/license.dat``
-* set the ``license.file`` configuration property to the path to the license file, e.g. to ``/var/clover/conf/license.dat`` (this is the path to the file in volume inside the container). There are several ways to set the property:
-
-    * modify the ``conf/clover.properties`` file in the mounted volume
-    * set the ``clover.license.file`` environment variable: ``docker run -e clover.license.file=/var/clover/conf/license.dat``
+* activate the server via the Server Console in the browser
+* modify the ``license.file`` configuration property and set a different path to the license file, e.g. to a different volume
 
 ## Tomcat Configuration
 

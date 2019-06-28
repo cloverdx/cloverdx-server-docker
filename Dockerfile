@@ -31,6 +31,8 @@ WORKDIR $CATALINA_HOME
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN set -eux && \
+	# The default answers be used for all questions
+	export DEBIAN_FRONTEND=noninteractive && \
 	# Change the default shell from dash to bash
 	ln -sfv /bin/bash /bin/sh && \
 	# Install required packages

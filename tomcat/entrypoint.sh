@@ -144,8 +144,8 @@ adduser \
 
 echo "Changing ownership of $CATALINA_HOME"
 chown -R $USER:$USER $CATALINA_HOME
-chown -R $USER:$USER $CLOVER_HOME_DIR
-chown -R $USER:$USER $CLOVER_DATA_DIR
+chown $USER:$USER $CLOVER_HOME_DIR
+chown $USER:$USER $CLOVER_DATA_DIR
 
 #create empty folder for config files
 if [ ! -d $CLOVER_CONF_DIR ]; then

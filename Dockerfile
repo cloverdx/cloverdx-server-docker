@@ -64,7 +64,7 @@ RUN chmod u+x entrypoint.sh && \
 # Create volumes for Clover home dir and internal data dir
 VOLUME $CLOVER_HOME_DIR $CLOVER_DATA_DIR
 
-# HTTP, JMX for Core server, JMX for worker
-EXPOSE 8080 8686 8687
+# 8080: HTTP, 8686 and 8687: JMX for Core server, 8688 and 8689: JMX for worker
+EXPOSE 8080 8686 8687 8688 8689
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "./entrypoint.sh"]

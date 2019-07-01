@@ -18,6 +18,8 @@ export CATALINA_OPTS="$CATALINA_OPTS -XX:G1ReservePercent=10"
 export CATALINA_OPTS="$CATALINA_OPTS -XX:MaxGCPauseMillis=100"
  
 export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.config.file=$CATALINA_HOME/cloverconf/jmx-conf.properties"
+export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.port=8686"
+export CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.rmi.port=8687"
 export CATALINA_OPTS="$CATALINA_OPTS -Djava.rmi.server.hostname=${RMI_HOSTNAME}"
 
 export CATALINA_OPTS="$CATALINA_OPTS -Dclover.default.config.file=$CATALINA_HOME/cloverconf/default_clover.properties"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#min memory limits in bytes
+# Min memory limits in bytes
 MIN_MEMORY_SIZE=2147483648
 MIN_SERVER_HEAP_SIZE=512
 MIN_WORKER_HEAP_SIZE=1024
@@ -27,10 +27,11 @@ bytes_to_megabytes() {
 	echo "${val}"
 }
 
-#gets value from the given parameter and converts it to megabytes
-#value can be a number (then it is considered as value in MB)
-# or number with units (e.g. "1024m")
-#supported units: 
+# Gets value from the given parameter and converts it to megabytes;
+# the value can be a number (then it is considered as value in MB)
+# or a number with units (e.g. "1024m")
+# 
+# Supported units: 
 #	megabytes (m)
 #	gigabytes (g)
 parse_to_get_megabytes() {
@@ -126,11 +127,18 @@ compute_memory() {
 	fi
 }
 
+#############################################################################
+# Start of the script                                                       #
+#############################################################################
+
 compute_memory
-#print info about memory settings
-#echo -e $(print_mem_info)
+
+# Print info about memory settings
+echo -e $(print_mem_info)
 
 USER=cloverdx
+# If not specified otherwise, user "cloverdx" will have UID 1000
+# Used when $CLOVER_HOME_DIR is bind-mounted to the host OS
 USER_ID=${LOCAL_USER_ID:-1000}
 
 echo "Creating $USER user"
@@ -142,41 +150,43 @@ adduser \
 	--uid "$USER_ID" \
 	"$USER"
 
-echo "Changing ownership of $CATALINA_HOME"
+echo "Changing ownership of working directories"
 chown -R $USER:$USER $CATALINA_HOME
 chown $USER:$USER $CLOVER_HOME_DIR
 chown $USER:$USER $CLOVER_DATA_DIR
 
-#create empty folder for config files
-if [ ! -d $CLOVER_CONF_DIR ]; then
-	gosu $USER mkdir -p $CLOVER_CONF_DIR
-fi	
-
 if [ ! -d $CLOVER_HOME_DIR ]; then
-	echo "Creating empty folder for config files $CLOVER_HOME_DIR"
+	echo "Creating empty folder for Clover home directory $CLOVER_HOME_DIR"
 	gosu $USER mkdir -p $CLOVER_HOME_DIR
 fi	
 
+if [ ! -d $CLOVER_CONF_DIR ]; then
+	echo "Creating empty folder for config files $CLOVER_CONF_DIR"
+	gosu $USER mkdir -p $CLOVER_CONF_DIR
+fi	
+
 if [ ! -f $CLOVER_CONF_FILE ]; then
-	echo "Creating default $CLOVER_CONF_FILE"
+	echo "Creating default Clover config file $CLOVER_CONF_FILE"
 	gosu $USER cp "$CATALINA_CONF_DIR/clover_example.properties" $CLOVER_CONF_FILE
 fi
 
 if [ ! -f $JNDI_CONF_FILE ]; then
-	echo "Creating default $JNDI_CONF_FILE"
+	echo "Creating default JNDI config file $JNDI_CONF_FILE"
 	gosu $USER cp "$CATALINA_CONF_DIR/jndi-conf_example.xml" $JNDI_CONF_FILE
 fi
 
 if [ ! -f $JMX_CONF_FILE ]; then
-	echo "Creating default $JMX_CONF_FILE"
+	echo "Creating default JMX config file $JMX_CONF_FILE"
 	gosu $USER cp "$CATALINA_CONF_DIR/jmx-conf_example.properties" $JMX_CONF_FILE
 fi
 
+# If SSL is used, jmx-conf.properties must only be readable by the owner (r--,---,---).
+# Therefore we make a copy of the file and mark it as read-only.
 gosu $USER cp $JMX_CONF_FILE $CATALINA_HOME/cloverconf
-chmod 0400 $CATALINA_HOME/cloverconf/jmx-conf.properties # If SSL is used, jmx-conf.properties must be only readable by the owner (r--,---,---)
+chmod 0400 $CATALINA_HOME/cloverconf/jmx-conf.properties
 
 if [ ! -f $HTTPS_CONF_FILE ]; then
-	echo "Creating default $HTTPS_CONF_FILE"
+	echo "Creating default HTTPS config file $HTTPS_CONF_FILE"
 	gosu $USER cp "$CATALINA_CONF_DIR/https-conf_example.xml" $HTTPS_CONF_FILE
 fi
 
@@ -187,19 +197,18 @@ if [ ! -d $CLOVER_HOME_DIR/tomcat-lib ]; then
 	gosu $USER cp /var/dbdrivers/* ${CLOVER_HOME_DIR}/tomcat-lib/
 fi
 
+# Create an empty directory for additional worker jars
 gosu $USER mkdir -p $CLOVER_HOME_DIR/worker-lib
 
-#set SERVER_JAVA_OPTS to empty string if not set
+# Set SERVER_JAVA_OPTS to empty string if not set
 if [ -z "$SERVER_JAVA_OPTS" ]; then
 	export SERVER_JAVA_OPTS=""
 fi
 
-#set WORKER_JAVA_OPTS to empty string if not set
+# Set WORKER_JAVA_OPTS to empty string if not set
 if [ -z "$WORKER_JAVA_OPTS" ]; then
 	export WORKER_JAVA_OPTS=""
 fi
 
-#execute Tomcat
-#save Tomcat standard output to catalina.out
 echo "Starting Tomcat"
 exec gosu $USER ./bin/catalina.sh run

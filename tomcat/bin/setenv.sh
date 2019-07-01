@@ -30,6 +30,11 @@ export CATALINA_OPTS="$CATALINA_OPTS -Dclover.default.config.file=$CATALINA_HOME
 export CATALINA_OPTS="$CATALINA_OPTS -Dtomcat.clover.lib=$CLOVER_LIB_DIR"
 export CATALINA_OPTS="$CATALINA_OPTS -Dlog4j2.appender.stdout.level=info"
 
+CLOVER_LICENSE_FILE=$CLOVER_CONF_DIR/license.dat
+if [ -f $CLOVER_LICENSE_FILE ]; then
+	export CATALINA_OPTS="$CATALINA_OPTS -Dclover.license.file=$CLOVER_LICENSE_FILE"
+fi
+
 # SERVER_JAVA_OPTS should be at the end of CATALINA_OPTS, so that it has the highest priority
 # Used for custom command line arguments for CloverDX Core Server
 export CATALINA_OPTS="$CATALINA_OPTS ${SERVER_JAVA_OPTS}"

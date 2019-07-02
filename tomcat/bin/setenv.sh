@@ -27,7 +27,7 @@ export CATALINA_OPTS="$CATALINA_OPTS -Djava.rmi.server.hostname=${RMI_HOSTNAME}"
 export CATALINA_OPTS="$CATALINA_OPTS -Dclover.config.file=$CLOVER_CONF_FILE"
 export CATALINA_OPTS="$CATALINA_OPTS -Dclover.clover.home=$CLOVER_HOME_DIR"
 export CATALINA_OPTS="$CATALINA_OPTS -Dclover.default.config.file=$CATALINA_HOME/cloverconf/default_clover.properties"
-export CATALINA_OPTS="$CATALINA_OPTS -Dtomcat.clover.lib=$CLOVER_LIB_DIR"
+export CATALINA_OPTS="$CATALINA_OPTS -Dshared.clover.lib=$CLOVER_LIB_DIR"
 export CATALINA_OPTS="$CATALINA_OPTS -Dlog4j2.appender.stdout.level=info"
 
 CLOVER_LICENSE_FILE=$CLOVER_CONF_DIR/license.dat

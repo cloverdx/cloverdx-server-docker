@@ -193,8 +193,8 @@ Then Server Core will have 1 GB heap, Worker will have 2 GB heap, and the rest i
 
 The automatic memory settings can be overridden by setting **BOTH** environment properties:
 
-* ``CLOVER_SERVER_HEAP_SIZE`` - heap size of Server Core, value as for the -Xmx Java argument
-* ``CLOVER_WORKER_HEAP_SIZE``  - heap size of Worker, value as for the -Xmx Java argument
+* ``CLOVER_SERVER_HEAP_SIZE`` - heap size of Server Core (in MB)
+* ``CLOVER_WORKER_HEAP_SIZE``  - heap size of Worker (in MB)
 
 ## CPU
 

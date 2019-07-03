@@ -75,7 +75,9 @@ Default exposed ports:
 
 * 8080 - HTTP port of the Server Console and Server's API
 * 8686 - JMX port for monitoring of Server Core
-* 8687 - JMX port for monitoring of Worker
+* 8687 - RMI port for the above Server Core JMX monitoring
+* 8688 - JMX port for monitoring of Worker
+* 8689 - RMI port for the above Worker JMX monitoring
 
 Used ports need to be published when running the container via the ``-p HOST_PORT:CONTAINER_PORT`` (this maps the inside ``CONTAINER_PORT`` to be visible from the outside as ``HOST_PORT``). If you enable additional ports (e.g. 8443 for HTTPS), do not forget to publish them.
 
@@ -219,14 +221,16 @@ The docker container exposes ports by default for JMX monitoring via tools such 
 
 Exported JMX ports:
 
-* ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyse behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc.
-* ``8687`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows, etc.
+* ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyse behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc. Use this port when connecting a **JMX client to Server Core**.
+* ``8687`` - RMI port for the above JMX monitoring of Server Core. This port is a utility port transparently used by JMX client.
+* ``8688`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows, etc. Use this port when connecting a **JMX client to Worker**.
+* ``8689`` - RMI port for the above JMX monitoring of Worker. This port is a utility port transparently used by JMX client.
 
 ---
 
 # Security
 
-By default, the ports exposed by the container (8080, 8686, 8687) do not use SSL. To secure them via SSL, additional configuration is needed:
+By default, the ports exposed by the container do not use SSL. To secure them via SSL, additional configuration is needed:
 
 ## HTTPS
 
@@ -239,8 +243,8 @@ To enable HTTPS:
 
 ## JMX over SSL
 
-To enable JMX monitoring over SSL:
+Currently JMX monitoring over SSL is supported for Server Core. To enable it:
 
 1. place the keystore in ``conf/serverKS.jks`` file in the mounted volume
 1. modify the file ``conf/jmx-conf.properties`` in the mounted volume
-1. publish the JMX ports (8686 for Server Core, 8687 for Worker) when running the container (e.g. ``docker run -p 8686:8686 p 8687:8687 ...``)
+1. publish the JMX ports (8686 and 8687 for Server Core) when running the container (e.g. ``docker run -p 8686:8686 p 8687:8687 ...``)

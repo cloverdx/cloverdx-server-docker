@@ -4,7 +4,7 @@ You can find the repository for this Dockerfile at <https://github.com/CloverDX>
 
 # Overview
 
-This Docker container provides an easy way to create an CloverDX Server instance. The container is tailored to spin-up a 
+This Docker container provides an easy way to create a CloverDX Server instance. The container is tailored to spin-up a 
 standalone CloverDX Server with good defaults, in a recommended environment. 
  
 # Quick Start
@@ -29,10 +29,10 @@ standalone CloverDX Server with good defaults, in a recommended environment.
     
     * ``-d`` - detached mode, the container exits when Server exits
     * ``--name`` - name to identify the running container
-    * ``--memory=3g`` - allow 3 GB of memory for the container, the container requires at least 2 GB memory.
+    * ``--memory=3g`` - allow 3 GB of memory for the container, the container requires at least 2 GB of memory.
     * ``-p 8080:8080`` - publish exposed container port
     * ```-e LOCAL_USER_ID=`id -u $USER``` - set an environment variable, in this case user ID to be used for permissions
-    * ``--mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover`` - mount the ``/data/your-host-clover-home-dir`` directory from the host as a data volume into ``/var/clover`` path inside the container, this will contain the persistent data, configuration etc
+    * ``--mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover`` - mount the ``/data/your-host-clover-home-dir`` directory from the host as a data volume into ``/var/clover`` path inside the container, this will contain the persistent data, configuration, etc.
     * ``cloverdx-server:latest`` - name of the image to run as a container
 
 **Success**. CloverDX Server is now available at <http://localhost:8080/clover>. The Server is running with default settings, and **should be configured further** to get it into production quality (i.e. it should use external database).
@@ -47,13 +47,13 @@ This Docker container is designed to run a standalone CloverDX Server instance.
 
 It has external dependencies:
 
-* *system database* - database for storing server's settings, state, history etc. must be available somewhere. The container does not spin-up the database (except the default embedded Derby that should be used only for evaluation).
+* *system database* - database for storing server's settings, state, history, etc. must be available somewhere. The container does not spin-up the database (except of the default embedded Derby that should be used only for evaluation).
 * *data sources/data targets* - the data sources/targets to be processed are expected to be outside of the container (temporary files will be inside)
 
 The container expects a mounted volume that will contain its state and configuration. The volume should be mounted into the ``/var/clover`` directory. Contents of the volume:
 
 * ``conf/`` - configuration of the server, e.g. connection to the system database
-* ``sandboxes/`` - sandboxes with jobs, metadata, data etc.
+* ``sandboxes/`` - sandboxes with jobs, metadata, data, etc.
 * ``cloverlogs/`` - server logs
 * ``tomcatlogs/`` - Tomcat logs
 * ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath
@@ -136,7 +136,7 @@ By default, CloverDX Server will use an embedded Derby database. In order to use
 
 ## Libraries and Classpath
 
-Libraries are added to the classpath of Tomcat (ie Server Core) and Worker via the mounted volume. This action does not modify the build of the Docker image. Place the JARs to the following directories in the volume:
+Libraries are added to the classpath of Tomcat (i.e. Server Core) and Worker via the mounted volume. This action does not modify the build of the Docker image. Place the JARs to the following directories in the volume:
 
 * ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath (e.g. JDBC drivers)
 * ``worker-lib/`` - libraries to add to Worker classpath (e.g. libraries used by jobs)
@@ -165,7 +165,7 @@ The mounted volume contains fragments of Tomcat configuration files that configu
 Configuration files:
 
 * ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is referenced from ``server.xml`` when running the container. See *Security* / *HTTPS* section below.
-* ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL.  See *Security* / *JMX over SSL* section below.
+* ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL. See *Security* / *JMX over SSL* section below.
 * ``conf/jndi-conf.xml`` - configuration of JNDI resources of Tomcat, is referenced from ``server.xml``when running the container. See the commented ``<Resource>`` example on how to add a JNDI resource. We recommend to use JNDI to connect to server's system database.
 
 Examples of these files are in this repo (see ``tomcat/conf/*example*`` files) - the examples can be used as a starting point for the configuration files before the first start of the container.
@@ -177,17 +177,17 @@ The container starts two Java processes - one for Tomcat running CloverDX Server
 * ``SERVER_JAVA_OPTS`` - additional Java command line options for Server Core and Tomcat
 * ``WORKER_JAVA_OPTS`` - additional Java command line options for Worker
 
-The command line options in the above environment variables are added to the options that the container sets by default. It's mostly meant for customizing garbage collector, Java performance logging etc. Do not use this to extend the classpath - see *Libraries and Classpath* section above for that.
+The command line options in the above environment variables are added to the options that the container sets by default. It's mostly meant for customizing garbage collector, Java performance logging, etc. Do not use this to extend the classpath - see *Libraries and Classpath* section above for that.
 
 ## Memory
 
 Important memory settings inside the container are Java heap size for Server Core, Java heap size for Worker and sizes of additional Java memory spaces. The memory settings are automatically calculated based on the memory assigned to the container instance. 
 
-For example, if running the container with 4GB of RAM:
+For example, if running the container with 4 GB of RAM:
 
 ``docker run -d --name cloverdx --memory=4g  ... ``
 
-Then Server Core will have 1GB heap, Worker will have 2GB heap, and the rest is left for additional Java memory spaces and the OS.
+Then Server Core will have 1 GB heap, Worker will have 2 GB heap, and the rest is left for additional Java memory spaces and the OS.
 
 The automatic memory settings can be overridden by setting **BOTH** environment properties:
 
@@ -198,10 +198,10 @@ The automatic memory settings can be overridden by setting **BOTH** environment 
 
 The docker image follows CPU constraints assigned to it, e.g. it sees just a limited number of CPU cores and is assigned a portion of CPU cycles of the host machine.
 
-Usefull options of the ``docker run`` commands (see [documentation](https://docs.docker.com/config/containers/resource_constraints/)):
+Useful options of the ``docker run`` commands (see [documentation](https://docs.docker.com/config/containers/resource_constraints/)):
 
-* ``--cpus=<value>`` - portion of host CPUs the container can use. For example, ``--cpus=1.5`` allows at most one and a half CPU from all the hosts CPUs. Available in Docker 1.13 and higher.
-* ``--cpu-shares=<value>`` - value is weight of the container, and containers running on a host get their share of CPU cycles based on their weight. Default weight is ``1024``, which also translates into 1 CPU core from the point of view of Java. For example setting this to ``4096`` will cause Java to see 4 CPU cores.
+* ``--cpus=<value>`` - portion of host CPUs the container can use. For example, ``--cpus=1.5`` allows at most one and a half CPU of all the host's CPUs. Available in Docker 1.13 and higher.
+* ``--cpu-shares=<value>`` - value is a weight of the container, and containers running on a host get their share of CPU cycles based on their weight. Default weight is ``1024``, which also translates into 1 CPU core from the point of view of Java. For example setting this to ``4096`` will cause Java to see 4 CPU cores.
 
 We recommend setting multiple CPU cores for the docker image, e.g. ``--cpus=4``.
 
@@ -215,12 +215,12 @@ Default timezone of the container instance is UTC. The timezone is NOT inherited
 
 # Monitoring
 
-The docker container exposes ports by default for JMX monitoring via tools such as [VisualVM](https://visualvm.github.io/). The JMX monitoring tools are useful to analyse threads, memory usage, classloaders etc.
+The docker container exposes ports by default for JMX monitoring via tools such as [VisualVM](https://visualvm.github.io/). The JMX monitoring tools are useful to analyse threads, memory usage, classloaders, etc.
 
 Exported JMX ports:
 
 * ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyse behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc.
-* ``8687`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows etc.
+* ``8687`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows, etc.
 
 ---
 
@@ -235,7 +235,7 @@ To enable HTTPS:
 1. place the keystore in ``conf/serverKS.jks`` file in the mounted volume
 1. modify the file ``conf/https-conf.xml`` in the mounted volume - uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 9 HTTPS connector (see [documentation](https://tomcat.apache.org/tomcat-9.0-doc/ssl-howto.html)).
 1. publish the HTTPS port (8443 be default) when running the container (e.g. ``docker run -p 8443:8443 ...``)
-1. we recommend to not publish the unsecured HTTP port (8080 by default) in case HTTPS is enabled.
+1. we recommend not to publish the unsecured HTTP port (8080 by default) in case HTTPS is enabled.
 
 ## JMX over SSL
 

@@ -219,12 +219,19 @@ Default timezone of the container instance is UTC. The timezone is NOT inherited
 
 The docker container exposes ports by default for JMX monitoring via tools such as [VisualVM](https://visualvm.github.io/). The JMX monitoring tools are useful to analyse threads, memory usage, classloaders, etc.
 
-Exported JMX ports:
+Exposed JMX ports:
 
 * ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyse behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc. Use this port when connecting a **JMX client to Server Core**.
 * ``8687`` - RMI port for the above JMX monitoring of Server Core. This port is a utility port transparently used by JMX client.
 * ``8688`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows, etc. Use this port when connecting a **JMX client to Worker**.
 * ``8689`` - RMI port for the above JMX monitoring of Worker. This port is a utility port transparently used by JMX client.
+
+To enable JMX:
+
+1. set the ``RMI_HOSTNAME`` environment variable to the hostname or IP address of the running container instance (i.e. the instance must know its external address)
+1. make sure that the ports above are published
+
+To enable JMX over SSL, see *JMX over SSL* section below.
 
 ---
 

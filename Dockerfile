@@ -10,7 +10,7 @@ ENV CLOVER_HOME_DIR /var/clover
 # Directory with persistent data, invisible to users (tempspaces)
 ENV CLOVER_DATA_DIR /var/cloverdata
 # Shared libraries for both Tomcat and worker
-ENV CLOVER_LIB_DIR /var/cloverlib
+ENV CLOVER_LIB_DIR /var/clover-lib
 
 # Default directories for configuration files
 ENV CLOVER_CONF_DIR $CLOVER_HOME_DIR/conf

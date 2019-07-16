@@ -183,7 +183,7 @@ The command line options in the above environment variables are added to the opt
 
 ## Memory
 
-Important memory settings inside the container are Java heap size for Server Core, Java heap size for Worker and sizes of additional Java memory spaces. The memory settings are automatically calculated based on the memory assigned to the container instance. 
+Important memory settings inside the container are Java heap size for Server Core, Java heap size for Worker and sizes of additional Java memory spaces. The memory settings are automatically calculated based on the memory assigned to the container instance.
 
 For example, if running the container with 4 GB of RAM:
 
@@ -217,13 +217,13 @@ Default timezone of the container instance is UTC. The timezone is NOT inherited
 
 # Monitoring
 
-The docker container exposes ports by default for JMX monitoring via tools such as [VisualVM](https://visualvm.github.io/). The JMX monitoring tools are useful to analyse threads, memory usage, classloaders, etc.
+The docker container exposes ports by default for JMX monitoring via tools such as [VisualVM](https://visualvm.github.io/). The JMX monitoring tools are useful to analyze threads, memory usage, classloaders, etc.
 
 Exposed JMX ports:
 
-* ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyse behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc. Use this port when connecting a **JMX client to Server Core**.
+* ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyze behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc. Use this port when connecting a **JMX client to Server Core**.
 * ``8687`` - RMI port for the above JMX monitoring of Server Core. This port is a utility port transparently used by JMX client.
-* ``8688`` - JMX monitoring of Worker, use to monitor and analyse behavior of jobs, jobflows, etc. Use this port when connecting a **JMX client to Worker**.
+* ``8688`` - JMX monitoring of Worker, use to monitor and analyze behavior of jobs, jobflows, etc. Use this port when connecting a **JMX client to Worker**.
 * ``8689`` - RMI port for the above JMX monitoring of Worker. This port is a utility port transparently used by JMX client.
 
 To enable JMX:
@@ -237,7 +237,9 @@ To enable JMX over SSL, see *JMX over SSL* section below.
 
 # Security
 
-By default, the ports exposed by the container do not use SSL. To secure them via SSL, additional configuration is needed:
+This section describes security related aspects of the container. Some secure configuration cannot be enabled by default, because it requires additional information from the users (e.g. certificates for SSL) or 3rd party libraries that must be downloaded separately (e.g. Bouncy Castle for stronger cryptography).
+
+ By default, the ports exposed by the container do not use SSL. To secure them via SSL, additional configuration is needed - see subsection below.
 
 ## HTTPS
 
@@ -255,3 +257,44 @@ Currently JMX monitoring over SSL is supported for Server Core. To enable it:
 1. place the keystore in ``conf/serverKS.jks`` file in the mounted volume
 1. modify the file ``conf/jmx-conf.properties`` in the mounted volume
 1. publish the JMX ports (8686 and 8687 for Server Core) when running the container (e.g. ``docker run -p 8686:8686 p 8687:8687 ...``)
+
+## Stronger Cryptography
+
+Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.cloverdx.com/latest/server/secure-parameters.html#secure-parameters) and [Secure Configuration Properties](https://doc.cloverdx.com/latest/server/secure-configuration-properties.html). It is possible to use stronger cryptographic algorithms than those available in the JVM, by installing a custom JCE provider. We recommend using [Bouncy Castle](https://www.bouncycastle.org/). The steps below are a simplified version of our documentation, the only difference from non-Docker deployment is getting Bouncy Castle on classpath of the server.
+
+### Install Bouncy Castle
+
+* download Bouncy Castle JAR ( e.g. ``bcprov-jdk15on-162.jar`` from [here](https://www.bouncycastle.org/latest_releases.html))
+* get the JAR on server classpath - place it in ``tomcat-lib/`` in the mounted volume
+
+### Secure Configuration Properties
+
+*Secure configuration properties* are server's configuration properties that have encrypted values. Typically they are used to store credentials to the system database.
+
+* select Bouncy Castle as encryption provider and select the encryption algorithm - configure this via configuration properties:
+
+    ```properties
+    ...
+    security.config_properties.encryptor.providerClassName=org.bouncycastle.jce.provider.BouncyCastleProvider
+    security.config_properties.encryptor.algorithm=PBEWITHSHA256AND256BITAES-CBC-BC
+    ...
+    ```
+
+* use the same encryption provider and algorithm when using ``encrypt.sh`` tool (from our ``secure-cfg-tool.zip`` package) to encrypt the configuration property values:
+
+    ``encrypt.sh -a PBEWITHMD5AND256BITAES-CBC-OPENSSL -c org.bouncycastle.jce.provider.BouncyCastleProvider -l bcprov-jdk15on-149.jar``
+
+### Secure Parameters
+
+*Secure parameters* are graph parameters that have encrypted values. Typically they are used to store credentials used by jobs to connect to external systems and they prevent storage of the credentials in plain text.
+
+* select Bouncy Castle as encryption provider and select the encryption algorithm - configure this via configuration properties:
+
+    ```properties
+    ...
+    security.job_parameters.encryptor.algorithm=org.bouncycastle.jce.provider.BouncyCastleProvider
+    security.job_parameters.encryptor.providerClassName=PBEWITHSHA256AND256BITAES-CBC-BC
+    ...
+    ```
+
+* set the master password in Server Console (in *Configuration* > *Security* page)

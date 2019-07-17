@@ -37,7 +37,9 @@ RUN set -eux && \
 	ln -sfv /bin/bash /bin/sh && \
 	# Install required packages
 	apt-get update && \
-	apt-get install -y gosu tzdata fontconfig locales dumb-init && \
+	apt-get install --no-install-recommends -y gosu tzdata fontconfig locales dumb-init && \
+	apt-get -y autoremove && \
+	apt-get -y clean && \
 	rm -rf /var/lib/apt/lists/* && \
 	# Install en_US locale
 	locale-gen $LANG && \

@@ -6,7 +6,7 @@ MIN_SERVER_HEAP_SIZE=512
 MIN_WORKER_HEAP_SIZE=1024
 
 # Load functions for computing memory
-source memory-utils.sh
+. memory-utils.sh
 
 #############################################################################
 # Start of the script                                                       #

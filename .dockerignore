@@ -1,8 +1,14 @@
+# Git files
 .git
 .gitignore
+**/.keep
+
+# Gradle files
 *.gradle
 gradle
 gradlew
 gradlew.bat
+
+# Documentation
 README.md
 docker-architecture.png

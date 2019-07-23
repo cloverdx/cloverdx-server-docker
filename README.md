@@ -151,6 +151,12 @@ This feature is enabled by default in the container, not in vanilla CloverDX Ser
 
 The container does not create default example sandboxes by default. To enable them, set the ``installer.BundledSandboxesInstaller.enabled`` configuration property to ``true``.
 
+## Schedules, Listeners, Data Services
+
+During the first startup, the container automatically imports configuration XML from ``${CLOVER_HOME_DIR}/conf/configuration.xml``. This way you can set up schedulers, event listeners and data services, for example.
+
+This feature is enabled by default in the container, not in vanilla CloverDX Server. It can be enabled/disabled via the ``configuration.autoimport.file`` configuration property.
+
 ## License
 
 To activate CloverDX Server, the container by default searches for a license file (text file containing the license key itself) in the ``conf/license.dat`` path in the mounted volume.

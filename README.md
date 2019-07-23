@@ -304,3 +304,15 @@ Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.c
     ```
 
 * set the master password in Server Console (in *Configuration* > *Security* page)
+
+# Stack Deployment
+
+You can deploy CloverDX Server and its system database together as a stack using [docker compose](https://github.com/docker/compose) or [stack deploy](https://docs.docker.com/engine/swarm/stack-deploy/) in swarm mode. There is a provided example of compose file in ``examples/compose`` for deployment of PostgreSQL database and CloverDX Server built from Dockerfile.
+
+To build and run the stack in docker compose, use:
+
+``docker-compose -f examples/compose/stack.yml up -d``
+
+or in a Docker swarm:
+
+``docker stack deploy -c examples/compose/stack.yml cloverdx``

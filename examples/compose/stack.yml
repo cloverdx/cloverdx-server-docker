@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+
+  db:
+    image: postgres:9.4
+    expose:
+      # Expose port 5432 to other services but not the host system
+      - "5432"
+    volumes:
+      # Mount to persist PostgreSQL data
+      - ./dbdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=clover_db
+      - POSTGRES_USER=clover
+      - POSTGRES_PASSWORD=clover
+
+  clover:
+    build:
+      # Build from Dockerfile in the base directory
+      context: ../..
+    depends_on:
+      # Start db service before clover service
+      - db
+    ports:
+      # Expose port 8080 to the host system
+      - 8080:8080
+    volumes:
+      # Mount to persist CloverDX Server data
+      - ./clover:/var/clover
+    environment:
+      - clover.datasource.type=JDBC
+      # Connect to database on hostname = service name = 'db'
+      - clover.jdbc.url=jdbc:postgresql://db:5432/clover_db
+      - clover.jdbc.driverClassName=org.postgresql.Driver
+      - clover.jdbc.dialect=org.hibernate.dialect.PostgreSQLDialect
+      - clover.jdbc.username=clover
+      - clover.jdbc.password=clover

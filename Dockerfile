@@ -69,4 +69,8 @@ VOLUME $CLOVER_HOME_DIR $CLOVER_DATA_DIR
 # 8080: HTTP, 8686 and 8687: JMX for Core server, 8688 and 8689: JMX for worker
 EXPOSE 8080 8686 8687 8688 8689
 
+# Check if container is running correctly
+HEALTHCHECK --start-period=120s --interval=30s --retries=4 --timeout=5s \
+	CMD curl -f http://localhost:8080/clover/accessibilityTest.jsp || exit 1
+
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "./entrypoint.sh"]

@@ -91,5 +91,14 @@ if [ -z "$WORKER_JAVA_OPTS" ]; then
 	export WORKER_JAVA_OPTS=""
 fi
 
+HOOK_BEFEORE_APP=hooks/before-start-app.sh
+if [ -f $HOOK_BEFEORE_APP ]; then
+	echo "Running $HOOK_BEFEORE_APP"
+	if [ ! -x $HOOK_BEFEORE_APP ]; then
+		gosu $USER chmod u+x $HOOK_BEFEORE_APP
+	fi
+	gosu $USER ./$HOOK_BEFEORE_APP
+fi
+
 echo "Starting Tomcat"
 exec gosu $USER ./bin/catalina.sh run

@@ -38,3 +38,6 @@ fi
 # SERVER_JAVA_OPTS should be at the end of CATALINA_OPTS, so that it has the highest priority
 # Used for custom command line arguments for CloverDX Core Server
 export CATALINA_OPTS="$CATALINA_OPTS ${SERVER_JAVA_OPTS}"
+
+# Avoiding JVM delays caused by random number generation
+export CATALINA_OPTS="$CATALINA_OPTS -Djava.security.egd=file:/dev/./urandom"

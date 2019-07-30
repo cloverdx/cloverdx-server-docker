@@ -275,7 +275,7 @@ Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.c
 
 ### Secure Configuration Properties
 
-*Secure configuration properties* are server's configuration properties that have encrypted values. Typically they are used to store credentials to the system database.
+*Secure configuration properties* are server's configuration properties that have encrypted values. They are used to encrypt sensitive values in the configuration file, e.g. credentials used to connect Server to the system database.
 
 * select Bouncy Castle as encryption provider and select the encryption algorithm - configure this via configuration properties:
 

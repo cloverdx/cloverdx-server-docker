@@ -219,6 +219,21 @@ Default timezone of the container instance is UTC. The timezone is NOT inherited
 
 ``docker run -e TZ=Europe/Amsterdam ...``
 
+## Healtcheck
+
+The HEALTHCHECK monitors if the CloverDX Server in a container is running correctly.
+
+If the CloverDX is OK the status of the container is healthy in other cases the status is unhealthy. 
+
+The Core Server also takes the status of the worker. If the worker is unavailable (starting, restarting etc.) the Core Server is marked as temporarily unavailable. Depend on the Healthcheck settings and time which take the worker to switch to running state if the container is marked as unhealthy or healthy.
+
+Default setting in our container:
+```
+--interval=30s
+--timeout=5s
+--start-period=120s
+--retries=4
+```
 ---
 
 # Monitoring

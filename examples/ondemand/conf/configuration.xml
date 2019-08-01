@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<cs:cloverServerConfiguration xmlns:cs="http://cloveretl.com/server/data" cloverVersion="5.4.0.546" exporter="clover" timeZone="Etc/UTC" timestamp="2019-08-01T06:45:20.633Z">
+  <cs:usersList/>
+  <cs:userGroupsList/>
+  <cs:sandboxesList/>
+  <cs:jobConfigsList/>
+  <cs:schedulesList/>
+  <cs:eventListenersList>
+    <cs:eventListener xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="cs:groovyEventListener" enabled="true">
+      <cs:id>36</cs:id>
+      <cs:name>ExecuteAndKillJob</cs:name>
+      <cs:ownerUsername>clover</cs:ownerUsername>
+      <cs:task xsi:type="cs:taskExecuteGroovyCode" taskType="groovy">
+        <cs:fileEncoding>UTF-8</cs:fileEncoding>
+        <cs:sourceCode><![CDATA[import java.util.concurrent.Callable
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Future
+
+import org.apache.log4j.Logger
+import org.jetel.graph.Result
+import org.springframework.context.ApplicationContext
+import org.springframework.web.context.support.WebApplicationContextUtils
+
+import com.cloveretl.server.events.NotificationFilter
+import com.cloveretl.server.events.ServerEventListener
+import com.cloveretl.server.events.types.GraphServerEvent
+import com.cloveretl.server.events.types.JobServerEvent
+import com.cloveretl.server.events.types.JobflowServerEvent
+import com.cloveretl.server.facade.api.ServerFacade
+import com.cloveretl.server.facade.api.commands.GraphExecutionCommand
+import com.cloveretl.server.facade.api.misc.IServerEvent
+import com.cloveretl.server.persistent.RunRecord
+import com.cloveretl.server.persistent.NodeStatus.Status
+import com.cloveretl.server.persistent.enums.GraphEventType
+import com.cloveretl.server.persistent.enums.JobflowEventType
+import com.cloveretl.server.worker.commons.facade.api.Message
+import com.cloveretl.server.worker.commons.facade.api.Response
+
+enum ExitCode {
+	OK(0),
+	ERROR(1),
+	JOB_ERROR(2),
+	JOB_ABORT(3)
+	
+	ExitCode(int code) {
+		this.code = code
+	}
+	private final int code
+	int getCode() {
+		return code
+	}
+	@Override
+	public String toString() {
+		return String.valueOf(code)
+	}
+}
+
+class Utils {
+	
+	static void process(JobServerEvent graphEvent, ExitCode exitCode) {
+		Logger log = Logger.getLogger("com.cloveretl.server");
+		log.info("Job finished: " + graphEvent)
+		Utils.shutdown(exitCode)
+	}
+	
+	static void shutdown(ExitCode exitCode) {
+		System.exit(exitCode.getCode())
+	}
+	
+	static checkResponse(Logger log, Response response) {
+		
+		if (!response.isOk()) {
+			log.error("Job execution failed")
+			for (Message message : response.getMessages()) {
+				log.error(message)
+			}
+			Utils.shutdown(ExitCode.ERROR)
+		}
+	}
+}
+
+class ExecuteJobTask implements Callable<Response<RunRecord>> {
+	
+	private final ServerFacade facade
+	private final String sessionToken
+	private final GraphExecutionCommand jobExecutionCommand
+	
+	public ExecuteJobTask(ServerFacade facade, String sessionToken, GraphExecutionCommand jobExecutionCommand) {
+		this.facade = facade
+		this.sessionToken = sessionToken
+		this.jobExecutionCommand = jobExecutionCommand 
+	}
+	
+	@Override
+	public Response<RunRecord> call() throws Exception {
+		return facade.executeJobSync(sessionToken, jobExecutionCommand)
+	}
+	
+}
+
+Logger log = Logger.getLogger("com.cloveretl.server");
+
+String sandbox = System.getenv("SANDBOX");
+String jobPath = System.getenv("JOB_PATH");
+
+if (sandbox != null && jobPath != null) {
+
+	ApplicationContext context = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+	
+	ExecutorService executor = context.getBean("threadPool")
+
+	final GraphExecutionCommand jobExecutionCommand = new GraphExecutionCommand("docker", null, sandbox, jobPath);
+
+	log.info("Executing job " + sandbox + "/" + jobPath);
+	
+	Future<Response<RunRecord>> task = executor.submit(new ExecuteJobTask(serverFacade, sessionToken, jobExecutionCommand))
+	
+	log.info("Job executed " + sandbox + "/" + jobPath)
+		
+	Response<RunRecord> response = null
+	try {
+		response = task.get() 
+	} catch (Exception e) {
+		log.error("Error when executing job", e)
+	}
+	
+	Utils.checkResponse(log, response)
+	
+	RunRecord runRecord = response.getBean()
+	
+	Result result = runRecord.getStatus()
+	
+	log.info("Job finished: " + result)
+	
+	ExitCode exitCode = null; 
+	switch (result) {
+		case Result.FINISHED_OK:
+			exitCode = ExitCode.OK
+			break;
+		case Result.ERROR:
+			exitCode = ExitCode.JOB_ERROR
+			break;
+		case Result.ABORTED:
+			exitCode = ExitCode.JOB_ABORT
+			break;
+		default:
+			exitCode = ExitCode.ERROR
+	}
+	
+	Utils.shutdown(exitCode)
+	
+} else {
+	log.warn("No job to execute specified");
+}]]></cs:sourceCode>
+      </cs:task>
+      <cs:numberOfExecutors>1</cs:numberOfExecutors>
+      <cs:checkInterval>5</cs:checkInterval>
+      <cs:groovyCode><![CDATA[	import com.cloveretl.server.persistent.NodeStatus.Status
+	      if (System.getProperty("jobExecuted") == null && serverFacade.getLocalInternalStatus().getNodeRun().getStatus() == Status.READY) {
+
+  System.setProperty("jobExecuted", "true");
+  return true;
+}
+return false;]]></cs:groovyCode>
+    </cs:eventListener>
+  </cs:eventListenersList>
+  <cs:launchServicesList/>
+  <cs:dataServicesList/>
+  <cs:tempSpacesList/>
+</cs:cloverServerConfiguration>

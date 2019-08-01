@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="reichman" created="Thu Aug 01 11:04:58 CEST 2019" guiVersion="0.0.0.devel" id="1564650359502" licenseCode="Commercial Devel" name="graph" showComponentDetails="true">
+<Global>
+<GraphParameters>
+<GraphParameterFile fileURL="workspace.prm"/>
+</GraphParameters>
+<Dictionary/>
+</Global>
+<Phase number="0">
+<Node delay="20s" guiName="Sleep" guiX="545" guiY="213" id="SLEEP" type="SLEEP"/>
+</Phase>
+</Graph>

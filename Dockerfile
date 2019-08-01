@@ -54,8 +54,8 @@ RUN set -eux && \
 	# Remove unused directories
 	rm -rf $CATALINA_HOME/webapps/* \
 	# Remove websocket support
-	rm tomcat7-websocket.jar \
-	rm websocket-api.jar
+	rm $CATALINA_HOME/lib/tomcat-websocket.jar \
+	rm $CATALINA_HOME/lib/websocket-api.jar
 
 # Customize downloaded Tomcat
 COPY tomcat $CATALINA_HOME

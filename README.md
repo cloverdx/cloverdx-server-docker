@@ -230,9 +230,7 @@ Default setting in our container:
 * --start-period=120s - two minutes for the container to initialize
 * --interval=30s - thirty seconds between running the check
 * --timeout=5s
-* --retries=4 - four consecutive failures needed to set unhealthy state 
-
-It is 4 * 30s = 120s interval gives 2 minutes for a short time when CloverDX is not working correctly for example, Worker is restarting.
+* --retries=4 - four consecutive failures needed to set unhealthy state. In combination with thirty seconds interval above allows short Worker restarts.
 
 ---
 

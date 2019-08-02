@@ -81,6 +81,9 @@ fi
 # Create an empty directory for additional worker jars
 gosu $USER mkdir -p $CLOVER_HOME_DIR/worker-lib
 
+# Create an empty directory for additional shared jars
+gosu $USER mkdir -p $CLOVER_HOME_DIR/clover-lib
+
 # Set SERVER_JAVA_OPTS to empty string if not set
 if [ -z "$SERVER_JAVA_OPTS" ]; then
 	export SERVER_JAVA_OPTS=""

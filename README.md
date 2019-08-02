@@ -56,6 +56,7 @@ The container expects a mounted volume that will contain its state and configura
 * ``sandboxes/`` - sandboxes with jobs, metadata, data, etc.
 * ``cloverlogs/`` - server logs
 * ``tomcatlogs/`` - Tomcat logs
+* ``clover-lib/`` - libraries to add to Tomcat, Server Core classpath and Worker classpath 
 * ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath
 * ``worker-lib/`` - libraries to add to Worker classpath
 
@@ -64,6 +65,9 @@ Internal structure of the container:
 * ``/opt/tomcat/`` - installation directory of Tomcat running the server
 * ``/var/clover/`` - directory with persistent data, visible to users (config, jobs, logs, ...). It is expected that a volume is mounted into this directory from the host. See above for its structure
 * ``/var/cloverdata/`` - directory with non-persistent data, not visible to users
+* ``/var/clover-lib/`` - libraries to add to Tomcat, Server Core classpath and Worker classpath 
+* ``/var/tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath
+* ``/var/worker-lib/`` - libraries to add to Worker classpath
 
 Environment:
 

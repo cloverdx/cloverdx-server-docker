@@ -221,19 +221,19 @@ Default timezone of the container instance is UTC. The timezone is NOT inherited
 
 ## Healtcheck
 
-The HEALTHCHECK monitors if the CloverDX Server in a container is running correctly.
+The container reports its health via the Docker HEALTHCHECK instruction.
 
-If the CloverDX is OK the status of the container is healthy in other cases the status is unhealthy. 
-
-The Core Server also takes the status of the worker. If the worker is unavailable (starting, restarting etc.) the Core Server is marked as temporarily unavailable. Depend on the Healthcheck settings and time which take the worker to switch to running state if the container is marked as unhealthy or healthy.
+The healthcheck periodically calls http://localhost:8080/clover/accessibilityTest.jsp to check the health of the CloverDX Server. By default it is set-up to survive short restarts of the Worker.
 
 Default setting in our container:
-```
---interval=30s
---timeout=5s
---start-period=120s
---retries=4
-```
+
+* --start-period=120s - two minutes for the container to initialize
+* --interval=30s - thirty seconds between running the check
+* --timeout=5s
+* --retries=4 - four consecutive failures needed to set unhealthy state 
+
+It is 4 * 30s = 120s interval gives 2 minutes for a short time when CloverDX is not working correctly for example, Worker is restarting.
+
 ---
 
 # Monitoring

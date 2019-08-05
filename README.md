@@ -56,6 +56,7 @@ The container expects a mounted volume that will contain its state and configura
 * ``sandboxes/`` - sandboxes with jobs, metadata, data, etc.
 * ``cloverlogs/`` - server logs
 * ``tomcatlogs/`` - Tomcat logs
+* ``clover-lib/`` - libraries to add to Tomcat, Server Core classpath and Worker classpath 
 * ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath
 * ``worker-lib/`` - libraries to add to Worker classpath
 
@@ -64,6 +65,9 @@ Internal structure of the container:
 * ``/opt/tomcat/`` - installation directory of Tomcat running the server
 * ``/var/clover/`` - directory with persistent data, visible to users (config, jobs, logs, ...). It is expected that a volume is mounted into this directory from the host. See above for its structure
 * ``/var/cloverdata/`` - directory with non-persistent data, not visible to users
+* ``/var/clover-lib/`` - libraries to add to Tomcat, Server Core classpath and Worker classpath 
+* ``/var/tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath
+* ``/var/worker-lib/`` - libraries to add to Worker classpath
 
 Environment:
 
@@ -219,6 +223,19 @@ Default timezone of the container instance is UTC. The timezone is NOT inherited
 
 ``docker run -e TZ=Europe/Amsterdam ...``
 
+## Healtcheck
+
+The container reports its health via the Docker HEALTHCHECK instruction.
+
+The healthcheck periodically calls http://localhost:8080/clover/accessibilityTest.jsp to check the health of the CloverDX Server. By default it is set-up to survive short restarts of the Worker.
+
+Default setting in our container:
+
+* --start-period=120s - two minutes for the container to initialize
+* --interval=30s - thirty seconds between running the check
+* --timeout=5s
+* --retries=4 - four consecutive failures needed to set unhealthy state. In combination with thirty seconds interval above allows short Worker restarts.
+
 ---
 
 # Monitoring
@@ -275,7 +292,7 @@ Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.c
 
 ### Secure Configuration Properties
 
-*Secure configuration properties* are server's configuration properties that have encrypted values. Typically they are used to store credentials to the system database.
+*Secure configuration properties* are server's configuration properties that have encrypted values. They are used to encrypt sensitive values in the configuration file, e.g. credentials used to connect Server to the system database.
 
 * select Bouncy Castle as encryption provider and select the encryption algorithm - configure this via configuration properties:
 

@@ -52,9 +52,9 @@ RUN set -eux && \
 	# Change permisions for the writable directories - CLO-16457
 	chmod -R o+x $CATALINA_HOME/work $CATALINA_HOME/webapps $CATALINA_HOME/logs $CATALINA_HOME/temp && \
 	# Remove unused directories
-	rm -rf $CATALINA_HOME/webapps/* \
+	rm -rf $CATALINA_HOME/webapps/* && \
 	# Remove websocket support
-	rm $CATALINA_HOME/lib/tomcat-websocket.jar \
+	rm $CATALINA_HOME/lib/tomcat-websocket.jar && \
 	rm $CATALINA_HOME/lib/websocket-api.jar
 
 # Customize downloaded Tomcat

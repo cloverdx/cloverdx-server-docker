@@ -35,9 +35,10 @@ if [ -f $CLOVER_LICENSE_FILE ]; then
 	export CATALINA_OPTS="$CATALINA_OPTS -Dclover.license.file=$CLOVER_LICENSE_FILE"
 fi
 
+# Avoiding JVM delays caused by random number generation
+export CATALINA_OPTS="$CATALINA_OPTS -Djava.security.egd=file:/dev/./urandom"
+
 # SERVER_JAVA_OPTS should be at the end of CATALINA_OPTS, so that it has the highest priority
 # Used for custom command line arguments for CloverDX Core Server
 export CATALINA_OPTS="$CATALINA_OPTS ${SERVER_JAVA_OPTS}"
 
-# Avoiding JVM delays caused by random number generation
-export CATALINA_OPTS="$CATALINA_OPTS -Djava.security.egd=file:/dev/./urandom"

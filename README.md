@@ -157,7 +157,7 @@ The container does not create default example sandboxes by default. To enable th
 
 ## Schedules, Listeners, Data Services
 
-During the first startup, the container automatically imports configuration XML from ``${CLOVER_HOME_DIR}/conf/configuration.xml``. This way you can set up schedulers, event listeners and data services, for example.
+During the first startup, the container automatically imports configuration XML from ``${CLOVER_HOME_DIR}/conf/configuration_import.xml``. This way you can set up schedulers, event listeners and data services, for example. The file can be obtained by [exporting configuration](https://doc.cloverdx.com/latest/server/server-config-export.html) from an existing Server instance. You can edit the exported file and replace hard-coded values with placeholders, e.g. ``${env:VARIABLE_NAME}`` will be replaced with the value of ``VARIABLE_NAME`` environment variable during the import.
 
 This feature is enabled by default in the container, not in vanilla CloverDX Server. It can be enabled/disabled via the ``configuration.autoimport.file`` configuration property.
 

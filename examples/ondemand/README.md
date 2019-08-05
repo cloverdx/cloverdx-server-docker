@@ -27,6 +27,6 @@ This example shows how to run a container with CloverDX Server for a specific jo
 This command executes ``Example/graph/graph.grf`` (as specified in the Dockerfile).
 
 ### Implementation
-``conf\configuration.xml`` contains a custom event listener written in Groovy. The listener starts the job after Server startup, waits for the job to finish and stops the container.
+``conf\configuration_import.xml`` contains a custom event listener written in Groovy. The listener starts the job after Server startup, waits for the job to finish and stops the container.
 
 

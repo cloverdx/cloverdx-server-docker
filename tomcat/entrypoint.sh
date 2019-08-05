@@ -1,4 +1,8 @@
 #!/bin/bash
+#############################################################################
+# We do not recommend modifying this file.                                  #
+# Use hooks/init.sh to change application startup.                          #
+#############################################################################
 
 # Min memory limits in bytes
 MIN_MEMORY_SIZE=2147483648
@@ -94,6 +98,7 @@ if [ -z "$WORKER_JAVA_OPTS" ]; then
 	export WORKER_JAVA_OPTS=""
 fi
 
+# Run hooks/init.sh script for custom settings 
 HOOK_INIT=hooks/init.sh
 if [ -f $HOOK_INIT ]; then
 	echo "Running $HOOK_BEFEORE_APP"

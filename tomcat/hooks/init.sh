@@ -1,3 +1,3 @@
 #!/bin/bash
 
-# This script will be execute before CloverDX application 
+# This script will be executed before CloverDX application.

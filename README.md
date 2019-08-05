@@ -236,6 +236,11 @@ Default setting in our container:
 * --timeout=5s
 * --retries=4 - four consecutive failures needed to set unhealthy state. In combination with thirty seconds interval above allows short Worker restarts.
 
+## Custom entrypoint scripts
+
+To execute custom script before the CloverDX server starts edit file tomcat/hooks/init.sh. For using your init.sh script use next command:
+
+``docker run -v /your/hook/script.sh:/opt/tomcat/hooks/init.sh``
 ---
 
 # Monitoring

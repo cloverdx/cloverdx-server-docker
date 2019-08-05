@@ -81,6 +81,9 @@ fi
 # Create an empty directory for additional worker jars
 gosu $USER mkdir -p $CLOVER_HOME_DIR/worker-lib
 
+# Create an empty directory for additional shared jars
+gosu $USER mkdir -p $CLOVER_HOME_DIR/clover-lib
+
 # Set SERVER_JAVA_OPTS to empty string if not set
 if [ -z "$SERVER_JAVA_OPTS" ]; then
 	export SERVER_JAVA_OPTS=""
@@ -91,13 +94,13 @@ if [ -z "$WORKER_JAVA_OPTS" ]; then
 	export WORKER_JAVA_OPTS=""
 fi
 
-HOOK_BEFEORE_APP=hooks/before-start-app.sh
-if [ -f $HOOK_BEFEORE_APP ]; then
+HOOK_INIT=hooks/init.sh
+if [ -f $HOOK_INIT ]; then
 	echo "Running $HOOK_BEFEORE_APP"
-	if [ ! -x $HOOK_BEFEORE_APP ]; then
-		gosu $USER chmod u+x $HOOK_BEFEORE_APP
+	if [ ! -x $HOOK_INIT ]; then
+		gosu $USER chmod u+x $HOOK_INIT
 	fi
-	gosu $USER ./$HOOK_BEFEORE_APP
+	gosu $USER ./$HOOK_INIT
 fi
 
 echo "Starting Tomcat"

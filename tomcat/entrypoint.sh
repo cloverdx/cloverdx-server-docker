@@ -10,7 +10,10 @@ MIN_SERVER_HEAP_SIZE=512
 MIN_WORKER_HEAP_SIZE=1024
 
 # Load functions for computing memory
-. memory-utils.sh
+. utils/memory.sh
+
+# Load security functions
+. utils/security.sh
 
 #############################################################################
 # Start of the script                                                       #
@@ -37,8 +40,8 @@ adduser \
 
 echo "Changing ownership of working directories"
 chown -R $USER:$USER $CATALINA_HOME
-chown -R $USER:$USER $CLOVER_HOME_DIR
 chown -R $USER:$USER $CLOVER_DATA_DIR
+changeOwnerAndGroup $CLOVER_HOME_DIR $USER
 
 if [ ! -d $CLOVER_HOME_DIR ]; then
 	echo "Creating empty folder for Clover home directory $CLOVER_HOME_DIR"

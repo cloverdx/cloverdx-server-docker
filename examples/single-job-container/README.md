@@ -1,4 +1,4 @@
-# Example
+# Single Job Container example
 
 This example shows how to run a container with CloverDX Server for a specific job. The image already contains sandbox and uses an embedded Derby database. When the job finishes execution, the container is stopped.
 
@@ -10,18 +10,18 @@ This example shows how to run a container with CloverDX Server for a specific jo
     docker build -t cloverdx-server:latest .
     ```
 
-* Copy your license file (``license.dat``) to ``examples/ondemand/conf`` directory
+* Copy your license file (``license.dat``) to ``examples/single-job-container/conf`` directory
 
 * Build the image
 
     ```
-    docker build -t cloverdx-server-ondemand:latest examples/ondemand/
+    docker build -t cloverdx-single-job-container:latest examples/single-job-container/
     ```
 
 * Run the container
 
     ```
-    docker run --name cloverdx-server-ondemand -p 8080:8080 cloverdx-server-ondemand:latest
+    docker run --name cloverdx-single-job-container -p 8080:8080 cloverdx-single-job-container:latest
     ```
 
 This command executes ``Example/graph/graph.grf`` (as specified in the Dockerfile).

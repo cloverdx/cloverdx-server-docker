@@ -38,9 +38,9 @@ import com.cloveretl.server.worker.commons.facade.api.Response
 
 enum ExitCode {
 	OK(0),
-	ERROR(1),
-	JOB_ERROR(2),
-	JOB_ABORT(3)
+	JOB_ERROR(1),
+	JOB_ABORT(2),
+	ERROR(3),
 	
 	ExitCode(int code) {
 		this.code = code

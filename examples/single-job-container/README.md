@@ -21,10 +21,10 @@ This example shows how to run a container with CloverDX Server for a specific jo
 * Run the job in foreground mode and delete the container afterwards
 
     ```
-    &#35; executes Examples/graph/sleep.grf (default job from Dockerfile) - it waits 20s and finishes successfully
+    \# executes Examples/graph/sleep.grf (default job from Dockerfile) - it waits 20s and finishes successfully
     docker run --rm cloverdx-single-job-container
     
-    &#35; executes Example/graph/fail.grf - it fails after 5s
+    \# executes Example/graph/fail.grf - it fails after 5s
     docker run --rm -e JOB_PATH=graph/fail.grf cloverdx-single-job-container 
     ```
 

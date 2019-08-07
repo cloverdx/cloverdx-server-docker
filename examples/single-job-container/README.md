@@ -7,7 +7,7 @@ This example shows how to run a container with CloverDX Server for a specific jo
 * Build the base image
 
     ```
-    docker build -t cloverdx-server:latest .
+    docker build -t cloverdx-server .
     ```
 
 * Copy your license file (``license.dat``) to ``examples/single-job-container/conf`` directory
@@ -15,16 +15,16 @@ This example shows how to run a container with CloverDX Server for a specific jo
 * Build the image
 
     ```
-    docker build -t cloverdx-single-job-container:latest examples/single-job-container/
+    docker build -t cloverdx-single-job-container examples/single-job-container
     ```
 
-* Run the container
+* Run the job in foreground mode and delete the container afterwards
 
     ```
-    docker run --name cloverdx-single-job-container -p 8080:8080 cloverdx-single-job-container:latest
+    docker run --rm cloverdx-single-job-container
     ```
 
-This command executes ``Example/graph/graph.grf`` (as specified in the Dockerfile).
+This command executes ``Example/graph/graph.grf`` (as specified in the Dockerfile). It returns 0 as the exit code if the job finishes successfully and a non-zero exit code if the job fails.
 
 ### Implementation
 ``conf\configuration_import.xml`` contains a custom event listener written in Groovy. The listener starts the job after Server startup, waits for the job to finish and stops the container.

@@ -227,7 +227,7 @@ Default timezone of the container instance is UTC. The timezone is NOT inherited
 
 The container reports its health via the Docker HEALTHCHECK instruction.
 
-The healthcheck periodically calls ``http://localhost:8080/clover/accessibilityTest.jsp`` to check the health of the CloverDX Server. By default it is set-up to survive short restarts of the Worker.
+The healthcheck periodically calls ``http://localhost:8080/clover/accessibilityTest.jsp`` to check the health of CloverDX Server. By default it is set-up to survive short restarts of the Worker.
 
 Default setting in our container:
 
@@ -238,10 +238,9 @@ Default setting in our container:
 
 ## Custom entrypoint scripts
 
-To execute custom script before the CloverDX server starts, edit ``tomcat/hooks/init.sh`` file. Alternatively you can also mount your own script as the init.sh file:
+To execute a custom script before CloverDX Server starts, edit ``tomcat/hooks/init.sh`` file. Alternatively you can also mount your own script as the init.sh file:
 
 ``docker run -v /your/hook/script.sh:/opt/tomcat/hooks/init.sh``
----
 
 # Monitoring
 

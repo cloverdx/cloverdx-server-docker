@@ -259,7 +259,7 @@ To enable JMX:
 1. set the ``RMI_HOSTNAME`` environment variable to the hostname or IP address of the running container instance (i.e. the instance must know its external address)
 1. make sure that the ports above are published
 
-To enable JMX over SSL, see *JMX over SSL* section below.
+See also [JMX over SSL](#jmx-over-ssl) section below.
 
 ---
 
@@ -280,11 +280,11 @@ To enable HTTPS:
 
 ## JMX over SSL
 
-Currently JMX monitoring over SSL is supported for Server Core. To enable it:
+JMX monitoring over SSL is supported for both Server Core and Worker. To enable it:
 
 1. place the keystore in ``conf/serverKS.jks`` file in the mounted volume
 1. modify the file ``conf/jmx-conf.properties`` in the mounted volume
-1. publish the JMX ports (8686 and 8687 for Server Core) when running the container (e.g. ``docker run -p 8686:8686 p 8687:8687 ...``)
+1. publish the JMX ports (8686 and 8687 for Server Core, 8688 and 8689 for Worker) when running the container (e.g. ``docker run -p 8686:8686 -p 8687:8687 ...``)
 
 ## Stronger Cryptography
 

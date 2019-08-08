@@ -238,7 +238,7 @@ Default setting in our container:
 
 ## Custom Entrypoint Scripts
 
-To execute a custom script before CloverDX Server starts, edit ``tomcat/hooks/init.sh`` file. Alternatively you can also mount your own script as the init.sh file:
+If you need to run some script before CloverDX Server starts, but after ``$CLOVER_HOME`` directory is created, put your code into ``tomcat/hooks/init.sh`` file. Alternatively, you can also mount your own script as the ``init.sh`` file:
 
 ``docker run -v /your/hook/script.sh:/opt/tomcat/hooks/init.sh``
 

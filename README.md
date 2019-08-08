@@ -236,12 +236,13 @@ Default setting in our container:
 * --timeout=5s
 * --retries=4 - four consecutive failures needed to set unhealthy state. In combination with thirty seconds interval above allows short Worker restarts.
 
-## Custom entrypoint scripts
+## Custom Entrypoint Scripts
 
 To execute a custom script before CloverDX Server starts, edit ``tomcat/hooks/init.sh`` file. Alternatively you can also mount your own script as the init.sh file:
 
 ``docker run -v /your/hook/script.sh:/opt/tomcat/hooks/init.sh``
 
+---
 # Monitoring
 
 The docker container exposes ports by default for JMX monitoring via tools such as [VisualVM](https://visualvm.github.io/). The JMX monitoring tools are useful to analyze threads, memory usage, classloaders, etc.

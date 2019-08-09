@@ -1,19 +1,29 @@
 #!/bin/bash
 
+# Return user of directory
+getUserOfDirectory() {
+   local DIRECTORY=$1
+   echo $(stat -c '%U' $DIRECTORY)
+}
+
 # Change file owner and group
 # First parameter is the start folder and the second is the new user
 changeOwnerAndGroup() {
-   FOLDER_USER=$(stat -c '%U' $1)
-   if [ $FOLDER_USER == $2 ]; then
-      for folder in $(find $1/* -maxdepth 0 -type d); do
-         FOLDER_USER=$(stat -c '%U' $folder)
-         if [ $FOLDER_USER != $2 ]; then
-            echo "Changing owner of folder $folder"
-            chown -R $2:$2 $folder
+   local START_DIRECTORY=$1
+   local NEW_USER=$2
+
+   local DIRECTORY_USER=`getUserOfDirectory $START_DIRECTORY`
+   if [ $DIRECTORY_USER == $NEW_USER ]; then
+      # For all all first-level subdirectories of START_DIRECTORY
+      for directory in `find $START_DIRECTORY/* -maxdepth 0 -type d`; do
+         DIRECTORY_USER=`getUserOfDirectory $directory`
+         if [ $DIRECTORY_USER != $NEW_USER ]; then
+            echo "Changing owner of directory $directory"
+            chown -R $NEW_USER:$NEW_USER $directory
          fi
       done
    else
-      echo "Changing owner of folder $1"
-      chown -R $2:$2 $1
+      echo "Changing owner of directory $START_DIRECTORY"
+      chown -R $NEW_USER:$NEW_USER $START_DIRECTORY
    fi
 }

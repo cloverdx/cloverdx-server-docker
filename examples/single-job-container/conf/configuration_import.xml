@@ -56,13 +56,7 @@ enum ExitCode {
 }
 
 class Utils {
-	
-	static void process(JobServerEvent graphEvent, ExitCode exitCode) {
-		Logger log = Logger.getLogger("com.cloveretl.server");
-		log.info("Job finished: " + graphEvent)
-		Utils.shutdown(exitCode)
-	}
-	
+
 	static void shutdown(ExitCode exitCode) {
 		System.exit(exitCode.getCode())
 	}

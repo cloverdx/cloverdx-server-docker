@@ -10,20 +10,20 @@ getUserOfDirectory() {
 # First parameter is the start folder and the second is the new user
 changeOwnerAndGroup() {
    local START_DIRECTORY=$1
-   local NEW_USER=$2
+   local NEW_OWNER=$2
 
-   local DIRECTORY_USER=`getUserOfDirectory $START_DIRECTORY`
-   if [ $DIRECTORY_USER == $NEW_USER ]; then
+   local CURRENT_OWNER=`getUserOfDirectory $START_DIRECTORY`
+   if [ $CURRENT_OWNER == $NEW_OWNER ]; then
       # For all all first-level subdirectories of START_DIRECTORY
       for directory in `find $START_DIRECTORY/* -maxdepth 0 -type d`; do
-         DIRECTORY_USER=`getUserOfDirectory $directory`
-         if [ $DIRECTORY_USER != $NEW_USER ]; then
+         CURRENT_OWNER=`getUserOfDirectory $directory`
+         if [ $CURRENT_OWNER != $NEW_OWNER ]; then
             echo "Changing owner of directory $directory"
-            chown -R $NEW_USER:$NEW_USER $directory
+            chown -R $NEW_OWNER:$NEW_OWNER $directory
          fi
       done
    else
       echo "Changing owner of directory $START_DIRECTORY"
-      chown -R $NEW_USER:$NEW_USER $START_DIRECTORY
+      chown -R $NEW_OWNER:$NEW_OWNER $START_DIRECTORY
    fi
 }

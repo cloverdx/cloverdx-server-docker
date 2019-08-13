@@ -104,7 +104,7 @@ fi
 # Run hooks/init.sh script for custom settings 
 HOOK_INIT=hooks/init.sh
 if [ -f $HOOK_INIT ]; then
-	echo "Running $HOOK_BEFEORE_APP"
+	echo "Running $HOOK_INIT"
 	if [ ! -x $HOOK_INIT ]; then
 		gosu $USER chmod u+x $HOOK_INIT
 	fi

@@ -227,7 +227,7 @@ Default timezone of the container instance is UTC. The timezone is NOT inherited
 
 The container reports its health via the Docker HEALTHCHECK instruction.
 
-The healthcheck periodically calls ``http://localhost:8080/clover/accessibilityTest.jsp`` to check the health of the CloverDX Server. By default it is set-up to survive short restarts of the Worker.
+The healthcheck periodically calls ``http://localhost:8080/clover/accessibilityTest.jsp`` to check the health of CloverDX Server. By default it is set-up to survive short restarts of the Worker.
 
 Default setting in our container:
 
@@ -236,13 +236,13 @@ Default setting in our container:
 * --timeout=5s
 * --retries=4 - four consecutive failures needed to set unhealthy state. In combination with thirty seconds interval above allows short Worker restarts.
 
-## Custom entrypoint scripts
+## Custom Entrypoint Scripts
 
-To execute custom script before the CloverDX server starts, edit ``tomcat/hooks/init.sh`` file. Alternatively you can also mount your own script as the init.sh file:
+If you need to run some script before CloverDX Server starts, but after ``$CLOVER_HOME_DIR`` directory is created, put your code into ``tomcat/hooks/init.sh`` file. Alternatively, you can also mount your own script as the ``init.sh`` file:
 
 ``docker run -v /your/hook/script.sh:/opt/tomcat/hooks/init.sh``
----
 
+---
 # Monitoring
 
 The docker container exposes ports by default for JMX monitoring via tools such as [VisualVM](https://visualvm.github.io/). The JMX monitoring tools are useful to analyze threads, memory usage, classloaders, etc.
@@ -259,7 +259,7 @@ To enable JMX:
 1. set the ``RMI_HOSTNAME`` environment variable to the hostname or IP address of the running container instance (i.e. the instance must know its external address)
 1. make sure that the ports above are published
 
-To enable JMX over SSL, see *JMX over SSL* section below.
+See also [JMX over SSL](#jmx-over-ssl) section below.
 
 ---
 
@@ -280,11 +280,11 @@ To enable HTTPS:
 
 ## JMX over SSL
 
-Currently JMX monitoring over SSL is supported for Server Core. To enable it:
+JMX monitoring over SSL is supported for both Server Core and Worker. To enable it:
 
 1. place the keystore in ``conf/serverKS.jks`` file in the mounted volume
 1. modify the file ``conf/jmx-conf.properties`` in the mounted volume
-1. publish the JMX ports (8686 and 8687 for Server Core) when running the container (e.g. ``docker run -p 8686:8686 p 8687:8687 ...``)
+1. publish the JMX ports (8686 and 8687 for Server Core, 8688 and 8689 for Worker) when running the container (e.g. ``docker run -p 8686:8686 -p 8687:8687 ...``)
 
 ## Stronger Cryptography
 

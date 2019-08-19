@@ -1,3 +1,4 @@
 /.settings
 /tomcat/webapps/
 /var/*/
+**/license.dat

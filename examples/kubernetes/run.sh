@@ -3,7 +3,7 @@
 # Stop on error
 set -e
 
-DOCKER_REGISTRY=$1
+export DOCKER_REGISTRY=$1
 if [ -z $DOCKER_REGISTRY ]; then
 	echo "Usage: $0 my-docker-registry:5000"
 	exit 1
@@ -30,7 +30,7 @@ echo "Deploying the example to Kubernetes"
 # Create and expose the deployment as a service
 cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl apply -f -
 echo "Waiting for service startup"
-kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
+kubectl wait --for=condition=available --timeout=120s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
 
 # Print service description
 kubectl get services --namespace=$NAMESPACE

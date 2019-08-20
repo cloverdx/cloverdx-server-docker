@@ -40,7 +40,7 @@ To configure the Data Service use [Endpoint Configuration|action://com.cloveretl
 <Dictionary/>
 </Global>
 <Phase number="0">
-<Node Custom_Attribute_Example="${PARAM_NAME}" guiName="Example Request Echo" guiX="450" guiY="280" id="GET_JOB_INPUT0" type="GET_JOB_INPUT">
+<Node Custom_Attribute_Example="${PARAM_NAME}" guiName="Example Request Echo" guiX="237" guiY="280" id="GET_JOB_INPUT0" type="GET_JOB_INPUT">
 <attr name="mapping"><![CDATA[function integer transform() {
 
 	//  Example CTL code shows how to access HTTP request/response.
@@ -73,7 +73,10 @@ function integer transform() {
 	return ALL;
 }]]></attr>
 </Node>
+<Node guiName="SimpleCopy" guiX="468" guiY="280" id="SIMPLE_COPY" type="SIMPLE_COPY"/>
 <Node fileURL="response:body" footer="&lt;/body&gt;&#13;&#10;&lt;/html&gt;" guiName="StructuredDataWriter" guiX="677" guiY="280" header="&lt;html&gt;&#13;&#10;&lt;head&gt;&#13;&#10;&#9;&lt;meta charset=&quot;utf-8&quot; /&gt;&#13;&#10;&#9;&lt;title&gt;$message&lt;/title&gt;&#13;&#10;&lt;/head&gt;&#13;&#10;&lt;body&gt;&#13;&#10;&#13;&#10;" id="STRUCTURED_DATA_WRITER" mask="&lt;h1&gt;$message&lt;/h1&gt;" type="STRUCTURE_WRITER"/>
-<Edge fromNode="GET_JOB_INPUT0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (Body port)" metadata="Metadata0" outPort="Port 0 (out)" toNode="STRUCTURED_DATA_WRITER:0"/>
+<Edge fromNode="GET_JOB_INPUT0:0" guiBendpoints="" guiRouter="Manhattan" id="Edge0" inPort="Port 0 (in)" metadata="Metadata0" outPort="Port 0 (out)" toNode="SIMPLE_COPY:0"/>
+<Edge fromNode="SIMPLE_COPY:0" guiBendpoints="" guiRouter="Manhattan" id="Edge1" inPort="Port 0 (Body port)" outPort="Port 0 (out)" toNode="STRUCTURED_DATA_WRITER:0"/>
+<Edge fromNode="SIMPLE_COPY:1" guiBendpoints="" guiRouter="Manhattan" id="Edge2" inPort="Port 1 (Header port)" outPort="Port 1 (out)" toNode="STRUCTURED_DATA_WRITER:1"/>
 </Phase>
 </Graph>

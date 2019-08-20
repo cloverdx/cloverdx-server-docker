@@ -21,7 +21,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloverdx-ps
+  name: cloverdx-example
   namespace: cloverdx
 spec:
   selector:
@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name:  cloverdx-server
-          image: docker-master:5000/cloverdx-kubernetes-example:latest
+          image: ${DOCKER_REGISTRY}/cloverdx-kubernetes-example:latest
           env:
             - name: clover.datasource.type
               value: JDBC

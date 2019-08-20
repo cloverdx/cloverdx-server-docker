@@ -1,4 +1,5 @@
-FROM cloverdx-server-master:latest
+ARG DOCKER_REGISTRY
+FROM ${DOCKER_REGISTRY}/cloverdx-server:latest
 
 COPY conf $CLOVER_HOME_DIR/conf
 

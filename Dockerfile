@@ -61,6 +61,8 @@ RUN set -eux && \
 COPY tomcat $CATALINA_HOME
 # Copy additional libraries
 COPY var /var
+# Copy clover.war
+COPY clover.war $CATALINA_HOME/webapps
 
 # Change permissions for startup scripts
 RUN chmod u+x entrypoint.sh && \

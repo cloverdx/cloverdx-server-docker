@@ -29,5 +29,11 @@ task copyCloverLib(type: Copy) {
 	into "var/clover-lib"
 }
 
+// Logging
+tasks.withType(Copy) {
+	doFirst { logger.lifecycle("Copying files into {}:", projectDir.toPath().relativize(destinationDir.toPath())) }
+	eachFile { logger.lifecycle("* {}", it.file.name) }
+}
+
 task build(dependsOn: [copyTomcatLib, copyCloverLib]) {
 }

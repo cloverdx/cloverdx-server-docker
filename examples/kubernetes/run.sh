@@ -24,13 +24,18 @@ docker push $EXAMPLE_TAG
 # Constants
 NAMESPACE=cloverdx
 DEPLOYMENT_NAME=cloverdx-example
-SERVICE_NAME=cloverdx-svc
+SERVICE_NAME=cloverdx
 
 echo "Deploying the example to Kubernetes"
 # Create and expose the deployment as a service
 cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl apply -f -
-echo "Waiting for service startup"
+echo "Waiting for CloverDX service startup"
 kubectl wait --for=condition=available --timeout=120s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
+
+kubectl apply -f cloverdx-monitoring.yaml
+echo "Waiting for monitoring service startup"
+kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/prometheus
+kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/grafana
 
 # Print service description
 kubectl get services --namespace=$NAMESPACE

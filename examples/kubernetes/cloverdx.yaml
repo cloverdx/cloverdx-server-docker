@@ -6,18 +6,18 @@ metadata:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cloverdx-svc
+  name: cloverdx
   namespace: cloverdx
 spec:
   type: NodePort
   ports:
-  - name: http 
+  - name: http
     port: 8080
     targetPort: 8080
     protocol: TCP
   selector:
-    app: cloverdx-kubernetes
----    
+    app: cloverdx
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,12 +26,12 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: cloverdx-kubernetes
+      app: cloverdx
   replicas: 1
   template:
     metadata:
       labels:
-        app: cloverdx-kubernetes
+        app: cloverdx
     spec:
       containers:
         - name:  cloverdx-server
@@ -49,7 +49,7 @@ spec:
               value: clover
             - name: clover.jdbc.password
               value: clover
-            - name: clover.webGui.instance.label  
+            - name: clover.webGui.instance.label
               value: CloverDX App
           ports:
             - containerPort: 8080
@@ -71,6 +71,6 @@ spec:
               mountPath: /var/lib/postgresql/data
       volumes:
         - name: clover-logs
-          emptyDir: {}        
+          emptyDir: {}
         - name: db-volume
-          emptyDir: {}  
+          emptyDir: {}

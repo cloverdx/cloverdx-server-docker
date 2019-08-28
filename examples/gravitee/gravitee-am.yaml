@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gravitee-am-svc
+  namespace: gravitee
+spec:
+  type: NodePort
+  ports:
+  - port: 81
+    targetPort: 80
+    nodePort: 32110
+    protocol: TCP
+    name: am-management-ui
+  - port: 8092
+    targetPort: 8092
+    nodePort: 32111
+    protocol: TCP
+    name: am-gateway
+  - port: 8093
+    targetPort: 8093
+    nodePort: 32112
+    protocol: TCP
+    name: am-management-api
+  selector:
+    app: gravitee-am
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gravitee-am
+  namespace: gravitee
+spec:
+  selector:
+    matchLabels:
+      app: gravitee-am
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gravitee-am
+    spec:
+      containers:
+        - name: am-gateway
+          image: graviteeio/am-gateway:2.8
+          env:
+            - name: gravitee_management_mongodb_uri
+              value: "mongodb://gravitee-svc:27017/graviteeam?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000"
+            - name: gravitee_oauth2_mongodb_uri
+              value: "mongodb://gravitee-svc:27017/graviteeam?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000"
+          ports:
+            - containerPort: 8092
+              protocol: TCP
+        - name: am-management-api
+          image: graviteeio/am-management-api:2.8
+          env:
+            - name: gravitee_management_mongodb_uri
+              value: "mongodb://gravitee-svc:27017/graviteeam?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000"
+            - name: gravitee_oauth2_mongodb_uri
+              value: "mongodb://gravitee-svc:27017/graviteeam?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000"
+          ports:
+            - containerPort: 8093
+              protocol: TCP
+        - name: am-management-ui
+          image: graviteeio/am-management-ui:2.8
+          env:
+            - name: MGMT_API_URL
+              value: "http://virt-oberon:32112"
+            - name: MGMT_UI_URL
+              value: "http://virt-oberon:32110"
+          ports:
+            - containerPort: 80
+              protocol: TCP

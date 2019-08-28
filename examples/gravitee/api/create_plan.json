@@ -1,0 +1,11 @@
+{
+
+    "name": "restPlan",
+    "description": "Plan created by REST API",
+    "validation": "AUTO",
+    "characteristics":[],
+"paths": {
+    "/":[]
+},
+"security": "KEY_LESS"
+}

@@ -1,0 +1,9 @@
+{
+    "type": "INLINE",
+	"payload": "---\nswagger: \"2.0\"\ninfo:\n  title: \"CloverDX Data Services\"\n  description: \"CloverDX Data Services\"\n  version: \"1.0.0\"\nhost: \"virt-oberon:32381\"\nbasePath: \"/clover/data-service\"\nschemes: [\"http\"]\ntags:\n- name: \"examples\"\n  externalDocs:\n    description: \"Find out more\"\n    url: \"http://cloverdx.com\"\npaths:\n  /echo/{message}:\n    get:\n      tags:\n      - \"examples\"\n      summary: \"\"\n      description: \"\"\n      operationId: \"/echo/{message}_GET\"\n      consumes:\n      - \"plain/text\"\n      produces:\n      - \"custom\"\n      parameters:\n      - in: \"path\"\n        name: \"message\"\n        required: true\n        type: \"string\"\n      - in: \"header\"\n        name: \"X-Clover-Save-Run-Record\"\n        type: \"string\"\n        enum: \"true\"\n        default: \"true\"\n      responses:\n        200:\n          description: \"\"\n        400:\n          description: \"Request validation failed\"\n        500:\n          description: \"Job failed\"\n  /kamil/{message}:\n    get:\n      tags:\n      - \"examples\"\n      summary: \"\"\n      description: \"\"\n      operationId: \"/kamil/{message}_GET\"\n      consumes:\n      - \"plain/text\"\n      produces:\n      - \"custom\"\n      parameters:\n      - in: \"path\"\n        name: \"message\"\n        required: true\n        type: \"string\"\n      - in: \"header\"\n        name: \"X-Clover-Save-Run-Record\"\n        type: \"string\"\n        enum: \"true\"\n        default: \"true\"\n      responses:\n        200:\n          description: \"\"\n        400:\n          description: \"Request validation failed\"\n        500:\n          description: \"Job failed\"\n",
+    "with_documentation": false,
+    "with_path_mapping": true,
+    "with_policy_paths": false,
+    "with_policy_mocks": false
+
+}

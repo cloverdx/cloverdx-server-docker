@@ -5,4 +5,4 @@ COPY conf $CLOVER_HOME_DIR/conf
 
 COPY sandboxes $CLOVER_HOME_DIR/sandboxes
 
-COPY license.dat /var/clover/conf
+COPY license.dat $CLOVER_CONF_DIR

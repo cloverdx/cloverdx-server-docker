@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gravitee-am-management-ui-svc
+spec:
+  type: NodePort
+  ports:
+  - port: 81
+    targetPort: 80
+    protocol: TCP
+    name: am-management-ui
+  selector:
+    app: gravitee-am-management-ui
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gravitee-am-management-ui
+spec:
+  selector:
+    matchLabels:
+      app: gravitee-am-management-ui
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gravitee-am-management-ui
+    spec:
+      containers:
+        - name: am-management-ui
+          image: graviteeio/am-management-ui:2.8
+          env:
+            - name: MGMT_API_URL
+              value: "http://localhost:8093"
+            - name: MGMT_UI_URL
+              value: "http://localhost:81"
+          ports:
+            - containerPort: 80
+              protocol: TCP

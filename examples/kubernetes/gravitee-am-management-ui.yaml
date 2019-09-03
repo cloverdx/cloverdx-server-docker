@@ -31,9 +31,9 @@ spec:
           image: graviteeio/am-management-ui:2.8
           env:
             - name: MGMT_API_URL
-              value: "http://localhost:8093"
-            - name: MGMT_UI_URL
-              value: "http://localhost:81"
+              value: "http://${KUBERNETES_HOST}:${MGMT_API_PORT}"
+            #- name: MGMT_UI_URL
+            #  value: "http://localhost:81"
           ports:
             - containerPort: 80
               protocol: TCP

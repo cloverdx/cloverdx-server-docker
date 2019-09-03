@@ -69,7 +69,7 @@ kubectl create namespace $NAMESPACE
 cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl create --namespace=$NAMESPACE -f -
 
 echo "Waiting for CloverDX service startup"
-kubectl wait --for=condition=available --timeout=120s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
+kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
 
 echo "Create and expose monitoring";
 cat cloverdx-monitoring.yaml | envsubst $NAMESPACE | kubectl create --namespace=$NAMESPACE -f -
@@ -78,25 +78,25 @@ echo "Waiting for monitoring service startup"
 #kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/prometheus
 #kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/grafana
 
+export KUBERNETES_HOST=virt-oberon
+
 kubectl create --namespace=$NAMESPACE -f elasticsearch.yaml 
 kubectl create --namespace=$NAMESPACE -f mongodb.yaml
 
 kubectl create --namespace=$NAMESPACE -f gravitee-gateway.yaml
 kubectl create --namespace=$NAMESPACE -f gravitee-management-api.yaml
-kubectl create --namespace=$NAMESPACE -f gravitee-management-ui.yaml
+
+export MGMT_API_PORT=`kubectl get svc gravitee-management-api-svc -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}'`
+cat gravitee-management-ui.yaml | envsubst '$KUBERNETES_HOST $MGMT_API_PORT' | kubectl apply --namespace=$NAMESPACE -f -
 
 kubectl create --namespace=$NAMESPACE -f gravitee-am-gateway.yaml
 kubectl create --namespace=$NAMESPACE -f gravitee-am-management-api.yaml
-kubectl create --namespace=$NAMESPACE -f gravitee-am-management-ui.yaml
+
+export MGMT_API_PORT=`kubectl get svc gravitee-am-management-api-svc -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}'`
+cat gravitee-am-management-ui.yaml | envsubst '$KUBERNETES_HOST $MGMT_API_PORT' | kubectl apply --namespace=$NAMESPACE -f -
 
 # Print service description
 kubectl get services --namespace=$NAMESPACE
-
-kubectl port-forward --namespace=$NAMESPACE svc/gravitee-management-api-svc 8083:8083 &
-
-kubectl port-forward --namespace=$NAMESPACE svc/gravitee-am-management-api-svc 8093:8093 &
-
-kubectl port-forward --namespace=$NAMESPACE svc/gravitee-am-management-ui-svc 81:81 &
 
 # Start port forwarding to localhost:8090
 kubectl port-forward --namespace=$NAMESPACE svc/$SERVICE_NAME 8090:8080

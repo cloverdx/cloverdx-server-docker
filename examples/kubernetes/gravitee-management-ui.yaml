@@ -31,7 +31,7 @@ spec:
           image: graviteeio/management-ui:1.28.1
           env:
             - name: MGMT_API_URL
-              value: http://localhost:8083/management/
+              value: "http://${KUBERNETES_HOST}:${MGMT_API_PORT}/management/"
           ports:
             - containerPort: 80
               protocol: TCP

@@ -27,12 +27,19 @@ DEPLOYMENT_NAME=cloverdx-example
 SERVICE_NAME=cloverdx
 
 echo "Deploying the example to Kubernetes"
+
+echo "Create namespace $NAMESPACE"
+kubectl create namespace $NAMESPACE
+
 # Create and expose the deployment as a service
-cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl apply -f -
+cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl apply --namespace=$NAMESPACE -f -
+
 echo "Waiting for CloverDX service startup"
 kubectl wait --for=condition=available --timeout=120s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
 
-kubectl apply -f cloverdx-monitoring.yaml
+echo "Create and expose monitoring";
+# kubectl apply -f cloverdx-monitoring.yaml --namespace=$NAMESPACE
+
 echo "Waiting for monitoring service startup"
 kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/prometheus
 kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/grafana

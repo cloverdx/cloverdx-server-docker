@@ -1,13 +1,7 @@
 apiVersion: v1
-kind: Namespace
-metadata:
-  name: cloverdx
----
-apiVersion: v1
 kind: Service
 metadata:
   name: cloverdx
-  namespace: cloverdx
 spec:
   type: NodePort
   ports:
@@ -22,7 +16,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloverdx-example
-  namespace: cloverdx
 spec:
   selector:
     matchLabels:

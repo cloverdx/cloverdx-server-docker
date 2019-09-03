@@ -26,6 +26,7 @@ spec:
       labels:
         app: gravitee-gateway
     spec:
+      containers:
         - name: gateway
           image: graviteeio/gateway:1.28.1
           env:

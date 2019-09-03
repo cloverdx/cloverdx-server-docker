@@ -26,6 +26,7 @@ spec:
       labels:
         app: gravitee-management-api
     spec:
+      containers:
         - name: management-api
           image: graviteeio/management-api:1.28.1
           env:

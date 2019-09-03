@@ -38,6 +38,7 @@ spec:
       labels:
         app: mongodb
     spec:
+      containers:
         - name: mongo-db
           image: mongo:3.4.22-xenial
           env:

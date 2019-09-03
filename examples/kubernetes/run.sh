@@ -1,11 +1,49 @@
 #!/bin/bash
 
+# Show help for this script
+script_help() {
+   echo "Usage:"
+   echo "$0 [options] my-docker-registry:5000"
+   echo "Options:"
+   echo "-h, --help            show help"
+   echo "-n, --namespace       specify namespace"
+}
+
+# Local variable
+NAMESPACE=cloverdx
+DEPLOYMENT_NAME=cloverdx-example
+SERVICE_NAME=cloverdx
+
 # Stop on error
 set -e
 
-export DOCKER_REGISTRY=$1
+# Parsing command-line arguments and flags 
+while test $# -gt 0; do
+  case "$1" in
+    -h|--help)
+	  script_help
+      exit 0
+      ;;
+    -n|--namespace)
+      shift
+      if test $# -gt 0; then
+        export NAMESPACE=$1
+      else
+        echo "no namespace specified"
+        exit 1
+      fi
+      shift
+      ;;
+    *)
+	  export DOCKER_REGISTRY=("$1")
+      break
+      ;;
+  esac
+done
+
+# Test if DOCKER_REGISTRY is existing
 if [ -z $DOCKER_REGISTRY ]; then
-	echo "Usage: $0 my-docker-registry:5000"
+	script_help
 	exit 1
 fi
 
@@ -21,24 +59,20 @@ EXAMPLE_TAG=$DOCKER_REGISTRY/cloverdx-kubernetes-example:latest
 docker build --build-arg DOCKER_REGISTRY=$DOCKER_REGISTRY -t $EXAMPLE_TAG .
 docker push $EXAMPLE_TAG
 
-# Constants
-NAMESPACE=filip
-DEPLOYMENT_NAME=cloverdx-example
-SERVICE_NAME=cloverdx
-
 echo "Deploying the example to Kubernetes"
 
 echo "Create namespace $NAMESPACE"
+kubectl delete namespace $NAMESPACE --ignore-not-found
 kubectl create namespace $NAMESPACE
 
 # Create and expose the deployment as a service
-cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl apply --namespace=$NAMESPACE -f -
+cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl create --namespace=$NAMESPACE -f -
 
 echo "Waiting for CloverDX service startup"
 kubectl wait --for=condition=available --timeout=120s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
 
 echo "Create and expose monitoring";
-# kubectl apply -f cloverdx-monitoring.yaml --namespace=$NAMESPACE
+cat cloverdx-monitoring.yaml | envsubst $NAMESPACE | kubectl create --namespace=$NAMESPACE -f -
 
 echo "Waiting for monitoring service startup"
 #kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/prometheus

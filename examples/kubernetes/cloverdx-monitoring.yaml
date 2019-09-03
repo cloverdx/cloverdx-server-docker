@@ -3,7 +3,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cadvisor
-  namespace: cloverdx
 spec:
   selector:
     app: cadvisor
@@ -17,7 +16,6 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: cadvisor
-  namespace: cloverdx
 spec:
   selector:
     matchLabels:
@@ -74,7 +72,6 @@ apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
   name: cadvisor
-  namespace: cloverdx
 spec:
   seLinux:
     rule: RunAsAny
@@ -98,7 +95,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: prometheus
-  namespace: cloverdx
 spec:
   selector:
     app: prometheus
@@ -112,7 +108,6 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: prometheus
-  namespace: cloverdx
 spec:
   replicas: 1
   template:
@@ -140,7 +135,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-config-map
-  namespace: cloverdx
 data:
   prometheus.yaml: |-
     scrape_configs:
@@ -148,14 +142,13 @@ data:
       scrape_interval: 5s
       static_configs:
       - targets:
-        - cadvisor.cloverdx:9080
+        - cadvisor:9080
 ---
 ### Grafana service
 apiVersion: v1
 kind: Service
 metadata:
   name: grafana
-  namespace: cloverdx
 spec:
   selector:
     app: grafana
@@ -169,7 +162,6 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: grafana
-  namespace: cloverdx
 spec:
   replicas: 1
   template:
@@ -214,7 +206,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: grafana-provisioning-map
-  namespace: cloverdx
 data:
   ds-prometheus.yaml: |-
     apiVersion: 1
@@ -222,7 +213,7 @@ data:
     - name: Prometheus
       type: prometheus
       access: proxy
-      url: http://prometheus.cloverdx:9090
+      url: http://prometheus:9090
   dashboard.yaml: |-
     apiVersion: 1
     providers:
@@ -321,7 +312,7 @@ data:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "count(container_last_seen{instance=~\"cadvisor.cloverdx:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_namespace=\"cloverdx\",container_label_io_kubernetes_container_name!~\"POD\"})",
+              "expr": "count(container_last_seen{instance=~\"cadvisor.${NAMESPACE}:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_${NAMESPACE}=\"${NAMESPACE}\",container_label_io_kubernetes_container_name!~\"POD\"})",
               "intervalFactor": 2,
               "legendFormat": "",
               "metric": "container_last_seen",
@@ -410,7 +401,7 @@ data:
           "tableColumn": "",
           "targets": [
             {
-              "expr": "sum(container_memory_usage_bytes{instance=~\"cadvisor.cloverdx:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_namespace=\"cloverdx\",container_label_io_kubernetes_container_name!~\"POD\"})/1024/1024",
+              "expr": "sum(container_memory_usage_bytes{instance=~\"cadvisor.${NAMESPACE}:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_${NAMESPACE}=\"${NAMESPACE}\",container_label_io_kubernetes_container_name!~\"POD\"})/1024/1024",
               "intervalFactor": 2,
               "legendFormat": "",
               "metric": "container_memory_usage_bytes",
@@ -478,7 +469,7 @@ data:
           "pluginVersion": "6.3.3",
           "targets": [
             {
-              "expr": "sum(rate(container_cpu_user_seconds_total{instance=~\"cadvisor.cloverdx:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_namespace=\"cloverdx\",container_label_io_kubernetes_container_name!~\"POD\"}[5m]) * 100)",
+              "expr": "sum(rate(container_cpu_user_seconds_total{instance=~\"cadvisor.${NAMESPACE}:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_${NAMESPACE}=\"${NAMESPACE}\",container_label_io_kubernetes_container_name!~\"POD\"}[5m]) * 100)",
               "intervalFactor": 2,
               "legendFormat": "",
               "metric": "container_memory_usage_bytes",
@@ -538,7 +529,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "container_memory_usage_bytes{instance=~\"cadvisor.cloverdx:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_namespace=\"cloverdx\",container_label_io_kubernetes_container_name!~\"POD\"}",
+              "expr": "container_memory_usage_bytes{instance=~\"cadvisor.${NAMESPACE}:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_${NAMESPACE}=\"${NAMESPACE}\",container_label_io_kubernetes_container_name!~\"POD\"}",
               "hide": false,
               "intervalFactor": 4,
               "legendFormat": "{{container_label_io_kubernetes_container_name}}",
@@ -637,7 +628,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(container_cpu_user_seconds_total{instance=~\"cadvisor.cloverdx:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_namespace=\"cloverdx\",container_label_io_kubernetes_container_name!~\"POD\"}[5m]) * 100",
+              "expr": "rate(container_cpu_user_seconds_total{instance=~\"cadvisor.${NAMESPACE}:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_${NAMESPACE}=\"${NAMESPACE}\",container_label_io_kubernetes_container_name!~\"POD\"}[5m]) * 100",
               "intervalFactor": 4,
               "legendFormat": "{{container_label_io_kubernetes_container_name}}",
               "metric": "cpu",
@@ -734,7 +725,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(irate(container_fs_reads_bytes_total{instance=~\"cadvisor.cloverdx:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_namespace=\"cloverdx\",container_label_io_kubernetes_container_name!=\"POD\"}[5m])) by (container_label_io_kubernetes_container_name)",
+              "expr": "sum(irate(container_fs_reads_bytes_total{instance=~\"cadvisor.${NAMESPACE}:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_${NAMESPACE}=\"${NAMESPACE}\",container_label_io_kubernetes_container_name!=\"POD\"}[5m])) by (container_label_io_kubernetes_container_name)",
               "intervalFactor": 2,
               "legendFormat": "{{container_label_io_kubernetes_container_name}}",
               "metric": "container_fs_reads_bytes_total",
@@ -831,7 +822,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(irate(container_fs_writes_bytes_total{instance=~\"cadvisor.cloverdx:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_namespace=\"cloverdx\",container_label_io_kubernetes_container_name!=\"POD\"}[5m])) by (container_label_io_kubernetes_container_name)",
+              "expr": "sum(irate(container_fs_writes_bytes_total{instance=~\"cadvisor.${NAMESPACE}:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_${NAMESPACE}=\"${NAMESPACE}\",container_label_io_kubernetes_container_name!=\"POD\"}[5m])) by (container_label_io_kubernetes_container_name)",
               "intervalFactor": 2,
               "legendFormat": "{{container_label_io_kubernetes_container_name}}",
               "metric": "container_fs_writes_bytes_total",
@@ -928,7 +919,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "irate(container_network_receive_bytes_total{instance=~\"cadvisor.cloverdx:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_namespace=\"cloverdx\"}[5m])",
+              "expr": "irate(container_network_receive_bytes_total{instance=~\"cadvisor.${NAMESPACE}:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_${NAMESPACE}=\"${NAMESPACE}\"}[5m])",
               "intervalFactor": 2,
               "legendFormat": "{{container_label_app}}",
               "metric": "container_network_receive_bytes_total",
@@ -1025,7 +1016,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "irate(container_network_transmit_bytes_total{instance=~\"cadvisor.cloverdx:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_namespace=\"cloverdx\"}[5m])",
+              "expr": "irate(container_network_transmit_bytes_total{instance=~\"cadvisor.${NAMESPACE}:9080\",job=~\"cadvisor\",container_label_io_kubernetes_pod_${NAMESPACE}=\"${NAMESPACE}\"}[5m])",
               "intervalFactor": 2,
               "legendFormat": "{{container_label_app}}",
               "refId": "A",

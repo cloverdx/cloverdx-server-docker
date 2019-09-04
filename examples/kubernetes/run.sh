@@ -71,16 +71,9 @@ kubectl create namespace $NAMESPACE
 # Create and expose the deployment as a service
 cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl create --namespace=$NAMESPACE -f -
 
-echo "Waiting for CloverDX service startup"
-kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
-
 echo "Create and expose monitoring";
 kubectl create --namespace=$NAMESPACE -f cloverdx-pod-security-policy.yaml
 cat cloverdx-monitoring.yaml | envsubst $NAMESPACE | kubectl create --namespace=$NAMESPACE -f -
-
-echo "Waiting for monitoring service startup"
-#kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/prometheus
-#kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/grafana
 
 export KUBERNETES_HOST=virt-oberon
 
@@ -98,6 +91,15 @@ kubectl create --namespace=$NAMESPACE -f gravitee-am-management-api.yaml
 
 export MGMT_API_PORT=`kubectl get svc gravitee-am-management-api-svc -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}'`
 cat gravitee-am-management-ui.yaml | envsubst '$KUBERNETES_HOST $MGMT_API_PORT' | kubectl apply --namespace=$NAMESPACE -f -
+
+kubectl create --namespace=$NAMESPACE -f import-apis.yaml
+
+echo "Waiting for monitoring service startup"
+#kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/prometheus
+#kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/grafana
+
+echo "Waiting for CloverDX service startup"
+kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
 
 # Print service description
 kubectl get services --namespace=$NAMESPACE

@@ -61,8 +61,11 @@ docker push $EXAMPLE_TAG
 
 echo "Deploying the example to Kubernetes"
 
-echo "Create namespace $NAMESPACE"
+# Cleanup
 kubectl delete namespace $NAMESPACE --ignore-not-found
+kubectl delete podsecuritypolicy cloverdx-cadvisor --ignore-not-found
+
+# Create namespace
 kubectl create namespace $NAMESPACE
 
 # Create and expose the deployment as a service
@@ -72,7 +75,8 @@ echo "Waiting for CloverDX service startup"
 kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
 
 echo "Create and expose monitoring";
-#cat cloverdx-monitoring.yaml | envsubst $NAMESPACE | kubectl create --namespace=$NAMESPACE -f -
+kubectl create --namespace=$NAMESPACE -f cloverdx-pod-security-policy.yaml
+cat cloverdx-monitoring.yaml | envsubst $NAMESPACE | kubectl create --namespace=$NAMESPACE -f -
 
 echo "Waiting for monitoring service startup"
 #kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/prometheus

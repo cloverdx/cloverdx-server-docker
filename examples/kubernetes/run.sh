@@ -84,9 +84,11 @@ kubectl create --namespace=$NAMESPACE -f gravitee-gateway.yaml
 kubectl create --namespace=$NAMESPACE -f gravitee-am-gateway.yaml
 
 export MGMT_API_PORT=`kubectl --namespace=$NAMESPACE get svc gravitee-management-api-svc -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}'`
+echo "Gravitee Management API port: $MGMT_API_PORT"
 cat gravitee-management-ui.yaml | envsubst '$KUBERNETES_HOST $MGMT_API_PORT' | kubectl apply --namespace=$NAMESPACE -f -
 
 export MGMT_API_PORT=`kubectl --namespace=$NAMESPACE get svc gravitee-am-management-api-svc -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}'`
+echo "Gravitee AM Management API port: $MGMT_API_PORT"
 cat gravitee-am-management-ui.yaml | envsubst '$KUBERNETES_HOST $MGMT_API_PORT' | kubectl apply --namespace=$NAMESPACE -f -
 
 echo "Waiting for Gravitee Management API startup"

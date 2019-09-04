@@ -11,8 +11,6 @@ script_help() {
 
 # Local variable
 NAMESPACE=cloverdx
-DEPLOYMENT_NAME=cloverdx-example
-SERVICE_NAME=cloverdx
 
 # Stop on error
 set -e
@@ -80,29 +78,26 @@ export KUBERNETES_HOST=virt-oberon
 kubectl create --namespace=$NAMESPACE -f elasticsearch.yaml 
 kubectl create --namespace=$NAMESPACE -f mongodb.yaml
 
-kubectl create --namespace=$NAMESPACE -f gravitee-gateway.yaml
 kubectl create --namespace=$NAMESPACE -f gravitee-management-api.yaml
+kubectl create --namespace=$NAMESPACE -f gravitee-am-management-api.yaml
+kubectl create --namespace=$NAMESPACE -f gravitee-gateway.yaml
+kubectl create --namespace=$NAMESPACE -f gravitee-am-gateway.yaml
 
-export MGMT_API_PORT=`kubectl get svc gravitee-management-api-svc -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}'`
+export MGMT_API_PORT=`kubectl --namespace=$NAMESPACE get svc gravitee-management-api-svc -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}'`
 cat gravitee-management-ui.yaml | envsubst '$KUBERNETES_HOST $MGMT_API_PORT' | kubectl apply --namespace=$NAMESPACE -f -
 
-kubectl create --namespace=$NAMESPACE -f gravitee-am-gateway.yaml
-kubectl create --namespace=$NAMESPACE -f gravitee-am-management-api.yaml
-
-export MGMT_API_PORT=`kubectl get svc gravitee-am-management-api-svc -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}'`
+export MGMT_API_PORT=`kubectl --namespace=$NAMESPACE get svc gravitee-am-management-api-svc -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}'`
 cat gravitee-am-management-ui.yaml | envsubst '$KUBERNETES_HOST $MGMT_API_PORT' | kubectl apply --namespace=$NAMESPACE -f -
 
+echo "Waiting for Gravitee Management API startup"
+kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/gravitee-management-api
 kubectl create --namespace=$NAMESPACE -f import-apis.yaml
 
-echo "Waiting for monitoring service startup"
-#kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/prometheus
-#kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/grafana
-
-echo "Waiting for CloverDX service startup"
-kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
+echo "Waiting for Gravitee Gateway startup"
+kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/gravitee-gateway
 
 # Print service description
 kubectl get services --namespace=$NAMESPACE
 
 # Start port forwarding to localhost:8090
-kubectl port-forward --namespace=$NAMESPACE svc/$SERVICE_NAME 8090:8080
+kubectl port-forward --namespace=$NAMESPACE svc/gravitee-gateway-svc 8090:8082

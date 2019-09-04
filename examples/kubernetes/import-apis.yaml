@@ -71,7 +71,6 @@ items:
         }
     gui_plan.json: |
         {
-
             "name": "CloverDX Plan",
             "description": "CloverDX Server Console Plan",
             "validation": "AUTO",
@@ -95,7 +94,6 @@ items:
         }
     ds_plan.json: |
         {
-
             "name": "CloverDX Data Services Plan",
             "description": "CloverDX Data Services Plan",
             "validation": "AUTO",
@@ -119,9 +117,31 @@ items:
         }
     grafana_plan.json: |
         {
-
             "name": "Grafana Plan",
             "description": "Grafana Plan",
+            "validation": "AUTO",
+            "characteristics":[],
+        "paths": {
+            "/":[]
+        },
+        "security": "KEY_LESS"
+        }
+    gravitee_ui_api.json: |
+        {
+            "name": "Gravitee UI",
+            "version": "1.0",
+            "description": "Gravitee Management UI",
+            "contextPath": "/gravitee",
+            "endpoint": "http://gravitee-management-ui-svc:80",
+            "groups": [
+        ],
+        "paths": 
+            []
+        }
+    gravitee_ui_plan.json: |
+        {
+            "name": "Gravitee UI Plan",
+            "description": "Gravitee Management UI Plan",
             "validation": "AUTO",
             "characteristics":[],
         "paths": {

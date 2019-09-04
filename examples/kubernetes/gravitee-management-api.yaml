@@ -29,6 +29,12 @@ spec:
       containers:
         - name: management-api
           image: graviteeio/management-api:1.28.1
+          livenessProbe:
+            httpGet:
+              path: /management
+              port: 8083
+            initialDelaySeconds: 120
+            periodSeconds: 10
           env:
             - name: gravitee_management_mongodb_uri
               value: "mongodb://mongodb-svc:27017/gravitee?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000"

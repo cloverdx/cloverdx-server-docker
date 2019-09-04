@@ -35,7 +35,7 @@ while test $# -gt 0; do
       shift
       ;;
     *)
-	  export DOCKER_REGISTRY=("$1")
+	  export DOCKER_REGISTRY=$1
       break
       ;;
   esac
@@ -72,7 +72,7 @@ echo "Waiting for CloverDX service startup"
 kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/$DEPLOYMENT_NAME
 
 echo "Create and expose monitoring";
-cat cloverdx-monitoring.yaml | envsubst $NAMESPACE | kubectl create --namespace=$NAMESPACE -f -
+#cat cloverdx-monitoring.yaml | envsubst $NAMESPACE | kubectl create --namespace=$NAMESPACE -f -
 
 echo "Waiting for monitoring service startup"
 #kubectl wait --for=condition=available --timeout=60s --namespace=$NAMESPACE deployment/prometheus

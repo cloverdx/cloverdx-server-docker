@@ -71,7 +71,7 @@ cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl create --namespace=$NA
 
 echo "Create and expose monitoring";
 kubectl create --namespace=$NAMESPACE -f cloverdx-pod-security-policy.yaml
-cat cloverdx-monitoring.yaml | envsubst $NAMESPACE | kubectl create --namespace=$NAMESPACE -f -
+cat cloverdx-monitoring.yaml | envsubst '$NAMESPACE' | kubectl create --namespace=$NAMESPACE -f -
 
 export KUBERNETES_HOST=virt-oberon
 

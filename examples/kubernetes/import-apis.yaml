@@ -30,12 +30,21 @@ spec:
           echo "Waiting for Gravitee Management API startup"
           MANAGEMENT_URL=http://gravitee-management-api-svc:8083/management/apis
           AUTHORIZATION='--user admin:admin'
+            AM_MANAGEMENT_URL=http://gravitee-am-management-api-svc:8093/management/domains
+          AM_AUTHORIZATION='--user admin:adminadmin'
           until curl ${AUTHORIZATION} --head --fail ${MANAGEMENT_URL}
           do
               echo '.'
               sleep 3
           done
           echo "Gravitee Management API available at ${MANAGEMENT_URL}"
+
+            ACCESS_TOKEN=`curl -X POST http://gravitee-am-management-api-svc:8093/admin/token ${AM_AUTHORIZATION} | jq -r .access_token`
+            curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "Content-Type:application/json;charset=UTF-8" -X POST -d '{"name":"CloverDX Domain","description":"CloverDX Security Domain"}' ${AM_MANAGEMENT_URL}
+            curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "Content-Type:application/json;charset=UTF-8" -X PUT -d '{"enabled": true}' ${AM_MANAGEMENT_URL}/cloverdx-domain
+            CLIENT_ID=`curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "Content-Type:application/json;charset=UTF-8" -X POST -d '{"clientName":"cloverdx", "clientId":"THE-CLIENT-ID", "clientSecret":"THE-CLIENT-SECRET"}' ${AM_MANAGEMENT_URL}/cloverdx-domain/clients | jq -r .id`
+            curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "Content-Type:application/json;charset=UTF-8" -X PUT -d '{"authorizedGrantTypes":["client_credentials"]}' ${AM_MANAGEMENT_URL}/cloverdx-domain/clients/${CLIENT_ID}
+
           for f in /config/*_api.json; do
               echo "Importing API from $f"
               BASENAME=$(basename $f "_api.json")
@@ -49,6 +58,12 @@ spec:
               echo
               echo "Plan ID: $PLAN_ID"
               curl -v -X POST ${AUTHORIZATION} -H "Content-Type:application/json;charset=UTF-8" ${MANAGEMENT_URL}/${API_ID}/plans/${PLAN_ID}/_publish
+
+                if [ -f /config/${BASENAME}_update.json ]; then
+                    echo "Updating API ID: $API_ID"
+                    curl -X PUT -H "Authorization: Basic YWRtaW46YWRtaW4=" -H "Content-Type:application/json;charset=UTF-8" -d "@/config/${BASENAME}_update.json" ${MANAGEMENT_URL}/${API_ID}
+                fi  
+
               curl -v -X POST ${AUTHORIZATION} ${MANAGEMENT_URL}/${API_ID}/deploy
               curl -v -X POST ${AUTHORIZATION} ${MANAGEMENT_URL}/${API_ID}?action=START
           done
@@ -149,6 +164,103 @@ items:
         },
         "security": "KEY_LESS"
         }
+    ds_oauth_api.json: |
+        {
+            "name": "CloverDX Data Services with oAuth2",
+            "version": "1.0",
+            "description": "CloverDX Data Services",
+            "contextPath": "/ds-oauth2",
+            "endpoint": "http://cloverdx:8080/clover/data-service",
+            "groups": [
+        ],
+        "paths": 
+            []
+        }
+    ds_oauth_plan.json: |
+        {
+            "name": "CloverDX Data Services Plan with oAuth2",
+            "description": "CloverDX Data Services Plan with oAuth2",
+            "validation": "AUTO",
+            "characteristics":[],
+        "paths": {
+            "/":[]
+        },
+        "security": "KEY_LESS"
+        }    
+    ds_oauth_update.json: |    
+        {
+            "name":"CloverDX Data Services with oAuth2",
+            "description":"CloverDX Data Services with oAuth2",
+            "version":"1.0",
+            "proxy":{
+                "context_path":"/ds-oauth2",
+                "strip_context_path":false,
+                "groups":[
+                    {
+                        "name":"default-group",
+                        "endpoints":[
+                            {
+                                "name":"default",
+                                "target":"http://cloverdx:8080/clover/data-service",
+                                "weight":1,
+                                "backup":false,
+                                "type":"HTTP",
+                                "inherit":true
+                            }
+                        ],
+                        "load_balancing":
+                            {
+                                "type":"ROUND_ROBIN"
+                            },
+                        "http":{
+                            "connectTimeout":5000,
+                            "idleTimeout":60000,
+                            "keepAlive":true,
+                            "readTimeout":10000,
+                            "pipelining":false,
+                            "maxConcurrentConnections":100,
+                            "useCompression":true,
+                            "followRedirects":false
+                        }
+                    }
+                ]
+            },
+            "paths":{
+                "/":[
+                    {
+                        "methods":[
+                            "GET"
+                        ],
+                        "description":"Description of the OAuth2 Gravitee Policy",
+                        "enabled":true,
+                        "oauth2":{
+                            "extractPayload":false,
+                            "checkRequiredScopes":false,
+                            "modeStrict":false,
+                            "propagateAuthHeader":true,
+                            "requiredScopes":[],
+                            "oauthResource":"oauth"
+                        }
+                    }
+                ]
+            },
+            "visibility":"private",
+            "resources":[
+                {
+                    "name":"oauth",
+                    "type":"oauth2-am-resource",
+                    "enabled":true,
+                    "configuration":{
+                        "version":"V2_X",
+                        "userClaim":"sub",
+                        "serverURL":"http://gravitee-am-gateway-svc:8092",
+                        "clientId":"THE-CLIENT-ID",
+                        "clientSecret":"THE-CLIENT-SECRET",
+                        "securityDomain":"cloverdx-domain"
+                    }
+                }
+            ]
+        }    
   kind: ConfigMap
   metadata:
     creationTimestamp: null

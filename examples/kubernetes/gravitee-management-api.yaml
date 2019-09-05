@@ -31,7 +31,7 @@ spec:
           image: graviteeio/management-api:1.28.1
           livenessProbe:
             httpGet:
-              path: /management
+              path: /management/apis
               port: 8083
             initialDelaySeconds: 120
             periodSeconds: 10

@@ -85,6 +85,13 @@ spec:
               curl -v -X POST ${AUTHORIZATION} ${MANAGEMENT_URL}/${API_ID}/deploy
               curl -v -X POST ${AUTHORIZATION} ${MANAGEMENT_URL}/${API_ID}?action=START
           done
+
+          GRAFANA_URL=http://grafana:3000
+          echo "Waiting for Grafana startup"
+          httpWait "--head ${GRAFANA_URL}"
+          echo "Grafana available at ${GRAFANA_URL}"
+
+          curl -v -X PUT -d '{ "homeDashboardId": 1 }' ${GRAFANA_URL}/api/org/preferences
 ---
 apiVersion: v1
 items:

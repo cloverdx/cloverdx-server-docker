@@ -91,7 +91,8 @@ spec:
           httpWait "--head ${GRAFANA_URL}"
           echo "Grafana available at ${GRAFANA_URL}"
 
-          curl -v -X PUT -d '{ "homeDashboardId": 1 }' ${GRAFANA_URL}/api/org/preferences
+          # Select default dashboard in Grafana
+          curl -v -X PUT -H "Content-Type: Content-Type: application/json" -d '{ "homeDashboardId": 1 }' ${GRAFANA_URL}/api/org/preferences
 ---
 apiVersion: v1
 items:

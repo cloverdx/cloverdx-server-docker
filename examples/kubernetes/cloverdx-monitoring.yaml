@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: cadvisor
+  name: cadvisor-svc
 spec:
   selector:
     app: cadvisor
@@ -71,7 +71,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: prometheus
+  name: prometheus-svc
 spec:
   selector:
     app: prometheus
@@ -125,7 +125,7 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: grafana
+  name: grafana-svc
 spec:
   selector:
     app: grafana
@@ -190,7 +190,7 @@ data:
     - name: Prometheus
       type: prometheus
       access: proxy
-      url: http://prometheus:9090
+      url: http://prometheus-svc:9090
   dashboard.yaml: |-
     apiVersion: 1
     providers:

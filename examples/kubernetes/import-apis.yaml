@@ -86,7 +86,7 @@ spec:
               curl -v -X POST ${AUTHORIZATION} ${MANAGEMENT_URL}/${API_ID}?action=START
           done
 
-          GRAFANA_URL=http://grafana:3000
+          GRAFANA_URL=http://grafana-svc:3000
           echo "Waiting for Grafana startup"
           httpWait "--head ${GRAFANA_URL}"
           echo "Grafana available at ${GRAFANA_URL}"
@@ -104,7 +104,7 @@ items:
             "version": "1.0",
             "description": "CloverDX Server Console",
             "contextPath": "/clover",
-            "endpoint": "http://cloverdx:8080/clover",
+            "endpoint": "http://cloverdx-svc:8080/clover",
             "groups": [
         ],
         "paths": 
@@ -127,7 +127,7 @@ items:
             "version": "1.0",
             "description": "CloverDX Data Services",
             "contextPath": "/data-service",
-            "endpoint": "http://cloverdx:8080/clover/data-service",
+            "endpoint": "http://cloverdx-svc:8080/clover/data-service",
             "groups": [
         ],
         "paths": 
@@ -150,7 +150,7 @@ items:
             "version": "1.0",
             "description": "Monitoring - Grafana",
             "contextPath": "/monitoring",
-            "endpoint": "http://grafana:3000",
+            "endpoint": "http://grafana-svc:3000",
             "groups": [
         ],
         "paths": 
@@ -196,7 +196,7 @@ items:
             "version": "1.0",
             "description": "CloverDX Data Services",
             "contextPath": "/ds-oauth2",
-            "endpoint": "http://cloverdx:8080/clover/data-service",
+            "endpoint": "http://cloverdx-svc:8080/clover/data-service",
             "groups": [
         ],
         "paths": 
@@ -227,7 +227,7 @@ items:
                         "endpoints":[
                             {
                                 "name":"default",
-                                "target":"http://cloverdx:8080/clover/data-service",
+                                "target":"http://cloverdx-svc:8080/clover/data-service",
                                 "weight":1,
                                 "backup":false,
                                 "type":"HTTP",

@@ -5,8 +5,9 @@ script_help() {
    echo "Usage:"
    echo "$0 [options] my-docker-registry:5000"
    echo "Options:"
-   echo "-h, --help            show help"
+   echo "-?, --help            show help"
    echo "-n, --namespace       specify namespace"
+   echo "-h, --host            kubernetes host"
 }
 
 # Local variable
@@ -18,8 +19,8 @@ set -e
 # Parsing command-line arguments and flags 
 while test $# -gt 0; do
   case "$1" in
-    -h|--help)
-	  script_help
+    '-?'|--help)
+      script_help
       exit 0
       ;;
     -n|--namespace)
@@ -27,7 +28,17 @@ while test $# -gt 0; do
       if test $# -gt 0; then
         export NAMESPACE=$1
       else
-        echo "no namespace specified"
+        echo "The namespace not specified"
+        exit 1
+      fi
+      shift
+      ;;
+    -h|--host)
+      shift
+      if test $# -gt 0; then
+        export KUBERNETES_HOST=$1
+      else
+        echo "The kubernetes host not specified"
         exit 1
       fi
       shift
@@ -43,7 +54,7 @@ while test $# -gt 0; do
       shift
       ;;
     *)
-	  export DOCKER_REGISTRY=$1
+      export DOCKER_REGISTRY=$1
       break
       ;;
   esac
@@ -51,8 +62,16 @@ done
 
 # Test if DOCKER_REGISTRY is existing
 if [ -z $DOCKER_REGISTRY ]; then
-	script_help
-	exit 1
+   echo "The docker registry host is empty"
+   script_help
+   exit 1
+fi
+
+# Test if Kubernetes host is existing
+if [ -z $KUBERNETES_HOST ]; then
+   echo "The kubernetes host is empty"
+   script_help
+   exit 1
 fi
 
 if [ -n "$GRAVITEE_PORT" ]; then
@@ -91,8 +110,6 @@ cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl create --namespace=$NA
 echo "Create and expose monitoring";
 kubectl create --namespace=$NAMESPACE -f cloverdx-pod-security-policy.yaml
 cat cloverdx-monitoring.yaml | envsubst '$NAMESPACE' | kubectl create --namespace=$NAMESPACE -f -
-
-export KUBERNETES_HOST=virt-oberon
 
 kubectl create --namespace=$NAMESPACE -f elasticsearch.yaml 
 kubectl create --namespace=$NAMESPACE -f mongodb.yaml

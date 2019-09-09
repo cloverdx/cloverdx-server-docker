@@ -114,7 +114,7 @@ echo "Waiting for Grafana startup"
 kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/grafana
 echo "Waiting for Gravitee Management API startup"
 kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/gravitee-management-api
-kubectl create --namespace=$NAMESPACE -f import-apis.yaml
+kubectl create --namespace=$NAMESPACE -f init-containers.yaml
 
 echo "Waiting for Gravitee Gateway startup"
 kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/gravitee-gateway

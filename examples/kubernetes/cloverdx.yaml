@@ -9,6 +9,12 @@ spec:
     port: 8080
     targetPort: 8080
     protocol: TCP
+  - name: core-jmx-exporter
+    port: 8787
+    protocol: TCP
+  - name: worker-jmx-exporter
+    port: 8788
+    protocol: TCP
   selector:
     app: cloverdx
 ---
@@ -46,6 +52,10 @@ spec:
               value: CloverDX App
           ports:
             - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8787
+              protocol: TCP
+            - containerPort: 8788
               protocol: TCP
           volumeMounts:
             - name: clover-logs

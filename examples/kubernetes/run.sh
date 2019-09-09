@@ -45,6 +45,9 @@ if [ -z $DOCKER_REGISTRY ]; then
 	exit 1
 fi
 
+# Prepare Prometheus JMX Agent JAR
+../../gradlew -b ../../build.gradle :copyPrometheusJmxAgent
+
 # Build and push the base image
 echo "Building the base image"
 BASE_IMAGE_TAG=$DOCKER_REGISTRY/cloverdx-server:latest

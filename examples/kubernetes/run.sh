@@ -110,6 +110,8 @@ export MGMT_API_PORT=`kubectl --namespace=$NAMESPACE get svc gravitee-am-managem
 echo "Gravitee AM Management API port: $MGMT_API_PORT"
 cat gravitee-am-management-ui.yaml | envsubst '$KUBERNETES_HOST $MGMT_API_PORT' | kubectl apply --namespace=$NAMESPACE -f -
 
+echo "Waiting for Grafana startup"
+kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/grafana
 echo "Waiting for Gravitee Management API startup"
 kubectl wait --for=condition=available --timeout=150s --namespace=$NAMESPACE deployment/gravitee-management-api
 kubectl create --namespace=$NAMESPACE -f import-apis.yaml

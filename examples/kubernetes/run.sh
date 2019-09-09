@@ -6,9 +6,9 @@ script_help() {
    echo "$0 [options] my-docker-registry:5000"
    echo "Options:"
    echo "-?, --help            show help"
-   echo "-h, --host            Kubernetes host"
-   echo "-n, --namespace       Kubernetes namespace (optional, \"cloverdx\" by default)"
-   echo "-p, --port            port number to run the example (optional, random if not specified)"
+   echo "-h, --host            Kubernetes host (autodetect if not specified)"
+   echo "-n, --namespace       Kubernetes namespace (\"cloverdx\" by default)"
+   echo "-p, --port            port number to run the example (random if not specified)"
 }
 
 # Local variable
@@ -68,11 +68,10 @@ if [ -z $DOCKER_REGISTRY ]; then
    exit 1
 fi
 
-# Test if Kubernetes host is existing
+# Autodetect Kubernetes hostname if not specified
 if [ -z $KUBERNETES_HOST ]; then
-   echo "The kubernetes host is empty"
-   script_help
-   exit 1
+   export KUBERNETES_HOST=$(kubectl get node --selector='node-role.kubernetes.io/master' -o jsonpath={.items[*].status.addresses[?\(@.type==\"Hostname\"\)].address})
+   echo "Using \"${KUBERNETES_HOST}\" as the Kubernetes hostname"
 fi
 
 if [ -n "$GRAVITEE_PORT" ]; then

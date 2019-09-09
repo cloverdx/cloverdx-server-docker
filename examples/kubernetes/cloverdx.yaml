@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: cloverdx-svc
 spec:
-  type: NodePort
+  type: CLusterIP
   ports:
   - name: http
     port: 8080

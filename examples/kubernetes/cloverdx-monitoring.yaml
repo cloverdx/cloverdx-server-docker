@@ -6,7 +6,7 @@ metadata:
 spec:
   selector:
     app: cadvisor
-  type: NodePort
+  type: ClusterIP
   ports:
   - port: 9080
     targetPort: 8080
@@ -75,7 +75,7 @@ metadata:
 spec:
   selector:
     app: prometheus
-  type: NodePort
+  type: ClusterIP
   ports:
     - port: 9090
       targetPort: 9090
@@ -142,7 +142,7 @@ metadata:
 spec:
   selector:
     app: grafana
-  type: NodePort
+  type: ClusterIP
   ports:
   - port: 3000
     targetPort: 3000

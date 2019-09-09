@@ -3,4 +3,3 @@
 /var/*/
 /clover.war
 **/license.dat
-/examples/kubernetes/jmx_prometheus_javaagent-*.jar

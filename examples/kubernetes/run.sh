@@ -80,9 +80,6 @@ if [ -n "$GRAVITEE_PORT" ]; then
 fi
 export GRAVITEE_GATEWAY_NODE_PORT
 
-# Prepare Prometheus JMX Agent JAR
-../../gradlew -b ../../build.gradle :copyPrometheusJmxAgent
-
 # Build and push the base image
 echo "Building the base image"
 # Download JDBC drivers
@@ -91,8 +88,10 @@ BASE_IMAGE_TAG=$DOCKER_REGISTRY/cloverdx-server:latest
 docker build -t $BASE_IMAGE_TAG ../..
 docker push $BASE_IMAGE_TAG
 
-echo "Building the example"
 # Build and push the image containing the example
+echo "Building the example"
+# Download JMX Exporter JAR
+../../gradlew :copyJmxExporter
 EXAMPLE_TAG=$DOCKER_REGISTRY/cloverdx-kubernetes-example:latest
 docker build --build-arg DOCKER_REGISTRY=$DOCKER_REGISTRY -t $EXAMPLE_TAG .
 docker push $EXAMPLE_TAG

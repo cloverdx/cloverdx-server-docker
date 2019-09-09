@@ -12,7 +12,7 @@ dependencies {
 
 task copyJmxExporter(type: Copy) {
 	from configurations.jmxExporter
-	into projectDir
+	into "${projectDir}/lib"
 }
 
 tasks.withType(Copy) {

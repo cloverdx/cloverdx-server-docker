@@ -5,9 +5,9 @@ It contains a sample echo data service, which simply prints the string passed as
 
 ### Requirements
 * bash + envsubst
+* Java
 * Docker + docker CLI
 * Kubernetes + kubectl
-* Java
 * Docker image registry accessible from Kubernetes
 * ``license.dat``
 

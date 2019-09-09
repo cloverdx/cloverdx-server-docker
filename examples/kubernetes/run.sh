@@ -63,7 +63,7 @@ done
 
 # Test if DOCKER_REGISTRY is existing
 if [ -z $DOCKER_REGISTRY ]; then
-   echo "The docker registry host is empty"
+   echo "The Docker registry host is empty"
    script_help
    exit 1
 fi

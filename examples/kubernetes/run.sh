@@ -76,8 +76,8 @@ if [ -z $KUBERNETES_HOST ]; then
 fi
 
 if [ -n "$GRAVITEE_PORT" ]; then
-	GRAVITEE_GATEWAY_NODE_PORT="nodePort: ${GRAVITEE_PORT}"
-	echo "Gravitee Gateway port: ${GRAVITEE_PORT}"
+   GRAVITEE_GATEWAY_NODE_PORT="nodePort: ${GRAVITEE_PORT}"
+   echo "Gravitee Gateway port: ${GRAVITEE_PORT}"
 fi
 export GRAVITEE_GATEWAY_NODE_PORT
 

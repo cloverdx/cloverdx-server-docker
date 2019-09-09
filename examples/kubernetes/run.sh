@@ -6,8 +6,9 @@ script_help() {
    echo "$0 [options] my-docker-registry:5000"
    echo "Options:"
    echo "-?, --help            show help"
-   echo "-n, --namespace       specify namespace"
-   echo "-h, --host            kubernetes host"
+   echo "-h, --host            Kubernetes host"
+   echo "-n, --namespace       Kubernetes namespace (optional, \"cloverdx\" by default)"
+   echo "-p, --port            port number to run the example (optional, random if not specified)"
 }
 
 # Local variable

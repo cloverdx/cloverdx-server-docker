@@ -92,7 +92,7 @@ spec:
           echo "Grafana available at ${GRAFANA_URL}"
 
           # Select default dashboard in Grafana
-          curl -v -X PUT -H "Content-Type: Content-Type: application/json" -d '{ "homeDashboardId": 1 }' ${GRAFANA_URL}/api/org/preferences
+          curl -v -X PUT -H "Content-Type: Content-Type: application/json" -d '{ "homeDashboardId": 2 }' ${GRAFANA_URL}/api/org/preferences
 ---
 apiVersion: v1
 items:

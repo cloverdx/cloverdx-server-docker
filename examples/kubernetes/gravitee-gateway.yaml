@@ -7,6 +7,7 @@ spec:
   ports:
   - port: 8082
     targetPort: 8082
+    ${GRAVITEE_GATEWAY_NODE_PORT}
     protocol: TCP
     name: gateway
   selector:

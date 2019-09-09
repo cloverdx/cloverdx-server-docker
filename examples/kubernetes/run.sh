@@ -32,6 +32,16 @@ while test $# -gt 0; do
       fi
       shift
       ;;
+    -p|--port)
+      shift
+      if test $# -gt 0; then
+        GRAVITEE_PORT=$1
+      else
+        echo "no port number specified"
+        exit 1
+      fi
+      shift
+      ;;
     *)
 	  export DOCKER_REGISTRY=$1
       break
@@ -44,6 +54,12 @@ if [ -z $DOCKER_REGISTRY ]; then
 	script_help
 	exit 1
 fi
+
+if [ -n "$GRAVITEE_PORT" ]; then
+	GRAVITEE_GATEWAY_NODE_PORT="nodePort: ${GRAVITEE_PORT}"
+	echo "Gravitee Gateway port: ${GRAVITEE_PORT}"
+fi
+export GRAVITEE_GATEWAY_NODE_PORT
 
 # Prepare Prometheus JMX Agent JAR
 ../../gradlew -b ../../build.gradle :copyPrometheusJmxAgent
@@ -83,7 +99,7 @@ kubectl create --namespace=$NAMESPACE -f mongodb.yaml
 
 kubectl create --namespace=$NAMESPACE -f gravitee-management-api.yaml
 kubectl create --namespace=$NAMESPACE -f gravitee-am-management-api.yaml
-kubectl create --namespace=$NAMESPACE -f gravitee-gateway.yaml
+cat gravitee-gateway.yaml | envsubst '$GRAVITEE_GATEWAY_NODE_PORT' | kubectl create --namespace=$NAMESPACE -f -
 kubectl create --namespace=$NAMESPACE -f gravitee-am-gateway.yaml
 
 export MGMT_API_PORT=`kubectl --namespace=$NAMESPACE get svc gravitee-management-api-svc -o go-template='{{range.spec.ports}}{{if .nodePort}}{{.nodePort}}{{"\n"}}{{end}}{{end}}'`

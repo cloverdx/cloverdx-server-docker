@@ -86,6 +86,8 @@ export GRAVITEE_GATEWAY_NODE_PORT
 
 # Build and push the base image
 echo "Building the base image"
+# Download JDBC drivers
+../../gradlew -b ../../build.gradle
 BASE_IMAGE_TAG=$DOCKER_REGISTRY/cloverdx-server:latest
 docker build -t $BASE_IMAGE_TAG ../..
 docker push $BASE_IMAGE_TAG

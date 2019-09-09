@@ -1,8 +1,8 @@
-### cAdvisor security policy
+### Permissive security policy, used by cAdvisor
 apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
-  name: cloverdx-cadvisor
+  name: permissive-policy
 spec:
   seLinux:
     rule: RunAsAny

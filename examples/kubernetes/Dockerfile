@@ -2,21 +2,16 @@ ARG DOCKER_REGISTRY
 FROM ${DOCKER_REGISTRY}/cloverdx-server:latest
 
 COPY conf $CLOVER_HOME_DIR/conf
-
 COPY sandboxes $CLOVER_HOME_DIR/sandboxes
-
 COPY license.dat $CLOVER_CONF_DIR
 
 ### Monitoring
 # Copy JMX Exporter config file
 COPY jmx-prometheus-config.yaml $CLOVER_CONF_DIR
-
 # Copy JMX exporter jar
 COPY lib/jmx_prometheus_javaagent-0.12.0.jar $CLOVER_LIB_DIR
-
 # Add exporter to Core Server
 ENV SERVER_JAVA_OPTS="-javaagent:/var/clover-lib/jmx_prometheus_javaagent-0.12.0.jar=8787:/var/clover/conf/jmx-prometheus-config.yaml"
-
 # Add exporter to Worker
 ENV WORKER_JAVA_OPTS=-javaagent:/var/clover-lib/jmx_prometheus_javaagent-0.12.0.jar=8788:/var/clover/conf/jmx-prometheus-config.yaml
 

@@ -3,6 +3,7 @@ README.md
 
 # Gradle build scripts
 *.gradle
+.gradle/
 
 # Kubernetes configuration files
 *.yaml

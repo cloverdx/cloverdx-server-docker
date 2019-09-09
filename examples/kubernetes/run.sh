@@ -109,7 +109,7 @@ kubectl create namespace $NAMESPACE
 cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl create --namespace=$NAMESPACE -f -
 
 echo "Create and expose monitoring";
-kubectl create --namespace=$NAMESPACE -f cloverdx-pod-security-policy.yaml
+kubectl create -f cloverdx-pod-security-policy.yaml
 cat cloverdx-monitoring.yaml | envsubst '$NAMESPACE' | kubectl create --namespace=$NAMESPACE -f -
 
 kubectl create --namespace=$NAMESPACE -f elasticsearch.yaml 

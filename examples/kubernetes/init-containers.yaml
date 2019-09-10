@@ -23,9 +23,7 @@ spec:
         - -c
         - |
             set -e
-            echo "Installing curl"
             apk add curl
-            echo "Installing jq"
             apk add jq
 
             MANAGEMENT_URL=http://gravitee-management-api-svc:8083/management/apis
@@ -66,7 +64,9 @@ spec:
 
             for f in /config/*_api.json; do
                 BASENAME=$(basename $f "_api.json")
-                echo "===== $BASENAME ====="
+                TITLE=`cat /tmp/${BASENAME}_api.json | jq -r .name`
+
+                echo "===== $TITLE ====="
                 echo "Importing API from $f"
 
                 # Create API

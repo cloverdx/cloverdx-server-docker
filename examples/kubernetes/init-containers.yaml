@@ -47,26 +47,31 @@ spec:
                 http_call "$@" --output /dev/null
             }
 
-            echo "Waiting for Gravitee Access Management API startup"
+            function echo_nl {
+                echo -e "\r\n"
+                echo "$@"
+            } 
+
+            echo_nl "Waiting for Gravitee Access Management API startup"
             http_wait -X POST ${AM_AUTHORIZATION} http://gravitee-am-management-api-svc:8093/admin/token
             echo "Gravitee Access Management API available at http://gravitee-am-management-api-svc:8093"
 
-            echo "Creating CloverDX Domain in Gravitee Access Management"
+            echo_nl "Creating CloverDX Domain in Gravitee Access Management"
             ACCESS_TOKEN=`curl --silent -X POST ${AM_AUTHORIZATION} http://gravitee-am-management-api-svc:8093/admin/token | jq -r .access_token`
             http_call_silent -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "Content-Type:application/json;charset=UTF-8" -X POST -d '{"name":"CloverDX Domain","description":"CloverDX Security Domain"}' ${AM_MANAGEMENT_URL}
             http_call_silent -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "Content-Type:application/json;charset=UTF-8" -X PUT -d '{"enabled": true}' ${AM_MANAGEMENT_URL}/cloverdx-domain
             CLIENT_ID=`curl --silent -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "Content-Type:application/json;charset=UTF-8" -X POST -d '{"clientName":"cloverdx", "clientId":"THE-CLIENT-ID", "clientSecret":"THE-CLIENT-SECRET"}' ${AM_MANAGEMENT_URL}/cloverdx-domain/clients | jq -r .id`
             http_call_silent -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "Content-Type:application/json;charset=UTF-8" -X PUT -d '{"authorizedGrantTypes":["client_credentials"]}' ${AM_MANAGEMENT_URL}/cloverdx-domain/clients/${CLIENT_ID}
 
-            echo "Waiting for Gravitee Gateway Management API startup"
+            echo_nl "Waiting for Gravitee Gateway Management API startup"
             http_wait ${AUTHORIZATION} --head ${MANAGEMENT_URL}
             echo "Gravitee Gateway Management API available at ${MANAGEMENT_URL}"
 
             for f in /config/*_api.json; do
                 BASENAME=$(basename $f "_api.json")
-                TITLE=`cat /tmp/${BASENAME}_api.json | jq -r .name`
+                TITLE=`cat /config/${BASENAME}_api.json | jq -r .name`
 
-                echo "===== $TITLE ====="
+                echo_nl "===== $TITLE ====="
                 echo "Importing API from $f"
 
                 # Create API
@@ -94,7 +99,7 @@ spec:
             done
 
             GRAFANA_URL=http://grafana-svc:3000
-            echo "Waiting for Grafana startup"
+            echo_nl "Waiting for Grafana startup"
             http_wait --head ${GRAFANA_URL}
             echo "Grafana available at ${GRAFANA_URL}"
 

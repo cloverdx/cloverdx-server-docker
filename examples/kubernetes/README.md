@@ -9,17 +9,19 @@ It contains a sample echo data service, which simply prints the string passed as
 * Docker + docker CLI
 * Kubernetes + kubectl
 * Docker image registry accessible from Kubernetes
+* ``clover.war``
 * ``license.dat``
 
 ---
 
 ### Running the example
 
-* Put your ``license.dat`` file to ``examples/kubernetes`` directory.
+* Put ``clover.war`` into the project root directory.
+* Switch to ``examples/kubernetes`` directory and put your ``license.dat`` file there.
 * Execute `run.sh` and pass the hostname and port of your Docker registry as a parameter. The script will deploy the example and start port forwarding to localhost:8090.
 
     ```
     ./run.sh my-docker-registry:5000
     ```
 
-The data service is now available at <http://localhost:8090/clover/data-service/echo/Hello+World!>.
+The data service is now available at <http://localhost:8090/data-service/echo/Hello+World!>.

@@ -14,7 +14,7 @@
       <cs:ownerUsername>clover</cs:ownerUsername>
       <cs:sandboxCode>examples</cs:sandboxCode>
       <cs:jobFile>data-service/echo.rjob</cs:jobFile>
-      <cs:publicAccess>false</cs:publicAccess>
+      <cs:publicAccess>true</cs:publicAccess>
       <cs:saveRunRecord>false</cs:saveRunRecord>
       <cs:healthListener enabled="true">
         <cs:name>Listener for Data Service: 51</cs:name>

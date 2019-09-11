@@ -1,0 +1,13 @@
+# Documentation
+README.md
+
+# Gradle build scripts
+*.gradle
+.gradle/
+
+# Kubernetes configuration files
+*.yaml
+!jmx-prometheus-config.yaml
+
+# Kubernetes startup scripts
+*.sh

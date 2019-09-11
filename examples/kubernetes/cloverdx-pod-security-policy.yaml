@@ -1,0 +1,22 @@
+### Permissive security policy, used by cAdvisor
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: permissive-policy
+spec:
+  seLinux:
+    rule: RunAsAny
+  supplementalGroups:
+    rule: RunAsAny
+  runAsUser:
+    rule: RunAsAny
+  fsGroup:
+    rule: RunAsAny
+  volumes:
+  - '*'
+  allowedHostPaths:
+  - pathPrefix: "/"
+  - pathPrefix: "/var/run"
+  - pathPrefix: "/sys"
+  - pathPrefix: "/var/lib/docker"
+  - pathPrefix: "/dev/disk"

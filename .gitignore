@@ -2,3 +2,4 @@
 /tomcat/webapps/
 /var/*/
 /clover.war
+**/license.dat

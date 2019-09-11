@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloverdx-svc
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  - name: core-jmx-exporter
+    port: 8787
+    protocol: TCP
+  - name: worker-jmx-exporter
+    port: 8788
+    protocol: TCP
+  selector:
+    app: cloverdx
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloverdx-example
+spec:
+  selector:
+    matchLabels:
+      app: cloverdx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cloverdx
+    spec:
+      containers:
+        - name:  cloverdx-server
+          image: ${DOCKER_REGISTRY}/cloverdx-kubernetes-example:latest
+          env:
+            - name: clover.datasource.type
+              value: JDBC
+            - name: clover.jdbc.url
+              value: jdbc:postgresql://localhost:5432/clover_db
+            - name: clover.jdbc.driverClassName
+              value: org.postgresql.Driver
+            - name: clover.jdbc.dialect
+              value: org.hibernate.dialect.PostgreSQLDialect
+            - name: clover.jdbc.username
+              value: clover
+            - name: clover.jdbc.password
+              value: clover
+            - name: clover.webGui.instance.label
+              value: CloverDX App
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+            - containerPort: 8787
+              protocol: TCP
+            - containerPort: 8788
+              protocol: TCP
+          volumeMounts:
+            - name: clover-logs
+              mountPath: /var/clover/cloverlogs
+        - name:  db
+          image: postgres:9.4
+          env:
+            - name: POSTGRES_DB
+              value: clover_db
+            - name: POSTGRES_USER
+              value: clover
+            - name: POSTGRES_PASSWORD
+              value: clover
+          volumeMounts:
+            - name: db-volume
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: clover-logs
+          emptyDir: {}
+        - name: db-volume
+          emptyDir: {}

@@ -49,7 +49,7 @@ RUN set -eux && \
 	curl "$TOMCAT_URL" | tar -xz --strip-components=1 && \
 	# Create directories
 	mkdir -p $CLOVER_CONF_DIR $CLOVER_HOME_DIR $CLOVER_DATA_DIR && \
-	# Change permisions for the writable directories - CLO-16457
+	# Change permissions for the writable directories - CLO-16457
 	chmod -R o+x $CATALINA_HOME/work $CATALINA_HOME/webapps $CATALINA_HOME/logs $CATALINA_HOME/temp && \
 	# Remove unused directories
 	rm -rf $CATALINA_HOME/webapps/* && \

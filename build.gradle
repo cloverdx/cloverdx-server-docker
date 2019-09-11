@@ -8,6 +8,7 @@ defaultTasks 'build'
 configurations {
 	tomcatLib { transitive = false }
 	cloverLib { transitive = false }
+	prometheus { transitive = false }
 }
 
 dependencies {
@@ -17,6 +18,8 @@ dependencies {
 	tomcatLib "mysql:mysql-connector-java:5.1.47"
 	tomcatLib "com.oracle:ojdbc6:11.2.0.3"
 	tomcatLib "org.postgresql:postgresql:42.2.2.jre7"
+
+	prometheus "io.prometheus.jmx:jmx_prometheus_javaagent:0.12.0"
 }
 
 task copyTomcatLib(type: Copy) {
@@ -27,6 +30,11 @@ task copyTomcatLib(type: Copy) {
 task copyCloverLib(type: Copy) {
 	from configurations.cloverLib
 	into "var/clover-lib"
+}
+
+task copyPrometheusJmxAgent(type: Copy) {
+	from configurations.prometheus
+	into "examples/kubernetes"
 }
 
 // Logging

@@ -18,7 +18,7 @@ It contains a sample echo data service, which simply prints the string passed as
 
 * Put ``clover.war`` into the project root directory.
 * Switch to ``examples/kubernetes`` directory and put your ``license.dat`` file there.
-* Execute `run.sh` and pass the hostname and port of your Docker registry as a parameter. The script will deploy the example and start port forwarding to localhost:8090.
+* Execute `run.sh` and pass the hostname and port of your Docker registry as a parameter. The script will build and deploy the example and start port forwarding to localhost:8090.
 
     ```
     ./run.sh my-docker-registry:5000

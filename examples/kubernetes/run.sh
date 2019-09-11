@@ -81,7 +81,7 @@ export GRAVITEE_GATEWAY_NODE_PORT
 
 echo "Using \"$KUBERNETES_HOST\" as the Kubernetes hostname"
 
-echo "Downloading libraries"
+echo -e "\nDownloading libraries"
 GRADLE_WRAPPER=../../gradlew
 # Download JDBC drivers
 $GRADLE_WRAPPER -b ../../build.gradle
@@ -89,18 +89,18 @@ $GRADLE_WRAPPER -b ../../build.gradle
 $GRADLE_WRAPPER :copyJmxExporter
 
 # Build and push the base image
-echo "Building the base image"
+echo -e "\nBuilding the base image"
 BASE_IMAGE_TAG=$DOCKER_REGISTRY/cloverdx-server:latest
 docker build -t $BASE_IMAGE_TAG ../..
 docker push $BASE_IMAGE_TAG
 
 # Build and push the image containing the example
-echo "Building the example"
+echo -e "\nBuilding the example"
 EXAMPLE_TAG=$DOCKER_REGISTRY/cloverdx-kubernetes-example:latest
 docker build --build-arg DOCKER_REGISTRY=$DOCKER_REGISTRY -t $EXAMPLE_TAG .
 docker push $EXAMPLE_TAG
 
-echo "Deploying the example to Kubernetes"
+echo -e "\nDeploying the example to Kubernetes"
 
 # Shorthand for specifying Kubernetes namespace
 kubectl_ns() {
@@ -150,7 +150,22 @@ echo "Waiting for Gravitee Gateway startup"
 kubectl_ns wait --for=condition=available --timeout=150s deployment/gravitee-gateway
 
 # Print service description
+echo -e "\nService listing:"
 kubectl_ns get services
+
+echo
+echo "+---------------------+"
+echo "| Deployment finished |"
+echo "+---------------------+"
+echo
+
+# Print URLs
+echo 'The services are now running at the following URLs:'
+echo
+echo '* http://localhost:8090/data-service/echo/Hello+World! - sample Data Service'
+echo '* http://localhost:8090/clover - CloverDX Server Console'
+echo '* http://localhost:8090/monitoring - Grafana monitoring dashboard'
+echo
 
 # Start port forwarding to localhost:8090
 kubectl_ns port-forward svc/gravitee-gateway-svc 8090:8082

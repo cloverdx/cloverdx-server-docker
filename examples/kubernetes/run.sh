@@ -149,6 +149,9 @@ kubectl_ns create -f init-containers.yaml
 echo "Waiting for Gravitee Gateway startup"
 kubectl_ns wait --for=condition=available --timeout=150s deployment/gravitee-gateway
 
+echo "Waiting for initialization job to finish"
+kubectl_ns wait --for=condition=complete --timeout=300s jobs/init-job
+
 # Print service description
 echo -e "\nService listing:"
 kubectl_ns get services
@@ -165,6 +168,7 @@ echo
 echo '* http://localhost:8090/data-service/echo/Hello+World! - sample Data Service'
 echo '* http://localhost:8090/clover - CloverDX Server Console'
 echo '* http://localhost:8090/monitoring - Grafana monitoring dashboard'
+echo '* http://localhost:8090/gravitee/ - Gravitee UI'
 echo
 
 # Start port forwarding to localhost:8090

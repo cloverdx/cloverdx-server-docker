@@ -105,6 +105,8 @@ spec:
 
             # Select default dashboard in Grafana
             http_call_silent -X PUT -H "Content-Type: Content-Type: application/json" -d '{ "homeDashboardId": 2 }' ${GRAFANA_URL}/api/org/preferences
+
+            echo_nl "FINISHED"
 ---
 apiVersion: v1
 items:

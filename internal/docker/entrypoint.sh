@@ -53,19 +53,21 @@ if [ ! -d $CLOVER_CONF_DIR ]; then
 	gosu $USER mkdir -p $CLOVER_CONF_DIR
 fi	
 
+DEFAULTS_DIR=$CATALINA_HOME/defaults
+
 if [ ! -f $CLOVER_CONF_FILE ]; then
 	echo "Creating default Clover config file $CLOVER_CONF_FILE"
-	gosu $USER cp "$CATALINA_CONF_DIR/clover_example.properties" $CLOVER_CONF_FILE
+	gosu $USER cp "$DEFAULTS_DIR/clover.properties" $CLOVER_CONF_FILE
 fi
 
 if [ ! -f $JNDI_CONF_FILE ]; then
 	echo "Creating default JNDI config file $JNDI_CONF_FILE"
-	gosu $USER cp "$CATALINA_CONF_DIR/jndi-conf_example.xml" $JNDI_CONF_FILE
+	gosu $USER cp "$DEFAULTS_DIR/jndi-conf.xml" $JNDI_CONF_FILE
 fi
 
 if [ ! -f $JMX_CONF_FILE ]; then
 	echo "Creating default JMX config file $JMX_CONF_FILE"
-	gosu $USER cp "$CATALINA_CONF_DIR/jmx-conf_example.properties" $JMX_CONF_FILE
+	gosu $USER cp "$DEFAULTS_DIR/jmx-conf.properties" $JMX_CONF_FILE
 fi
 
 # If SSL is used, jmx-conf.properties must only be readable by the owner (r--,---,---).
@@ -75,7 +77,7 @@ chmod 0400 $CATALINA_HOME/cloverconf/jmx-conf.properties
 
 if [ ! -f $HTTPS_CONF_FILE ]; then
 	echo "Creating default HTTPS config file $HTTPS_CONF_FILE"
-	gosu $USER cp "$CATALINA_CONF_DIR/https-conf_example.xml" $HTTPS_CONF_FILE
+	gosu $USER cp "$DEFAULTS_DIR/https-conf.xml" $HTTPS_CONF_FILE
 fi
 
 if [ ! -d $CLOVER_HOME_DIR/tomcat-lib ]; then

@@ -178,9 +178,9 @@ Configuration files:
 
 * ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is referenced from ``server.xml`` when running the container. See *Security* / *HTTPS* section below.
 * ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL. See *Security* / *JMX over SSL* section below.
-* ``conf/jndi-conf.xml`` - configuration of JNDI resources of Tomcat, is referenced from ``server.xml``when running the container. See the commented ``<Resource>`` example on how to add a JNDI resource. We recommend to use JNDI to connect to server's system database.
+* ``conf/jndi-conf.xml`` - configuration of JNDI resources of Tomcat, is referenced from ``server.xml`` when running the container. See the commented ``<Resource>`` example on how to add a JNDI resource. We recommend to use JNDI to connect to server's system database.
 
-Examples of these files are in this repo (see ``tomcat/conf/*example*`` files) - the examples can be used as a starting point for the configuration files before the first start of the container.
+Examples of these files are in this repo (see ``public/tomcat/defaults`` directory) - the examples can be used as a starting point for the configuration files before the first start of the container.
 
 ## Java Tuning
 
@@ -238,7 +238,7 @@ Default setting in our container:
 
 ## Custom Entrypoint Scripts
 
-If you need to run some script before CloverDX Server starts, but after ``$CLOVER_HOME_DIR`` directory is created, put your code into ``tomcat/hooks/init.sh`` file. Alternatively, you can also mount your own script as the ``init.sh`` file:
+If you need to run some script before CloverDX Server starts, but after ``$CLOVER_HOME_DIR`` directory is created, put your code into ``public/docker/hooks/init.sh`` file. Alternatively, you can also mount your own script as the ``init.sh`` file:
 
 ``docker run -v /your/hook/script.sh:/opt/tomcat/hooks/init.sh``
 

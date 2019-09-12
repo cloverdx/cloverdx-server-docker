@@ -10,7 +10,7 @@ gradlew
 gradlew.bat
 
 # Documentation
-README.md
+**/README.md
 docker-architecture.png
 
 # Examples

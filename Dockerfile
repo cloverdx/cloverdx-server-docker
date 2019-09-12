@@ -58,9 +58,9 @@ RUN set -eux && \
 	rm $CATALINA_HOME/lib/websocket-api.jar
 
 # Customize downloaded Tomcat
-COPY tomcat $CATALINA_HOME
+COPY internal/tomcat public/tomcat internal/docker public/docker $CATALINA_HOME/
 # Copy additional libraries
-COPY var /var
+COPY public/var /var
 # Copy clover.war
 COPY clover.war $CATALINA_HOME/webapps
 

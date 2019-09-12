@@ -24,12 +24,12 @@ dependencies {
 
 task copyTomcatLib(type: Copy) {
 	from configurations.tomcatLib
-	into "var/dbdrivers"
+	into "public/var/dbdrivers"
 }
 
 task copyCloverLib(type: Copy) {
 	from configurations.cloverLib
-	into "var/clover-lib"
+	into "public/var/clover-lib"
 }
 
 task copyPrometheusJmxAgent(type: Copy) {

@@ -25,6 +25,7 @@ It contains a sample echo data service, which simply prints the string passed as
     ```
 
 Thanks to port forwarding, you can now access the application at the following URLs:
+
 * <http://localhost:8090/data-service/echo/Hello+World!> - sample Data Service
 * <http://localhost:8090/clover> - CloverDX Server Console
 * <http://localhost:8090/monitoring> - Grafana monitoring dashboard

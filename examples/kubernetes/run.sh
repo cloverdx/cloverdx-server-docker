@@ -113,6 +113,9 @@ kubectl_ns() {
 # Create namespace
 kubectl create namespace $NAMESPACE
 
+# Pass PostgreSQL configuration to Kubernetes secrets
+kubectl create --namespace=$NAMESPACE secret generic postgresql-cfg --from-env-file=postgresql.conf
+
 # Create and expose CloverDX Server as a service
 cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl_ns create -f -
 

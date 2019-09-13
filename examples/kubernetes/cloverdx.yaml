@@ -37,17 +37,35 @@ spec:
           image: ${DOCKER_REGISTRY}/cloverdx-kubernetes-example:latest
           env:
             - name: clover.datasource.type
-              value: JDBC
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-cfg
+                  key: clover.datasource.type
             - name: clover.jdbc.url
-              value: jdbc:postgresql://localhost:5432/clover_db
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-cfg
+                  key: clover.jdbc.url
             - name: clover.jdbc.driverClassName
-              value: org.postgresql.Driver
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-cfg
+                  key: clover.jdbc.driverClassName
             - name: clover.jdbc.dialect
-              value: org.hibernate.dialect.PostgreSQLDialect
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-cfg
+                  key: clover.jdbc.dialect
             - name: clover.jdbc.username
-              value: clover
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-cfg
+                  key: clover.jdbc.username
             - name: clover.jdbc.password
-              value: clover
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-cfg
+                  key: clover.jdbc.password
             - name: clover.webGui.instance.label
               value: CloverDX App
           ports:
@@ -64,11 +82,20 @@ spec:
           image: postgres:9.4
           env:
             - name: POSTGRES_DB
-              value: clover_db
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-cfg
+                  key: database
             - name: POSTGRES_USER
-              value: clover
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-cfg
+                  key: clover.jdbc.username
             - name: POSTGRES_PASSWORD
-              value: clover
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-cfg
+                  key: clover.jdbc.password
           volumeMounts:
             - name: db-volume
               mountPath: /var/lib/postgresql/data

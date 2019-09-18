@@ -105,6 +105,8 @@ spec:
 
             # Select default dashboard in Grafana
             http_call_silent -X PUT -H "Content-Type: Content-Type: application/json" -d '{ "homeDashboardId": 2 }' ${GRAFANA_URL}/api/org/preferences
+
+            echo_nl "FINISHED"
 ---
 apiVersion: v1
 items:
@@ -275,6 +277,29 @@ items:
                     }
                 }
             ]
+        }
+    gravitee_ui_api.json: |
+        {
+            "name": "Gravitee UI",
+            "version": "1.0",
+            "description": "Gravitee API Management UI",
+            "contextPath": "/gravitee",
+            "endpoint": "http://gravitee-management-ui-svc:80/",
+            "groups": [
+        ],
+        "paths":
+            []
+        }
+    gravitee_ui_plan.json: |
+        {
+            "name": "Gravitee UI Plan",
+            "description": "Gravitee UI Plan",
+            "validation": "AUTO",
+            "characteristics":[],
+        "paths": {
+            "/":[]
+        },
+        "security": "KEY_LESS"
         }
   kind: ConfigMap
   metadata:

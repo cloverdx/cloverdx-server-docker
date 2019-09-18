@@ -25,7 +25,21 @@ It contains a sample echo data service, which simply prints the string passed as
     ```
 
 Thanks to port forwarding, you can now access the application at the following URLs:
-* <http://localhost:8090/data-service/echo/Hello+World!> - sample Data Service
-* <http://localhost:8090/clover> - CloverDX Server Console
-* <http://localhost:8090/monitoring> - Grafana monitoring dashboard
 
+* <http://localhost:8090/data-service/echo/Hello+World!> - sample Data Service
+* <http://localhost:8090/clover> - CloverDX Server Console (clover/clover)
+* <http://localhost:8090/monitoring> - Grafana monitoring dashboard
+* <http://localhost:8090/gravitee/> - Gravitee UI (admin/admin)
+
+---
+
+### Architecture
+
+At the core of the example, there is a CloverDX Server container together with a PostgreSQL container, running in the same pod.
+
+Then there is a Grafana pod providing monitoring dashboard. Grafana uses Prometheus and cAdvisor to collect the monitoring data.
+
+Finally, all the services are proxied via Gravitee.io Gateway. The gateway is split into a number of microservices - the proxy itself, its Management UI that uses Management API, and MongoDB and Elasticsearch used as a storage. In addition, there are Gravitee Access Management API and UI pods, but we have left them out of the schema for the sake of simplicity.
+
+
+![Architecture of the Example](architecture.png)

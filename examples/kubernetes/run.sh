@@ -113,6 +113,9 @@ kubectl_ns() {
 # Create namespace
 kubectl create namespace $NAMESPACE
 
+# Pass PostgreSQL configuration to Kubernetes secrets
+kubectl create --namespace=$NAMESPACE secret generic postgresql-cfg --from-env-file=postgresql.conf
+
 # Create and expose CloverDX Server as a service
 cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl_ns create -f -
 
@@ -149,6 +152,9 @@ kubectl_ns create -f init-containers.yaml
 echo "Waiting for Gravitee Gateway startup"
 kubectl_ns wait --for=condition=available --timeout=150s deployment/gravitee-gateway
 
+echo "Waiting for initialization job to finish"
+kubectl_ns wait --for=condition=complete --timeout=300s jobs/init-job
+
 # Print service description
 echo -e "\nService listing:"
 kubectl_ns get services
@@ -165,6 +171,7 @@ echo
 echo '* http://localhost:8090/data-service/echo/Hello+World! - sample Data Service'
 echo '* http://localhost:8090/clover - CloverDX Server Console'
 echo '* http://localhost:8090/monitoring - Grafana monitoring dashboard'
+echo '* http://localhost:8090/gravitee/ - Gravitee UI'
 echo
 
 # Start port forwarding to localhost:8090

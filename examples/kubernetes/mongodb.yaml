@@ -41,9 +41,6 @@ spec:
       containers:
         - name: mongo-db
           image: mongo:3.4.22-xenial
-          env:
-            - name: clover.datasource.type
-              value: JDBC
           ports:
             - containerPort: 27017
               protocol: TCP

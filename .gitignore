@@ -1,5 +1,5 @@
 /.settings
 /tomcat/webapps/
-/var/*/
+**/*.jar
 /clover.war
 **/license.dat

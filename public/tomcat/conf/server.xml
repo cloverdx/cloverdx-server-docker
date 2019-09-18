@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- For HTTPS and JNDI setup, it is recommended to edit https-conf.xml and jndi-conf.xml instead. -->
 <!DOCTYPE server-xml [
 	<!ENTITY jndi-conf SYSTEM "file:///var/clover/conf/jndi-conf.xml">
 	<!ENTITY https-conf SYSTEM "file:///var/clover/conf/https-conf.xml">
 ]>
+
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with

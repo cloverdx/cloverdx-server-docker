@@ -121,7 +121,7 @@ cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl_ns create -f -
 
 echo "Create and expose monitoring";
 # Pod security policy is global - it is not a part of any namespace
-kubectl create -f cloverdx-pod-security-policy.yaml
+kubectl apply -f cloverdx-pod-security-policy.yaml
 # cAdvisor, Prometheus, Grafana
 cat cloverdx-monitoring.yaml | envsubst '$NAMESPACE' | kubectl_ns create -f -
 
@@ -147,6 +147,7 @@ echo "Waiting for Gravitee Management API startup"
 kubectl_ns wait --for=condition=available --timeout=150s deployment/gravitee-management-api
 
 # Run container initialization job
+kubectl create --namespace=$NAMESPACE configmap gravitee-apis --from-file=init-containers/
 kubectl_ns create -f init-containers.yaml
 
 echo "Waiting for Gravitee Gateway startup"

@@ -1,0 +1,10 @@
+{
+	"name": "Gravitee UI Plan",
+	"description": "Gravitee UI Plan",
+	"validation": "AUTO",
+	"characteristics":[],
+	"paths": {
+		"/":[]
+	},
+	"security": "KEY_LESS"
+}

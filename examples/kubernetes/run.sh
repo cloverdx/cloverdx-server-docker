@@ -114,7 +114,7 @@ kubectl_ns() {
 kubectl create namespace $NAMESPACE
 
 # Pass PostgreSQL configuration to Kubernetes secrets
-kubectl create --namespace=$NAMESPACE secret generic postgresql-cfg --from-env-file=postgresql.conf
+kubectl_ns create secret generic postgresql-cfg --from-env-file=postgresql.conf
 
 # Create and expose CloverDX Server as a service
 cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl_ns create -f -
@@ -147,7 +147,7 @@ echo "Waiting for Gravitee Management API startup"
 kubectl_ns wait --for=condition=available --timeout=150s deployment/gravitee-management-api
 
 # Run container initialization job
-kubectl create --namespace=$NAMESPACE configmap gravitee-apis --from-file=init-containers/
+kubectl_ns create configmap gravitee-apis --from-file=init-containers/
 kubectl_ns create -f init-containers.yaml
 
 echo "Waiting for Gravitee Gateway startup"

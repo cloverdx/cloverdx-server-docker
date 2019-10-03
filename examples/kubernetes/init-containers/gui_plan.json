@@ -1,0 +1,10 @@
+{
+	"name": "CloverDX Plan",
+	"description": "CloverDX Server Console Plan",
+	"validation": "AUTO",
+	"characteristics":[],
+	"paths": {
+		"/":[]
+	},
+	"security": "KEY_LESS"
+}

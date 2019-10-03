@@ -1,0 +1,9 @@
+{
+	"name": "Grafana",
+	"version": "1.0",
+	"description": "Monitoring - Grafana",
+	"contextPath": "/monitoring",
+	"endpoint": "http://grafana-svc:3000",
+	"groups": [],
+	"paths": []
+}

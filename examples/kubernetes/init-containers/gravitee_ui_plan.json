@@ -2,9 +2,9 @@
 	"name": "Gravitee UI Plan",
 	"description": "Gravitee UI Plan",
 	"validation": "AUTO",
-	"characteristics":[],
+	"characteristics": [],
 	"paths": {
-		"/":[]
+		"/": []
 	},
 	"security": "KEY_LESS"
 }

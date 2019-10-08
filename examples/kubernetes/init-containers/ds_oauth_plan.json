@@ -2,9 +2,9 @@
 	"name": "CloverDX Data Services Plan with oAuth2",
 	"description": "CloverDX Data Services Plan with oAuth2",
 	"validation": "AUTO",
-	"characteristics":[],
+	"characteristics": [],
 	"paths": {
-		"/":[]
+		"/": []
 	},
 	"security": "KEY_LESS"
 }

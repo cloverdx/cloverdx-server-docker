@@ -2,9 +2,9 @@
 	"name": "Grafana Plan",
 	"description": "Grafana Plan",
 	"validation": "AUTO",
-	"characteristics":[],
+	"characteristics": [],
 	"paths": {
-		"/":[]
+		"/": []
 	},
 	"security": "KEY_LESS"
 }

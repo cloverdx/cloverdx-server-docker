@@ -127,7 +127,7 @@ Put the ``clover.properties`` file in the ``conf`` directory of the data volume 
 Server's configuration properties can be set via environment variables in 2 ways:
 
 * *direct override* - override server configuration properties with environment variables that have the same name, but with a ``clover.`` prefix. For example, the environment variable ``clover.sandboxes.home`` will override the configuration property ``sandboxes.home``.
-* *placeholders* - configuration properties can reference environment variables using the ``${ENVIRONMENT_VARIABLE}`` syntax. For example, ``sandboxes.home=${SANDBOXES_ROOT}``.
+* *placeholders* - configuration properties can reference environment variables using the ``${env:ENVIRONMENT_VARIABLE}`` syntax. For example, ``sandboxes.home=${env:SANDBOXES_ROOT}``.
 
 Environment variable values are set when running the container:
 ``docker run -e "clover.sandboxes.home=/some/path" ...``

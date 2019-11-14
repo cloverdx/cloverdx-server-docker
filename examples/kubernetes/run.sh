@@ -18,7 +18,7 @@ script_help() {
   echo "-p, --port            port number to run the example (random if not specified)"
 }
 
-# Parsing command-line arguments and flags 
+# Parsing command-line arguments and flags
 while test $# -gt 0; do
   case "$1" in
     '-?'|--help)
@@ -119,13 +119,13 @@ kubectl_ns create secret generic postgresql-cfg --from-env-file=postgresql.conf
 # Create and expose CloverDX Server as a service
 cat cloverdx.yaml | envsubst '$DOCKER_REGISTRY' | kubectl_ns create -f -
 
-echo "Create and expose monitoring";
+echo "Create and expose monitoring"
 # Pod security policy is global - it is not a part of any namespace
 kubectl apply -f cloverdx-pod-security-policy.yaml
 # cAdvisor, Prometheus, Grafana
 cat cloverdx-monitoring.yaml | envsubst '$NAMESPACE' | kubectl_ns create -f -
 
-kubectl_ns create -f elasticsearch.yaml 
+kubectl_ns create -f elasticsearch.yaml
 kubectl_ns create -f mongodb.yaml
 
 # Gravitee

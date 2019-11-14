@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:jdk-11.0.3_7-slim
+FROM adoptopenjdk/openjdk11:jdk-11.0.5_10-slim
 
 ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.20/bin/apache-tomcat-9.0.20.tar.gz"
 

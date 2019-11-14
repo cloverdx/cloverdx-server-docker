@@ -91,7 +91,7 @@ Used ports need to be published when running the container via the ``-p HOST_POR
 
 ## Data Volume
 
-CloverDX Server needs a persistent storage for its data and configuration, so that the files are not lost when the container is restarted or updated to a newer version. You should bind a host directory to `/var/clover/` inside the container ad a mounted volume:
+CloverDX Server needs a persistent storage for its data and configuration, so that the files are not lost when the container is restarted or updated to a newer version. You should bind a host directory to `/var/clover/` inside the container as a mounted volume:
 
 ```bash
 # bind host directory: 

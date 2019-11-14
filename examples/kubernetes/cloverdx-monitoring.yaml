@@ -81,11 +81,14 @@ spec:
       targetPort: 9090
 ---
 ### Prometheus deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: prometheus
 spec:
+  selector:
+    matchLabels:
+      app: prometheus
   replicas: 1
   template:
     metadata:
@@ -148,11 +151,14 @@ spec:
     targetPort: 3000
 ---
 ### Grafana deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
 spec:
+  selector:
+    matchLabels:
+      app: grafana
   replicas: 1
   template:
     metadata:

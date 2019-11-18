@@ -36,37 +36,37 @@ spec:
         - name:  cloverdx-server
           image: ${DOCKER_REGISTRY}/cloverdx-kubernetes-example:latest
           env:
-            - name: clover.datasource.type
+            - name: clover_datasource_type
               valueFrom:
                 secretKeyRef:
                   name: postgresql-cfg
                   key: clover.datasource.type
-            - name: clover.jdbc.url
+            - name: clover_jdbc_url
               valueFrom:
                 secretKeyRef:
                   name: postgresql-cfg
                   key: clover.jdbc.url
-            - name: clover.jdbc.driverClassName
+            - name: clover_jdbc_driverClassName
               valueFrom:
                 secretKeyRef:
                   name: postgresql-cfg
                   key: clover.jdbc.driverClassName
-            - name: clover.jdbc.dialect
+            - name: clover_jdbc_dialect
               valueFrom:
                 secretKeyRef:
                   name: postgresql-cfg
                   key: clover.jdbc.dialect
-            - name: clover.jdbc.username
+            - name: clover_jdbc_username
               valueFrom:
                 secretKeyRef:
                   name: postgresql-cfg
                   key: clover.jdbc.username
-            - name: clover.jdbc.password
+            - name: clover_jdbc_password
               valueFrom:
                 secretKeyRef:
                   name: postgresql-cfg
                   key: clover.jdbc.password
-            - name: clover.webGui.instance.label
+            - name: clover_webGui_instance_label
               value: CloverDX App
           ports:
             - containerPort: 8080

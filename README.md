@@ -161,6 +161,8 @@ During the first startup, the container automatically imports configuration XML 
 
 This feature is enabled by default in the container, not in vanilla CloverDX Server. It can be enabled/disabled via the ``configuration.autoimport.file`` configuration property.
 
+Additionally, during the first startup the container also automatically imports configuration from each of the automatically created sandboxes (see   section [Sandboxes](#sandboxes) above). In each sandbox there can be a ``sandbox_configuration.xml`` file that can contain sandbox-related configuration entities (schedules, event listeners, data services, job config properties). See [documentation](https://doc.cloverdx.com/latest/server/sandbox-config-import.html) for more details. This simplifies deployment of sandbox content and related configuration.
+
 ## License
 
 To activate CloverDX Server, the container by default searches for a license file (text file containing the license key itself) in the ``conf/license.dat`` path in the mounted volume.

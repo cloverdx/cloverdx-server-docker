@@ -56,3 +56,6 @@ export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.rmi/sun.rmi.transpor
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/sun.net.dns=ALL-UNNAMED"
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-exports=java.base/sun.security.provider=ALL-UNNAMED"
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED"
+# LocalDirectoryStream:
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens java.base/java.nio.file=ALL-UNNAMED"
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens java.base/sun.nio.fs=ALL-UNNAMED"

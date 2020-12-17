@@ -19,6 +19,9 @@ MIN_WORKER_HEAP_SIZE=1024
 # Start of the script                                                       #
 #############################################################################
 
+# Identification of running in docker, CloverDX uses this to detect environment
+export CLOVER_RUNNING_IN_DOCKER="true"
+
 compute_memory
 
 # Print info about memory settings

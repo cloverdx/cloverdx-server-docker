@@ -259,7 +259,7 @@ Exposed JMX ports:
 To enable JMX:
 
 1. set the ``RMI_HOSTNAME`` environment variable to the hostname or IP address of the running container instance (i.e. the instance must know its external address)
-1. make sure that the ports above are published
+1. make sure that the ports above are published. Container ports have to be mapped to the same ports on the Docker host (e.g. -p 8686:8686 -p 8687:8687...)
 
 See also [JMX over SSL](#jmx-over-ssl) section below.
 

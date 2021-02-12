@@ -322,8 +322,8 @@ Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.c
 
     ```properties
     ...
-    security.job_parameters.encryptor.algorithm=org.bouncycastle.jce.provider.BouncyCastleProvider
-    security.job_parameters.encryptor.providerClassName=PBEWITHSHA256AND256BITAES-CBC-BC
+    security.job_parameters.encryptor.providerClassName=org.bouncycastle.jce.provider.BouncyCastleProvider
+    security.job_parameters.encryptor.algorithm=PBEWITHSHA256AND256BITAES-CBC-BC
     ...
     ```
 

@@ -6,6 +6,7 @@ repositories {
 defaultTasks 'build'
 
 configurations {
+	dbDriver { transitive = false }
 	tomcatLib { transitive = false }
 	cloverLib { transitive = false }
 	prometheus { transitive = false }
@@ -13,18 +14,25 @@ configurations {
 
 dependencies {
 	cloverLib "javax.jms:javax.jms-api:2.0.1"
-	
-	tomcatLib "com.microsoft.sqlserver:sqljdbc4:4.0"
-	tomcatLib "mysql:mysql-connector-java:5.1.47"
-	tomcatLib "com.oracle:ojdbc6:11.2.0.3"
-	tomcatLib "org.postgresql:postgresql:42.2.12"
+
+	dbDriver "com.microsoft.sqlserver:sqljdbc4:4.0"
+	dbDriver "mysql:mysql-connector-java:5.1.47"
+	dbDriver "com.oracle:ojdbc6:11.2.0.3"
+	dbDriver "org.postgresql:postgresql:42.2.12"
+
+	tomcatLib "org.bouncycastle:bcprov-jdk15on:latest.release"
 
 	prometheus "io.prometheus.jmx:jmx_prometheus_javaagent:0.12.0"
 }
 
+task copyDbDriver(type: Copy) {
+	from configurations.dbDriver
+	into "public/var/dbdrivers"
+}
+
 task copyTomcatLib(type: Copy) {
 	from configurations.tomcatLib
-	into "public/var/dbdrivers"
+	into "public/var/tomcat-lib"
 }
 
 task copyCloverLib(type: Copy) {
@@ -43,5 +51,8 @@ tasks.withType(Copy) {
 	eachFile { logger.lifecycle("* {}", it.file.name) }
 }
 
-task build(dependsOn: [copyTomcatLib, copyCloverLib]) {
+task build(dependsOn: [copyDbDriver, copyTomcatLib, copyCloverLib]) {
 }
+
+task addStrongCrypto(dependsOn: [copyTomcatLib])
+

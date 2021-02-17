@@ -59,3 +59,5 @@ export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-exports=java.security.jgss/sun.
 # LocalDirectoryStream:
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens java.base/java.nio.file=ALL-UNNAMED"
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens java.base/sun.nio.fs=ALL-UNNAMED"
+# thread allocation tracking (CLO-20469)
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED"

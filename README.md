@@ -12,7 +12,7 @@ standalone CloverDX Server with good defaults, in a recommended environment.
 * Checkout or download this repository (Checkout via ``git clone https://github.com/cloverdx/cloverdx-server-docker.git``)
 * Download `clover.war` for Tomcat from <https://www.cloverdx.com>
 * Put `clover.war` into `cloverdx-server-docker` directory (current working directory containing the `Dockerfile`).
-* Optional: run `gradlew` to download additional dependencies, e.g. JDBC drivers.
+* Optional: run `gradlew` to download additional dependencies, e.g. JDBC drivers and stronger cryptography.
 * Build the Docker image:
 
     ```
@@ -35,7 +35,7 @@ standalone CloverDX Server with good defaults, in a recommended environment.
     * ``--mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover`` - mount the ``/data/your-host-clover-home-dir`` directory from the host as a data volume into ``/var/clover`` path inside the container, this will contain the persistent data, configuration, etc.
     * ``cloverdx-server:latest`` - name of the image to run as a container
 
-**Success**. CloverDX Server is now available at <http://localhost:8080/clover>. The Server is running with default settings, and **should be configured further** to get it into production quality (i.e. it should use external database).
+**Success**. CloverDX Server is now available at <http://localhost:8080/clover>. The Server is running with default settings, and **should be configured further** to get it into production quality (i.e. it should use an external database and set a cryptography master password).
 
 ---
 
@@ -294,8 +294,9 @@ Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.c
 
 ### Install Bouncy Castle
 
-* download Bouncy Castle JAR ( e.g. ``bcprov-jdk15on-162.jar`` from [here](https://www.bouncycastle.org/latest_releases.html))
-* get the JAR on server classpath - place it in ``tomcat-lib/`` in the mounted volume
+Run `./gradlew addStrongCrypto` to pull the latest version of BouncyCastle from Maven Central into `tomcat-lib/` in the mounted volume.
+
+To control the version of Bouncy Castle deployed, change `latest.release` in `gradle.build` to the version available in [Maven Central](https://search.maven.org/artifact/org.bouncycastle/bcprov-jdk15on) on which you want to pin. Be sure to check Bouncy Castle regularly for security updates.
 
 ### Secure Configuration Properties
 

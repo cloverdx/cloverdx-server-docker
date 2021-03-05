@@ -14,7 +14,7 @@ configurations {
 dependencies {
 	cloverLib "javax.jms:javax.jms-api:2.0.1"
 	
-	tomcatLib "com.microsoft.sqlserver:sqljdbc4:4.0"
+	tomcatLib "com.microsoft.sqlserver:mssql-jdbc:8.4.1.jre8"
 	tomcatLib "mysql:mysql-connector-java:5.1.47"
 	tomcatLib "com.oracle:ojdbc6:11.2.0.3"
 	tomcatLib "org.postgresql:postgresql:42.2.12"

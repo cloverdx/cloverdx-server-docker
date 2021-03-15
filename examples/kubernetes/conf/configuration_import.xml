@@ -6,7 +6,6 @@
   <cs:jobConfigsList/>
   <cs:schedulesList/>
   <cs:eventListenersList/>
-  <cs:launchServicesList/>
   <cs:dataServicesList>
     <cs:dataService>
       <cs:id>51</cs:id>

@@ -158,7 +158,6 @@ if (sandbox != null && jobPath != null) {
 return false;]]></cs:groovyCode>
     </cs:eventListener>
   </cs:eventListenersList>
-  <cs:launchServicesList/>
   <cs:dataServicesList/>
   <cs:tempSpacesList/>
 </cs:cloverServerConfiguration>

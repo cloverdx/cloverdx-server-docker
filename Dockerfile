@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk11:jdk-11.0.5_10-slim
+FROM adoptopenjdk:11.0.11_9-jdk-hotspot
 
 ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.41/bin/apache-tomcat-9.0.41.tar.gz"
 

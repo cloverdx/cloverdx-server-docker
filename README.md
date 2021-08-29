@@ -113,7 +113,7 @@ CloverDX Server is configured via configuration properties - e.g. connection inf
 The ``clover.properties`` file contains server configuration properties and their values. For example:
 
 ```properties
-jdbc.driverClassName=com.mysql.jdbc.Driver
+jdbc.driverClassName=com.mysql.cj.jdbc.Driver
 jdbc.url=jdbc:mysql://hostname:3306/clover?useUnicode=true&characterEncoding=utf8
 jdbc.username=user
 jdbc.password=pass

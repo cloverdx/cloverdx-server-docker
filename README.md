@@ -19,11 +19,17 @@ standalone CloverDX Server with good defaults, in a recommended environment.
     $ docker build -t cloverdx-server:latest .
     ```
 
-* Start CloverDX Server:
+* Start CloverDX Server on Linux:
 
     ```
     $ docker run -d --name cloverdx --memory=3g -p 8080:8080 -e LOCAL_USER_ID=`id -u $USER` --mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover cloverdx-server:latest
     ```  
+    
+* Start CloverDX Server on Windows:
+
+    ```
+    docker run -d --name cloverdx --memory=3g -p 8080:8080 --mount type=bind,source=C:/your-host-clover-home-dir,target=/var/clover cloverdx-server:latest
+    ```      
 
     Explanation:
     
@@ -31,7 +37,7 @@ standalone CloverDX Server with good defaults, in a recommended environment.
     * ``--name`` - name to identify the running container
     * ``--memory=3g`` - allow 3 GB of memory for the container, the container requires at least 2 GB of memory.
     * ``-p 8080:8080`` - publish exposed container port
-    * ```-e LOCAL_USER_ID=`id -u $USER``` - set an environment variable, in this case user ID to be used for permissions
+    * ```-e LOCAL_USER_ID=`id -u $USER``` - set an environment variable, in this case user ID to be used for permissions (only on Linux)
     * ``--mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover`` - mount the ``/data/your-host-clover-home-dir`` directory from the host as a data volume into ``/var/clover`` path inside the container, this will contain the persistent data, configuration, etc.
     * ``cloverdx-server:latest`` - name of the image to run as a container
 
@@ -94,11 +100,16 @@ Used ports need to be published when running the container via the ``-p HOST_POR
 CloverDX Server needs a persistent storage for its data and configuration, so that the files are not lost when the container is restarted or updated to a newer version. You should bind a host directory to `/var/clover/` inside the container as a mounted volume:
 
 ```bash
-# bind host directory: 
+# bind host directory on Linux: 
 --mount type=bind,source=/data/your-host-clover-data-dir,target=/var/clover
 ```
 
-If you bind a directory from the host OS, the data files will be owned by user with UID 1000. You should override this by setting `LOCAL_USER_ID` environment variable:
+```bash
+# bind host directory on Windows: 
+--mount type=bind,source=C:/your-host-clover-data-dir,target=/var/clover
+```
+
+On Linux, if you bind a directory from the host OS, the data files will be owned by user with UID 1000. You should override this by setting `LOCAL_USER_ID` environment variable:
 
 ```bash
 -e LOCAL_USER_ID=`id -u $USER`

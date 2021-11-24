@@ -362,8 +362,8 @@ As a workaround, job queue has been disabled in containers by default.
 
 You can re-enable it by setting the following property in your ``clover.properties`` file:
 
-    ```properties
-    jobqueue.enabled=true
-    ```
+```properties
+jobqueue.enabled=true
+```
 
 See ``public/tomcat/defaults/clover.properties``.

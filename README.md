@@ -359,7 +359,7 @@ Java 11 and older incorrectly reports system CPU usage in containers, which appe
 This may cause jobs to be enqueued instead of being executed, because the Server thinks it is under heavy load - [CLO-21980](https://bug.cloverdx.com/browse/CLO-21980).
 
 As a workaround, the [Job Queue](https://doc.cloverdx.com/latest/server/job-queue.html#job-queue-overview) has been disabled in containers by default.
-You can re-enable it by setting the following property in your ``clover.properties`` file:
+You can re-enable it by setting the following property in your ``clover.properties`` file, but it's recommended to keep the Job Queue disabled for Docker deployments.
 
 ```properties
 jobqueue.enabled=true

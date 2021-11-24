@@ -351,3 +351,19 @@ To build and run the stack in docker compose, use:
 or in a Docker swarm:
 
 ``docker stack deploy -c examples/compose/stack.yml cloverdx``
+
+# Known Issues
+
+## Job Queue
+Java 11 and older incorrectly reports system CPU usage in containers, which appears much higher than it actually is.
+This may prevent jobs from being executed - [CLO-21980](https://bug.cloverdx.com/browse/CLO-21980).
+
+As a workaround, job queue has been disabled in containers by default.
+
+You can re-enable it by setting the following property in your ``clover.properties`` file:
+
+    ```properties
+    jobqueue.enabled=true
+    ```
+
+See ``public/tomcat/defaults/clover.properties``.

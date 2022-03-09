@@ -1,6 +1,6 @@
-FROM adoptopenjdk:11.0.11_9-jdk-hotspot
+FROM eclipse-temurin:11.0.14.1_1-jdk-focal
 
-ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.41/bin/apache-tomcat-9.0.41.tar.gz"
+ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.59/bin/apache-tomcat-9.0.59.tar.gz"
 
 # Tomcat home directory
 ENV CATALINA_HOME /opt/tomcat

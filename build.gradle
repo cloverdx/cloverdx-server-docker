@@ -17,7 +17,7 @@ dependencies {
 	tomcatLib "com.microsoft.sqlserver:mssql-jdbc:8.4.1.jre8"
 	tomcatLib "mysql:mysql-connector-java:8.0.26"
 	tomcatLib "com.oracle.database.jdbc:ojdbc8:21.1.0.0"
-	tomcatLib "org.postgresql:postgresql:42.2.12"
+	tomcatLib "org.postgresql:postgresql:42.3.3"
 
 	prometheus "io.prometheus.jmx:jmx_prometheus_javaagent:0.12.0"
 }

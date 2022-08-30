@@ -338,7 +338,16 @@ Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.c
     ...
     ```
 
-* set the master password in Server Console (in *Configuration* > *Security* page)
+* set the master password in Server Console (in *Configuration* > *Security* page) or use autoimport (below)
+
+### Master password autoimport
+
+During the first startup, the container automatically imports master password from `${CLOVER_HOME_DIR}/conf/master-password.txt`, if the file exists.
+The file can be created manually. *The whole file content* is imported as the new password.
+
+This feature is enabled by default in the container, not in vanilla CloverDX Server. It can be enabled/disabled via the `masterpassword.autoimport.file` configuration property.
+
+After server start, you can check that the password is set in *Configuration* > *Security* page.
 
 # Stack Deployment
 

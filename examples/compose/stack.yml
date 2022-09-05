@@ -3,7 +3,7 @@ version: "3"
 services:
 
   db:
-    image: postgres:9.4
+    image: postgres:14.5
     expose:
       # Expose port 5432 to other services but not the host system
       - "5432"

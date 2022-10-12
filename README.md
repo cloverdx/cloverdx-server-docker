@@ -12,7 +12,7 @@ standalone CloverDX Server with good defaults, in a recommended environment.
 * Clone or download this repository and checkout the corresponding branch. For example, clone and checkout branch for release 5.13.0 via ``git clone https://github.com/cloverdx/cloverdx-server-docker.git -b release-5-13``.
 * Download `clover.war` for Tomcat from <https://www.cloverdx.com>
 * Put `clover.war` into `cloverdx-server-docker` directory (current working directory containing the `Dockerfile`).
-* Optional: run `gradlew` to download additional dependencies, e.g. JDBC drivers.
+* Optional: run `gradlew` to download additional dependencies, e.g. JDBC drivers, BouncyCastle.
 * Build the Docker image:
 
     ```
@@ -305,8 +305,8 @@ Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.c
 
 ### Install Bouncy Castle
 
-* download Bouncy Castle JAR ( e.g. ``bcprov-jdk15on-162.jar`` from [here](https://www.bouncycastle.org/latest_releases.html))
-* get the JAR on server classpath - place it in ``tomcat-lib/`` in the mounted volume
+* Download Bouncy Castle JAR ( e.g. ``bcprov-jdk15on-1.70.jar`` from [here](https://www.bouncycastle.org/latest_releases.html)).
+* Place it in ``var/bouncy-castle`` before building the image and then build the image. Optionally, the ``gradlew`` build script in this repository downloads it.
 
 ### Secure Configuration Properties
 

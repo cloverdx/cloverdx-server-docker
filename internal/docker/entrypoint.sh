@@ -86,8 +86,12 @@ fi
 if [ ! -d $CLOVER_HOME_DIR/tomcat-lib ]; then
 	echo "Creating ${CLOVER_HOME_DIR}/tomcat-lib"
 	gosu $USER mkdir $CLOVER_HOME_DIR/tomcat-lib
+
 	echo "Copying JDBC drivers to ${CLOVER_HOME_DIR}/tomcat-lib"
 	gosu $USER cp /var/dbdrivers/* ${CLOVER_HOME_DIR}/tomcat-lib/
+
+	echo "Copying BouncyCastle to ${CLOVER_HOME_DIR}/tomcat-lib"
+	gosu $USER cp /var/bouncy-castle/* ${CLOVER_HOME_DIR}/tomcat-lib/
 fi
 
 # Create an empty directory for additional worker jars

@@ -6,7 +6,8 @@ repositories {
 defaultTasks 'build'
 
 configurations {
-	tomcatLib { transitive = false }
+	dbDriverLib { transitive = false }
+	bouncyCastleLib { transitive = false }
 	cloverLib { transitive = false }
 	prometheus { transitive = false }
 }
@@ -14,17 +15,24 @@ configurations {
 dependencies {
 	cloverLib "javax.jms:javax.jms-api:2.0.1"
 	
-	tomcatLib "com.microsoft.sqlserver:mssql-jdbc:8.4.1.jre8"
-	tomcatLib "mysql:mysql-connector-java:8.0.26"
-	tomcatLib "com.oracle.database.jdbc:ojdbc8:21.1.0.0"
-	tomcatLib "org.postgresql:postgresql:42.4.1"
+	dbDriverLib "com.microsoft.sqlserver:mssql-jdbc:8.4.1.jre8"
+	dbDriverLib "mysql:mysql-connector-java:8.0.26"
+	dbDriverLib "com.oracle.database.jdbc:ojdbc8:21.1.0.0"
+	dbDriverLib "org.postgresql:postgresql:42.4.1"
+
+	bouncyCastleLib "org.bouncycastle:bcprov-jdk15on:1.70"
 
 	prometheus "io.prometheus.jmx:jmx_prometheus_javaagent:0.12.0"
 }
 
-task copyTomcatLib(type: Copy) {
-	from configurations.tomcatLib
+task copyDbDriverLib(type: Copy) {
+	from configurations.dbDriverLib
 	into "public/var/dbdrivers"
+}
+
+task copyBouncyCastleLib(type: Copy) {
+	from configurations.bouncyCastleLib
+	into "public/var/bouncy-castle"
 }
 
 task copyCloverLib(type: Copy) {
@@ -43,5 +51,5 @@ tasks.withType(Copy) {
 	eachFile { logger.lifecycle("* {}", it.file.name) }
 }
 
-task build(dependsOn: [copyTomcatLib, copyCloverLib]) {
+task build(dependsOn: [copyDbDriverLib, copyCloverLib, copyBouncyCastleLib]) {
 }

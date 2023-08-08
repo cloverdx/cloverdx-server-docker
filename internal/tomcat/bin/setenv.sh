@@ -44,23 +44,12 @@ export CATALINA_OPTS="$CATALINA_OPTS -Djava.security.egd=file:/dev/./urandom"
 # Used for custom command line arguments for CloverDX Core Server
 export CATALINA_OPTS="$CATALINA_OPTS ${SERVER_JAVA_OPTS}"
 
-# for snowflake (CLO-27093)
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.nio=ALL-UNNAMED"
-
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.io=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.lang=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.util=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.management/javax.management=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-exports=java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/sun.net.dns=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-exports=java.base/sun.security.provider=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED"
-# LocalDirectoryStream:
+# LocalDirectoryStream (CLO-19177)
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens java.base/java.nio.file=ALL-UNNAMED"
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens java.base/sun.nio.fs=ALL-UNNAMED"
 # thread allocation tracking (CLO-20469)
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED"
+# for snowflake (CLO-27093)
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.nio=ALL-UNNAMED"
+# MDM (CLO-27101)
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED"

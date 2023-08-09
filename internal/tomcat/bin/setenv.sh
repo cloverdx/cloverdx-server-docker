@@ -44,12 +44,14 @@ export CATALINA_OPTS="$CATALINA_OPTS -Djava.security.egd=file:/dev/./urandom"
 # Used for custom command line arguments for CloverDX Core Server
 export CATALINA_OPTS="$CATALINA_OPTS ${SERVER_JAVA_OPTS}"
 
-# LocalDirectoryStream (CLO-19177)
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens java.base/java.nio.file=ALL-UNNAMED"
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens java.base/sun.nio.fs=ALL-UNNAMED"
 # thread allocation tracking (CLO-20469)
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED"
-# for snowflake (CLO-27093)
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.nio=ALL-UNNAMED"
 # MDM (CLO-27101)
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED"
+# for snowflake (CLO-27093)
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.nio=ALL-UNNAMED"
+# LocalDirectoryStream (CLO-19177)
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.nio.file=ALL-UNNAMED"
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/sun.nio.fs=ALL-UNNAMED"
+# email (CLO-23027)
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/sun.security.util=ALL-UNNAMED"

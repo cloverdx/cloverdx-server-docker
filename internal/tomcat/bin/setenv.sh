@@ -48,6 +48,10 @@ export CATALINA_OPTS="$CATALINA_OPTS ${SERVER_JAVA_OPTS}"
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED"
 # MDM (CLO-27101)
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.xml/com.sun.org.apache.xerces.internal.dom=ALL-UNNAMED"
+# greenmail (CLO-27090)
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/javax.net.ssl=ALL-UNNAMED"
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.lang=ALL-UNNAMED"
+export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.lang.reflect=ALL-UNNAMED"
 # for snowflake (CLO-27093)
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.nio=ALL-UNNAMED"
 # LocalDirectoryStream (CLO-19177)

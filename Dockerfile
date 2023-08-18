@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11.0.14.1_1-jdk-focal
+FROM eclipse-temurin:17.0.8_7-jdk-focal
 
 ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.59/bin/apache-tomcat-9.0.59.tar.gz"
 

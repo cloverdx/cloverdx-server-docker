@@ -78,7 +78,7 @@ Internal structure of the container:
 Environment:
 
 * Ubuntu Linux
-* OpenJDK 11 from AdoptOpenJDK (slim JDK build with removed functionality that's typically not needed in cloud)
+* Eclipse Temurin JDK 17
 * Tomcat 9
 
 Default exposed ports:

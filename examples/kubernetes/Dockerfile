@@ -14,6 +14,8 @@ COPY lib/jmx_prometheus_javaagent-0.12.0.jar $CLOVER_LIB_DIR
 ENV SERVER_JAVA_OPTS="-javaagent:/var/clover-lib/jmx_prometheus_javaagent-0.12.0.jar=8787:/var/clover/conf/jmx-prometheus-config.yaml"
 # Add exporter to Worker
 ENV WORKER_JAVA_OPTS=-javaagent:/var/clover-lib/jmx_prometheus_javaagent-0.12.0.jar=8788:/var/clover/conf/jmx-prometheus-config.yaml
+# Add env variable to signal this is a Docker test
+ENV IS_DOCKER="true"
 
 # 8080: HTTP
 # 8686 and 8687: JMX for Core server

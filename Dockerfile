@@ -25,6 +25,9 @@ ENV HTTPS_CONF_FILE $CLOVER_CONF_DIR/https-conf.xml
 # Set default locale to en_US; see also 'locale-gen' command below
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
+# Signal to the env that it's in a Docker container
+ENV IS_DOCKER="true"
+
 WORKDIR $CATALINA_HOME
 
 # Change the default shell to Bash

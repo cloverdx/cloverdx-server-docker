@@ -79,7 +79,7 @@ spec:
             - name: clover-logs
               mountPath: /var/clover/cloverlogs
         - name:  db
-          image: postgres:9.4
+          image: postgres:15.5
           env:
             - name: POSTGRES_DB
               valueFrom:

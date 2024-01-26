@@ -15,7 +15,7 @@ configurations {
 dependencies {
 	cloverLib "javax.jms:javax.jms-api:2.0.1"
 	
-	dbDriverLib "com.microsoft.sqlserver:mssql-jdbc:8.4.1.jre8"
+	dbDriverLib "com.microsoft.sqlserver:mssql-jdbc:12.4.2.jre11"
 	dbDriverLib "com.mysql:mysql-connector-j:8.2.0"
 	dbDriverLib "com.oracle.database.jdbc:ojdbc11:23.2.0.0"
 	dbDriverLib "org.postgresql:postgresql:42.6.0"

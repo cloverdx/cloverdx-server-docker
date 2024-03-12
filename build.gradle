@@ -17,7 +17,7 @@ dependencies {
 	
 	dbDriverLib "com.microsoft.sqlserver:mssql-jdbc:12.4.2.jre11"
 	dbDriverLib "com.mysql:mysql-connector-j:8.2.0"
-	dbDriverLib "com.oracle.database.jdbc:ojdbc11:23.2.0.0"
+	dbDriverLib "com.oracle.database.jdbc:ojdbc11:23.3.0.23.09"
 	dbDriverLib "org.postgresql:postgresql:42.7.2"
 
 	bouncyCastleLib "org.bouncycastle:bcprov-jdk15on:1.70"

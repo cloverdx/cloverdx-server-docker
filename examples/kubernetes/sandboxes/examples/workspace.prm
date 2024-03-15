@@ -36,9 +36,6 @@
     <GraphParameter name="META_DIR" value="${PROJECT}/meta" secure="false" public="false" required="false">
         <attr name="description">Default folder for external metadata (fmt)</attr>
     </GraphParameter>
-    <GraphParameter name="PROFILE_DIR" value="${PROJECT}/profile" secure="false" public="false" required="false">
-        <attr name="description">Default folder for data profiler jobs (cpj)</attr>
-    </GraphParameter>
     <GraphParameter name="SEQ_DIR" value="${PROJECT}/seq" secure="false" public="false" required="false">
         <attr name="description">Default folder for external sequences (seq)</attr>
     </GraphParameter>

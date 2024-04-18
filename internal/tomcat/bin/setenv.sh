@@ -10,7 +10,7 @@ if [ ! -z ${MAX_CACHED_BUFFER_SIZE} ]; then
 	export CATALINA_OPTS="$CATALINA_OPTS -Djdk.nio.maxCachedBufferSize=${MAX_CACHED_BUFFER_SIZE}"
 fi
 
-export CATALINA_OPTS="$CATALINA_OPTS -Xss256k"
+export CATALINA_OPTS="$CATALINA_OPTS -Xss512k"
 
 # GC settings
 export CATALINA_OPTS="$CATALINA_OPTS -XX:+UseG1GC"

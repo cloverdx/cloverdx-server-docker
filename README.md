@@ -219,6 +219,8 @@ The automatic memory settings can be overridden by setting **BOTH** environment 
 * ``CLOVER_SERVER_HEAP_SIZE`` - heap size of Server Core (in MB)
 * ``CLOVER_WORKER_HEAP_SIZE``  - heap size of Worker (in MB)
 
+Note that if the memory for the container is not limited with the ``--memory`` option, the memory settings will be calculated as though only 2 GB of memory were available (Server Core will have 0.5 GB heap, Worker will have 1 GB heap).
+
 ## CPU
 
 The docker image follows CPU constraints assigned to it, e.g. it sees just a limited number of CPU cores and is assigned a portion of CPU cycles of the host machine.

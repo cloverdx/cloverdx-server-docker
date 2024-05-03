@@ -1,14 +1,44 @@
 #!/bin/bash
 
 available_memory() {
+	if [[ -f /sys/fs/cgroup/cgroup.controllers ]]; then
+		get_mem_limit_cgroupv2
+	else
+		get_mem_limit_cgroupv1
+	fi
+}
+
+get_mem_limit_cgroupv1() {
+	# The default value (i.e. hard memory limit not set) is LONG_MAX/PAGE_SIZE (i.e. it depends on platform, 
+	# for example it is 9223372036854771712 for 4k page size). So we compare the value with the total memory available
+	# in the system and if it is lower, we consider it defined. 
+	# The value can also be -1 (means remove any existing limit).
+	# If the limit is not set, MIN_MEMORY_SIZE is used.
 	local mem_file="/sys/fs/cgroup/memory/memory.limit_in_bytes"
-	local mem_file_soft="/sys/fs/cgroup/memory/memory.soft_limit_in_bytes"
-	if [[ -r "${mem_file}" && -r "${mem_file_soft}" ]]; then
+	if [[ -r "${mem_file}" ]]; then
 		local max_mem_cgroup="$(cat ${mem_file})"
-		local max_mem_cgroup_soft="$(cat ${mem_file_soft})"
-		if [ ${max_mem_cgroup:-0} -lt ${max_mem_cgroup_soft:-0} ]; then
+		local max_mem_meminfo_kb="$(< /proc/meminfo awk '/MemTotal/ {print $2}')"
+		local max_mem_meminfo=$(("$max_mem_meminfo_kb" * 1024))
+		if [[ ${max_mem_cgroup:-0} != -1 && ${max_mem_cgroup:-0} -lt ${max_mem_meminfo:-0} ]]; then
 			export SYSTEM_TOTAL_MEMORY=${max_mem_cgroup}
-			echo ${max_mem_cgroup}
+			echo "${max_mem_cgroup}"
+		else
+			echo ""
+		fi
+	else
+		echo ""
+	fi
+}
+
+get_mem_limit_cgroupv2() {
+	# The default value (i.e. hard memory limit not set) is "max".
+	# If the limit is not set, MIN_MEMORY_SIZE is used.
+	local mem_file="/sys/fs/cgroup/memory.max"
+	if [[ -r "${mem_file}" ]]; then
+		local max_mem_cgroup="$(cat ${mem_file})"
+		if [[ ${max_mem_cgroup} != "max" ]]; then
+			export SYSTEM_TOTAL_MEMORY=${max_mem_cgroup}
+			echo "${max_mem_cgroup}"
 		else
 			echo ""
 		fi

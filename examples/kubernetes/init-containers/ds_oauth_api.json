@@ -1,9 +1,0 @@
-{
-	"name": "CloverDX Data Services with oAuth2",
-	"version": "1.0",
-	"description": "CloverDX Data Services",
-	"contextPath": "/ds-oauth2",
-	"endpoint": "http://cloverdx-svc:8080/clover/data-service",
-	"groups": [],
-	"paths": []
-}

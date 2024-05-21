@@ -1,9 +1,0 @@
-{
-	"name": "Gravitee UI",
-	"version": "1.0",
-	"description": "Gravitee API Management UI",
-	"contextPath": "/gravitee",
-	"endpoint": "http://gravitee-management-ui-svc:80/",
-	"groups": [],
-	"paths": []
-}

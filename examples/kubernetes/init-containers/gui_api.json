@@ -1,9 +1,0 @@
-{
-	"name": "CloverDX UI",
-	"version": "1.0",
-	"description": "CloverDX Server Console",
-	"contextPath": "/clover",
-	"endpoint": "http://cloverdx-svc:8080/clover",
-	"groups": [],
-	"paths": []
-}

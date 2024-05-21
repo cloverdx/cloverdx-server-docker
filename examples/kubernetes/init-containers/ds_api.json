@@ -1,9 +1,0 @@
-{
-	"name": "CloverDX Data Services",
-	"version": "1.0",
-	"description": "CloverDX Data Services",
-	"contextPath": "/data-service",
-	"endpoint": "http://cloverdx-svc:8080/clover/data-service",
-	"groups": [],
-	"paths": []
-}

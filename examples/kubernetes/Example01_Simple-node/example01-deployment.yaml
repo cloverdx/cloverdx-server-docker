@@ -1,0 +1,160 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: example01-ns
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: example01-sc
+  namespace: example01-ns
+provisioner: driver.longhorn.io
+reclaimPolicy: Retain
+parameters:
+  numberOfReplicas: "3"
+  fsType: ext4
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: example01-postgres-pvc
+  namespace: example01-ns
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+  storageClassName: example01-sc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: example01-sandboxes-pvc
+  namespace: example01-ns
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: example01-sc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example01-app-svc
+  namespace: example01-ns
+spec:
+  selector:
+    app: example01-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30001
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example01-db-svc
+  namespace: example01-ns
+spec:
+  selector:
+    app: example01-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: example01-db
+  namespace: example01-ns
+spec:
+  serviceName: example01-db-svc
+  selector:
+    matchLabels:
+      app: example01-db
+  template:
+    metadata:
+      labels:
+        app: example01-db
+    spec:
+      containers:
+      - name:  postgres
+        image: postgres:15.5
+        resources:
+          requests:
+            memory: "500Mi"
+          limits:
+            memory: "500Mi"
+            cpu: "1.0"
+        env:
+          - name: POSTGRES_DB
+            value: cloverdx_db
+          - name: POSTGRES_USER
+            value: clover
+          - name: POSTGRES_PASSWORD
+            value: clover
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: example01-postgres-volume
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres
+      volumes:
+      - name: example01-postgres-volume
+        persistentVolumeClaim:
+          claimName: example01-postgres-pvc
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: example01-app
+  namespace: example01-ns
+spec:
+  serviceName: example01-app-svc
+  selector:
+    matchLabels:
+      app: example01-app
+  template:
+    metadata:
+      labels:
+        app: example01-app
+    spec:
+      containers:
+      - name: cloverdx-server
+        image: cloverdx/cloverdx-server
+        resources:
+          requests:
+            memory: "4Gi"
+          limits:
+            memory: "4Gi"
+            cpu: "2.0"
+        env:
+          - name: clover.datasource.type
+            value: JDBC
+          - name: clover.jdbc.url
+            value: jdbc:postgresql://example01-db-svc.example01-ns.svc.cluster.local:5432/cloverdx_db
+          - name: clover.jdbc.driverClassName
+            value: org.postgresql.Driver
+          - name: clover.jdbc.dialect
+            value: org.hibernate.dialect.PostgreSQLDialect
+          - name: clover.jdbc.username
+            value: clover
+          - name: clover.jdbc.password
+            value: clover
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: example01-sandboxes-volume
+          mountPath: /var/clover/sandboxes
+          subPath: sandboxes
+      volumes:
+      - name: example01-sandboxes-volume
+        persistentVolumeClaim:
+          claimName: example01-sandboxes-pvc

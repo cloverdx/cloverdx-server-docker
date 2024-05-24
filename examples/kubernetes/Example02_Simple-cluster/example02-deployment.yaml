@@ -1,0 +1,225 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: example02-ns
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: example02-sc
+  namespace: example02-ns
+provisioner: driver.longhorn.io
+reclaimPolicy: Retain
+parameters:
+  numberOfReplicas: "3"
+  fsType: ext4
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: example02-postgres-pvc
+  namespace: example02-ns
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+  storageClassName: example02-sc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: example02-sandboxes-pvc
+  namespace: example02-ns
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: example02-sc
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: example02-config
+  namespace: example02-ns
+data:
+  clover.datasource.type: JDBC
+  clover.jdbc.url: jdbc:postgresql://example02-db-svc.example02-ns.svc.cluster.local:5432/clover_db
+  clover.jdbc.driverClassName: org.postgresql.Driver
+  clover.jdbc.dialect: org.hibernate.dialect.PostgreSQLDialect
+  clover.jdbc.username: clover
+  clover.jdbc.password: clover
+  clover.cluster.enabled: "true"
+  clover.cluster.jgroups.start_port: "7800"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example02-app-svc
+  namespace: example02-ns
+spec:
+  selector:
+    app: example02-app
+  ports:
+    - name: app
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30002
+    - name: jgroups
+      protocol: TCP
+      port: 7800
+      targetPort: 7800
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example02-db-svc
+  namespace: example02-ns
+spec:
+  selector:
+    app: example02-db
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: example02-db
+  namespace: example02-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: example02-db
+  serviceName: example02-db-svc
+  template:
+    metadata:
+      labels:
+        app: example02-db
+    spec:
+      containers:
+      - name:  postgres
+        image: postgres:15.5
+        resources:
+          requests:
+            memory: "500Mi"
+          limits:
+            memory: "500Mi"
+            cpu: "1.0"
+        env:
+          - name: POSTGRES_DB
+            value: clover_db
+          - name: POSTGRES_USER
+            value: clover
+          - name: POSTGRES_PASSWORD
+            value: clover
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: example02-postgres-volume
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres
+      volumes:
+      - name: example02-postgres-volume
+        persistentVolumeClaim:
+          claimName: example02-postgres-pvc
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: example02-app
+  namespace: example02-ns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: example02-app
+  serviceName: example02-app-svc
+  template:
+    metadata:
+      labels:
+        app: example02-app
+    spec:
+      containers:
+      - name: cloverdx-server
+        image: cloverdx/cloverdx-server
+        resources:
+          requests:
+            memory: "4Gi"
+          limits:
+            memory: "4Gi"
+            cpu: "2.0"
+        envFrom:
+        - configMapRef:
+            name: example02-config
+        env:
+          - name: MY_POD_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: clover.cluster.node.id
+            value: $(MY_POD_NAME)
+          - name: clover.cluster.http.url
+            value: http://$(MY_POD_IP):8080/clover
+          - name: clover.cluster.jgroups.bind_address
+            value: $(MY_POD_IP)
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: example02-sandboxes-volume
+          mountPath: /var/clover/sandboxes
+          subPath: sandboxes
+      volumes:
+      - name: example02-sandboxes-volume
+        persistentVolumeClaim:
+          claimName: example02-sandboxes-pvc
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: 
+  name: example02-tls-ingress
+  namespace: example02-ns
+  annotations:
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+spec:
+  tls:
+    - hosts:
+      - <your-domain>
+      secretName: example02-tls-secret
+  ingressClassName: nginx
+  rules:
+  - host: <your-domain>
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: example02-app-svc
+            port:
+              number: 8080
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: example02-tls-secret
+  namespace: example02-ns
+type: kubernetes.io/tls
+data:
+  tls.crt: |
+    <your-tls-crt>
+  tls.key: |
+    <your-tls-key>

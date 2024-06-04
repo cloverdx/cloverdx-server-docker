@@ -177,16 +177,25 @@ spec:
             value: http://$(MY_POD_IP):8080/clover
           - name: clover.cluster.jgroups.bind_address
             value: $(MY_POD_IP)
+          - name: clover.license.file
+            value: /var/clover/license.dat
         ports:
         - containerPort: 8080
         volumeMounts:
         - name: example02-sandboxes-volume
           mountPath: /var/clover/sandboxes
           subPath: sandboxes
+        - name: secret-volume
+          readOnly: true
+          mountPath: "/var/clover/license.dat"
+          subPath: license.dat
       volumes:
       - name: example02-sandboxes-volume
         persistentVolumeClaim:
           claimName: example02-sandboxes-pvc
+      - name: secret-volume
+        secret:
+          secretName: example02-license-secret
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -225,3 +234,13 @@ data:
     <your-tls-crt>
   tls.key: |
     <your-tls-key>
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: example02-license-secret
+  namespace: example02-ns
+type: Opaque
+data:
+  license.dat: |
+    <your-base64-license.dat>

@@ -1,4 +1,4 @@
-# Readme Example 1: Standalone CloverDX Server
+# Example 1: Standalone CloverDX Server
 
 Standalone CloverDX Server with PostgreSQL database.
 
@@ -58,6 +58,7 @@ To insert a license using the CloverDX REST API, follow these steps:
 ```
  
 Make sure to:
+
 * Replace `your-domain` with the actual domain where your CloverDX Server is hosted.
 * Replace `clover:clover` with the actual username and password.
 * Adjust the path to the `license.txt` file as needed.

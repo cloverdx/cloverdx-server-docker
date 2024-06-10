@@ -21,7 +21,7 @@ kubectl create -f example02-deployment.yaml
 
 * 3-node CloverDX Cluster from the [official Docker image](https://hub.docker.com/r/cloverdx/cloverdx-server).
 * Default admin user: `clover` (password: `clover`) with built-in user management available.
-* Resource limits: 4 GiB memory for CloverDX, 0.5 GiB for PostgreSQL.
+* Resource limits: 8 GiB memory for CloverDX, 2 GiB for PostgreSQL.
 * Apache Tomcat web server hosting CloverDX instance on internal HTTP port.
 * Ingress providing load balancing and TLS termination. CloverDX Server console will be accessible on `https://<your-domain>/clover`
 * Persistent storage:

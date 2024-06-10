@@ -24,7 +24,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: 1Gi
   storageClassName: example02-sc
 ---
 apiVersion: v1
@@ -37,7 +37,7 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
+      storage: 5Gi
   storageClassName: example02-sc
 ---
 apiVersion: v1
@@ -110,11 +110,11 @@ spec:
         image: postgres:15.5
         resources:
           requests:
-            memory: "500Mi"
-            cpu: "0.3"
+            memory: "2Gi"
+            cpu: "0.5"
           limits:
-            memory: "500Mi"
-            cpu: "1.0"
+            memory: "2Gi"
+            cpu: "2.0"
         env:
           - name: POSTGRES_DB
             value: clover_db
@@ -154,11 +154,11 @@ spec:
         image: cloverdx/cloverdx-server
         resources:
           requests:
-            memory: "4Gi"
-            cpu: "0.5"
-          limits:
-            memory: "4Gi"
+            memory: "8Gi"
             cpu: "2.0"
+          limits:
+            memory: "8Gi"
+            cpu: "4.0"
         envFrom:
         - configMapRef:
             name: example02-config

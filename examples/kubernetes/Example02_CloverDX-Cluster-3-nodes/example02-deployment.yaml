@@ -83,7 +83,7 @@ metadata:
 spec:
   selector:
     app: example02-db
-  type: NodePort
+  type: ClusterIP
   ports:
     - protocol: TCP
       port: 5432

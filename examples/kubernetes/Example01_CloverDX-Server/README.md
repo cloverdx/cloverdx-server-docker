@@ -14,7 +14,7 @@ kubectl create -f example01-deployment.yaml
 
 * CloverDX Server from the [official Docker image](https://hub.docker.com/r/cloverdx/cloverdx-server).
 * Default admin user: `clover` (password: `clover`) with built-in user management.
-* Resource limits: 4 GiB memory for CloverDX, 0.5 GiB for PostgreSQL.
+* Resource limits: 8 GiB memory for CloverDX, 2 GiB for PostgreSQL.
 * Apache Tomcat web server hosting CloverDX instance on internal port 8080, forwarded to external port 30001.
 * Persistent storage:
     * `example01-postgres-pvc` volume: CloverDX system database ([Longhorn block storage](https://longhorn.io/))

@@ -365,4 +365,4 @@ or in a Docker swarm:
 
 # Kubernetes
 
-You can deploy CloverDX Server to Kubernetes. There are examples of deployment of a standalone server and a 3-node cluster in [examples/kubernetes](examples/kubernetes)
+You can deploy CloverDX Server to Kubernetes. There are examples of deployment of a standalone CloverDX Server and a 3-node CloverDX Cluster in [examples/kubernetes](examples/kubernetes)

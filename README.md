@@ -362,3 +362,7 @@ To build and run the stack in docker compose, use:
 or in a Docker swarm:
 
 ``docker stack deploy -c examples/compose/stack.yml cloverdx``
+
+# Kubernetes
+
+You can deploy CloverDX Server to Kubernetes. There are examples of deployment of a standalone server and a 3-node cluster in [examples/kubernetes](examples/kubernetes)

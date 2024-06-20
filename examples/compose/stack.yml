@@ -1,5 +1,3 @@
-version: "3"
-
 services:
 
   db:
@@ -24,7 +22,7 @@ services:
       - db
     ports:
       # Expose port 8080 to the host system
-      - 8080:8080
+      - 8889:8080
     volumes:
       # Mount to persist CloverDX Server data
       - ./clover:/var/clover

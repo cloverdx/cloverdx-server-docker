@@ -357,7 +357,7 @@ You can deploy CloverDX Server and its system database together as a stack using
 
 To build and run the stack in docker compose, use:
 
-``docker-compose -f examples/compose/stack.yml up -d``
+``docker compose -f examples/compose/stack.yml up -d``
 
 or in a Docker swarm:
 

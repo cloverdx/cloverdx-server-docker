@@ -2,23 +2,22 @@
 	Define a HTTPS Connector on port 8443
 	
 	You have to change attributes:
-		* keystorePass
+		* certificateKeystorePassword
 -->
 <!--
 <Connector
-	port="8443"
-	maxHttpHeaderSize="7192"
-	maxThreads="150"
-	minSpareThreads="25"
-	enableLookups="false"
-	disableUploadTimeout="true"
-	acceptCount="100"
-	scheme="https"
-	secure="true"
-	clientAuth="false"
-	sslProtocol="TLS"
-	SSLEnabled="true"
 	protocol="org.apache.coyote.http11.Http11NioProtocol"
-	keystoreFile="/var/clover/conf/serverKS.jks"
-	keystorePass="<PASSWORD>" />
+	port="8443"
+	maxThreads="150"
+	SSLEnabled="true"
+	maxParameterCount="1000"
+	>
+	<SSLHostConfig>
+		<Certificate
+			certificateKeystoreFile="/var/clover/conf/serverKS.jks"
+			certificateKeystorePassword="<PASSWORD>"
+			type="RSA"
+		/>
+	</SSLHostConfig>
+</Connector>
 -->

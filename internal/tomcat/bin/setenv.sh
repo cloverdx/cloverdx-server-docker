@@ -58,5 +58,3 @@ export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.nio=ALL-UN
 # LocalDirectoryStream (CLO-19177)
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/java.nio.file=ALL-UNNAMED"
 export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/sun.nio.fs=ALL-UNNAMED"
-# email (CLO-23027)
-export JDK_JAVA_OPTIONS="$JDK_JAVA_OPTIONS --add-opens=java.base/sun.security.util=ALL-UNNAMED"

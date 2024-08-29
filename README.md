@@ -117,7 +117,7 @@ On Linux, if you bind a directory from the host OS, the data files will be owned
 
 ## Server Configuration
 
-CloverDX Server is configured via configuration properties - e.g. connection information to the system database. See [documentation](https://doc.cloverdx.com/latest/server/list-of-properties.html) for available configuration properties.
+CloverDX Server is configured via configuration properties - e.g. connection information to the system database. See [documentation](https://doc.cloverdx.com/latest/admin/list-of-properties.html) for available configuration properties.
 
 ### Configuration via clover.properties
 
@@ -148,7 +148,7 @@ Environment variable values are set when running the container:
 By default, CloverDX Server will use an embedded Derby database. In order to use an external database, the container needs a JDBC driver and a configuration file:
 
 1. If necessary, put additional JDBC drivers to `var/dbdrivers/` before building the image and then build the image. The ``gradlew`` build script in this repository downloads some default JDBC drivers.
-2. Put [database configuration properties](https://doc.cloverdx.com/latest/server/examples-db-connection-configuration.html) into `clover.properties` configuration file and place it into `/data/your-host-clover-data-dir/conf/` directory in your host file system.
+2. Put [database configuration properties](https://doc.cloverdx.com/latest/admin/examples-db-connection-configuration.html) into `clover.properties` configuration file and place it into `/data/your-host-clover-data-dir/conf/` directory in your host file system.
 3. Bind `/data/your-host-clover-data-dir/` to `/var/clover/` (see above) and start the container.
 
 ## Libraries and Classpath
@@ -168,11 +168,11 @@ The container does not create default example sandboxes by default. To enable th
 
 ## Schedules, Listeners, Data Services
 
-During the first startup, the container automatically imports configuration XML from ``${CLOVER_HOME_DIR}/conf/configuration_import.xml``. This way you can set up schedulers, event listeners and data services, for example. The file can be obtained by [exporting configuration](https://doc.cloverdx.com/latest/server/server-config-export.html) from an existing Server instance. You can edit the exported file and replace hard-coded values with placeholders, e.g. ``${env:VARIABLE_NAME}`` will be replaced with the value of ``VARIABLE_NAME`` environment variable during the import.
+During the first startup, the container automatically imports configuration XML from ``${CLOVER_HOME_DIR}/conf/configuration_import.xml``. This way you can set up schedulers, event listeners and data services, for example. The file can be obtained by [exporting configuration](https://doc.cloverdx.com/latest/admin/server-config.html#id_server_config_export) from an existing Server instance. You can edit the exported file and replace hard-coded values with placeholders, e.g. ``${env:VARIABLE_NAME}`` will be replaced with the value of ``VARIABLE_NAME`` environment variable during the import.
 
 This feature is enabled by default in the container, not in vanilla CloverDX Server. It can be enabled/disabled via the ``configuration.autoimport.file`` configuration property.
 
-Additionally, during the first startup the container also automatically imports configuration from each of the automatically created sandboxes (see   section [Sandboxes](#sandboxes) above). In each sandbox there can be a ``sandbox_configuration.xml`` file that can contain sandbox-related configuration entities (schedules, event listeners, data services, job config properties). See [documentation](https://doc.cloverdx.com/latest/server/sandbox-config-import.html) for more details. This simplifies deployment of sandbox content and related configuration.
+Additionally, during the first startup the container also automatically imports configuration from each of the automatically created sandboxes (see   section [Sandboxes](#sandboxes) above). In each sandbox there can be a ``sandbox_configuration.xml`` file that can contain sandbox-related configuration entities (schedules, event listeners, data services, job config properties). See [documentation](https://doc.cloverdx.com/latest/operations/sandboxes.html#id_sandbox_config_import) for more details. This simplifies deployment of sandbox content and related configuration.
 
 ## License
 
@@ -303,7 +303,7 @@ JMX monitoring over SSL is supported for both Server Core and Worker. To enable 
 
 ## Stronger Cryptography
 
-Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.cloverdx.com/latest/server/secure-parameters.html#secure-parameters) and [Secure Configuration Properties](https://doc.cloverdx.com/latest/server/secure-configuration-properties.html). It is possible to use stronger cryptographic algorithms than those available in the JVM, by installing a custom JCE provider. We recommend using [Bouncy Castle](https://www.bouncycastle.org/). The steps below are a simplified version of our documentation, the only difference from non-Docker deployment is getting Bouncy Castle on classpath of the server.
+Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.cloverdx.com/latest/admin/secure-parameters.html) and [Secure Configuration Properties](https://doc.cloverdx.com/latest/admin/secure-configuration-properties.html). It is possible to use stronger cryptographic algorithms than those available in the JVM, by installing a custom JCE provider. We recommend using [Bouncy Castle](https://www.bouncycastle.org/). The steps below are a simplified version of our documentation, the only difference from non-Docker deployment is getting Bouncy Castle on classpath of the server.
 
 ### Install Bouncy Castle
 

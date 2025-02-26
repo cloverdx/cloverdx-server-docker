@@ -78,7 +78,9 @@
                connectionTimeout="20000"
                redirectPort="8443"
                maxParameterCount="1000"
-               />
+               >
+        <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+    </Connector>
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"

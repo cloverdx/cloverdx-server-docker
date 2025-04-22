@@ -1,6 +1,6 @@
 FROM eclipse-temurin:17.0.13_11-jdk-focal
 
-ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.39/bin/apache-tomcat-10.1.39.tar.gz"
+ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.40/bin/apache-tomcat-10.1.40.tar.gz"
 
 # Tomcat home directory
 ENV CATALINA_HOME /opt/tomcat

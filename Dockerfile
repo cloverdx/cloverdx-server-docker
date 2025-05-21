@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.13_11-jdk-focal
+FROM eclipse-temurin:17.0.15_6-jdk-noble
 
 ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.40/bin/apache-tomcat-10.1.40.tar.gz"
 
@@ -31,6 +31,8 @@ WORKDIR $CATALINA_HOME
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN set -eux && \
+	# Remove the default non-root user that conflicts with the cloverdx user we are creating
+	touch /var/mail/ubuntu && chown ubuntu /var/mail/ubuntu && userdel -r ubuntu && \
 	# The default answers be used for all questions
 	export DEBIAN_FRONTEND=noninteractive && \
 	# Change the default shell from dash to bash

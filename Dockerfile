@@ -76,6 +76,12 @@ EXPOSE 8080 8686 8687 8688 8689
 
 # Check if container is running correctly
 HEALTHCHECK --start-period=120s --interval=30s --retries=4 --timeout=5s \
-	CMD curl -f http://localhost:8080/clover/accessibilityTest.jsp || exit 1
+	CMD bash -c '\
+		RESPONSE=$(curl -s -o /tmp/.healthcheck -w "%{http_code}" http://localhost:8080/clover/accessibilityTest.jsp); \
+		BODY=$(cat /tmp/.healthcheck); \
+		echo "HTTP status: $RESPONSE, body: $BODY"; \
+		if [ "$RESPONSE" -eq 200 ]; then exit 0; \
+		elif [ "$RESPONSE" -eq 503 ] && [ "$BODY" = "SUSPENDED" ]; then exit 0; \
+		else exit 1; fi'
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--", "./entrypoint.sh"]

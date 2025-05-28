@@ -366,3 +366,60 @@ or in a Docker swarm:
 # Kubernetes
 
 You can deploy CloverDX Server to Kubernetes. There are examples of deployment of a standalone CloverDX Server and a 3-node CloverDX Cluster in [examples/kubernetes](examples/kubernetes)
+
+# Building and Running the AI-Enabled Docker Image
+
+[Dockerfile.AI](./Dockerfile.AI) allows to build an alternative Docker image that enables CloverDX Server to run AI components on systems with NVIDIA GPU support. This setup leverages an NVIDIA-provided base image that includes CUDA and related dependencies, allowing seamless execution of GPU-accelerated tasks. Note that only Linux x86_64 platform is currently supported.
+
+## Prerequisites
+
+To run the AI-enabled container, your host machine must meet the following requirements:
+
+* **NVIDIA GPU with compatible drivers** installed (see [installation guide](https://docs.nvidia.com/datacenter/tesla/driver-installation-guide/index.html))
+* **NVIDIA Container Toolkit** installed - this allows Docker to interface with the GPU hardware (see [installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html))
+* Docker runtime configured for GPU support (see [installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker))
+
+You can test if your setup is working with:
+
+``docker run --rm --gpus all nvidia/cuda:12.4.0-base-ubuntu22.04 nvidia-smi``
+
+You should see details about the NVIDIA GPU(s) if everything is configured correctly.
+
+## Building the AI-Enabled Docker Image
+
+From the root of the repository:
+
+* Optional: Run ``./gradlew`` to download additional dependencies, e.g. JDBC drivers, BouncyCastle.
+* Download DJL native PyTorch driver for GPU runtime support (note that the driver has ~2.3GiB):
+
+    ``./gradlew copyDjlPytorchLib``
+
+* Build the Docker image using Dockerfile.AI:
+
+    ``docker build -f Dockerfile.AI -t cloverdx-server-ai:latest .``
+
+## Running the AI-Enabled Container
+
+Running the AI-enabled container is nearly identical to the standard CloverDX container, with one important addition:
+
+* Add the ``--gpus all`` option to enable GPU access.
+
+Example (on Linux):
+
+```
+docker run -d --name cloverdx-ai --gpus all --memory=6g -p 8080:8080 -e LOCAL_USER_ID=`id -u $USER` --mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover cloverdx-server-ai:latest
+```
+
+**Note:** The ``--gpus all`` parameter enables the container to access all available NVIDIA GPUs. Without this flag, GPU acceleration will not be available, and AI components may fail to start. Learn more in the [Docker GPU runtime docs](https://docs.docker.com/reference/cli/docker/container/run/#gpus).
+
+## Verifying GPU Access
+
+Once the container is running, you can verify that the GPU is visible to the AI components from within the container:
+
+    ``docker exec -it cloverdx-ai /bin/bash``
+
+Then inside the container:
+
+    ``nvidia-smi``
+
+You should see details about the NVIDIA GPU(s) if everything is configured correctly.

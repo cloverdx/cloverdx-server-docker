@@ -416,11 +416,15 @@ docker run -d --name cloverdx-ai --gpus all --memory=32g -p 8080:8080 -e LOCAL_U
 
 Once the container is running, you can verify that the GPU is visible to the AI components from within the container:
 
-    ``docker exec -it cloverdx-ai /bin/bash``
+```
+docker exec -it cloverdx-ai /bin/bash
+```
 
 Then inside the container:
 
-    ``nvidia-smi``
+```
+nvidia-smi
+```
 
 You should see details about the NVIDIA GPU(s) if everything is configured correctly.
 
@@ -428,13 +432,10 @@ You should see details about the NVIDIA GPU(s) if everything is configured corre
 
 AI workloads can be memory-intensive. To avoid out-of-memory errors or performance issues, it's recommended to manually set the JVM heap size for both the CloverDX Server Core and Worker processes - refer to [the section about memory configuration](#memory).
 
-The AI models are loaded and held in native (non-JVM) memory. This means their memory usage does not count toward the heap memory allocated to the CloverDX Server or Worker processes.
-
-**Important:**
-
-    If you allocate most or all of the container's memory to the JVM via CLOVER_SERVER_HEAP_SIZE and CLOVER_WORKER_HEAP_SIZE, the container may run out of memory when loading AI models.
-
-    Always reserve a portion of the container’s total memory to remain unallocated to the JVM, so native libraries have sufficient room to operate.
+> [!IMPORTANT]
+> The AI models are loaded and held in native (non-JVM) memory. This means their memory usage does not count toward the heap memory allocated to the CloverDX Server or Worker processes.
+> If you allocate most or all of the container's memory to the JVM via CLOVER_SERVER_HEAP_SIZE and CLOVER_WORKER_HEAP_SIZE, the container may run out of memory when loading AI models.
+> Always reserve a portion of the container’s total memory to remain unallocated to the JVM, so native libraries have sufficient room to operate.
 
 The optimal values for these settings depend on your specific use case — including the complexity of executed jobs, data volume, and the AI model being used.
 You may need to experiment and monitor memory usage to find the best configuration.

@@ -7,7 +7,7 @@ You can find the repository for this Dockerfile at <https://github.com/CloverDX>
 This Docker container provides an easy way to create a CloverDX Server instance. The container is tailored to spin-up a 
 standalone CloverDX Server with good defaults, in a recommended environment. 
  
-# Quick Start
+# Quick start
  
 - Clone or download this repository and checkout the corresponding branch. For example, clone and checkout branch for release 6.4.0 via ``git clone https://github.com/cloverdx/cloverdx-server-docker.git -b release-6-4``.
 - Download `clover.war` for Tomcat from <https://www.cloverdx.com>
@@ -95,7 +95,7 @@ Used ports need to be published when running the container via the ``-p HOST_POR
 
 # Configuration
 
-## Data Volume
+## Data volume
 
 CloverDX Server needs persistent storage for its data and configuration, so that the files are not lost when the container is restarted or updated to a newer version. You should bind a host directory to `/var/clover/` inside the container as a mounted volume:
 
@@ -115,7 +115,7 @@ On Linux, if you bind a directory from the host OS, the data files will be owned
 -e LOCAL_USER_ID=`id -u $USER`
 ```
 
-## Server Configuration
+## Server configuration
 
 CloverDX Server is configured via configuration properties - e.g. connection information to the system database. See [documentation](https://doc.cloverdx.com/latest/admin/list-of-properties.html) for available configuration properties.
 
@@ -137,13 +137,13 @@ Put the ``clover.properties`` file in the ``conf`` directory of the data volume 
 
 Server's configuration properties can be set via environment variables in 2 ways:
 
-* *direct override* - override server configuration properties with environment variables that have the same name, but with a ``clover.`` prefix. For example, the environment variable ``clover.sandboxes.home`` will override the configuration property ``sandboxes.home``.
-* *placeholders* - configuration properties can reference environment variables using the ``${env:ENVIRONMENT_VARIABLE}`` syntax. For example, ``sandboxes.home=${env:SANDBOXES_ROOT}``.
+- *direct override* - override server configuration properties with environment variables that have the same name, but with a ``clover.`` prefix. For example, the environment variable ``clover.sandboxes.home`` will override the configuration property ``sandboxes.home``.
+- *placeholders* - configuration properties can reference environment variables using the ``${env:ENVIRONMENT_VARIABLE}`` syntax. For example, ``sandboxes.home=${env:SANDBOXES_ROOT}``.
 
 Environment variable values are set when running the container:
 ``docker run -e "clover.sandboxes.home=/some/path" ...``
 
-## System Database Configuration
+## System database configuration
 
 By default, CloverDX Server will use an embedded Derby database. In order to use an external database, the container needs a JDBC driver and a configuration file:
 
@@ -151,12 +151,12 @@ By default, CloverDX Server will use an embedded Derby database. In order to use
 2. Put [database configuration properties](https://doc.cloverdx.com/latest/admin/examples-db-connection-configuration.html) into `clover.properties` configuration file and place it into `/data/your-host-clover-data-dir/conf/` directory in your host file system.
 3. Bind `/data/your-host-clover-data-dir/` to `/var/clover/` (see above) and start the container.
 
-## Libraries and Classpath
+## Libraries and classpath
 
 Libraries are added to the classpath of Tomcat (i.e. Server Core) and Worker via the mounted volume. This action does not modify the build of the Docker image. Place the JARs to the following directories in the volume:
 
-* ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath (e.g. JDBC drivers)
-* ``worker-lib/`` - libraries to add to Worker classpath (e.g. libraries used by jobs)
+- ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath (e.g. JDBC drivers)
+- ``worker-lib/`` - libraries to add to Worker classpath (e.g. libraries used by jobs)
 
 ## Sandboxes
 
@@ -166,7 +166,7 @@ This feature is enabled by default in the container, not in vanilla CloverDX Ser
 
 The container does not create default example sandboxes by default. To enable them, set the ``installer.BundledSandboxesInstaller.enabled`` configuration property to ``true``.
 
-## Schedules, Listeners, Data Services
+## Schedulers, listeners, Data Services
 
 During the first startup, the container automatically imports configuration XML from ``${CLOVER_HOME_DIR}/conf/configuration_import.xml``. This way you can set up schedulers, event listeners and data services, for example. The file can be obtained by [exporting configuration](https://doc.cloverdx.com/latest/admin/server-config.html#id_server_config_export) from an existing Server instance. You can edit the exported file and replace hard-coded values with placeholders, e.g. ``${env:VARIABLE_NAME}`` will be replaced with the value of ``VARIABLE_NAME`` environment variable during the import.
 
@@ -180,27 +180,27 @@ To activate CloverDX Server, the container by default searches for a license fil
 
 Alternative options:
 
-- activate the server via the Server Console in the browser
-- modify the ``license.file`` configuration property and set a different path to the license file, e.g. to a different volume
+- Activate the server via the Server Console in the browser.
+- Modify the ``license.file`` configuration property and set a different path to the license file, e.g. to a different volume.
 
-## Tomcat Configuration
+## Tomcat configuration
 
 The mounted volume contains fragments of Tomcat configuration files that configure various aspects of Tomcat. If the files are not found during the start of the container, the container will create commented-out examples of them.
 
 Configuration files:
 
-* ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is referenced from ``server.xml`` when running the container. See *Security* / *HTTPS* section below.
-* ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL. See *Security* / *JMX over SSL* section below.
-* ``conf/jndi-conf.xml`` - configuration of JNDI resources of Tomcat, is referenced from ``server.xml`` when running the container. See the commented ``<Resource>`` example on how to add a JNDI resource. We recommend to use JNDI to connect to server's system database.
+- ``conf/https-conf.xml`` - configuration of HTTPS connector of Tomcat, is referenced from ``server.xml`` when running the container. See *Security* / *HTTPS* section below.
+- ``conf/jmx-conf.properties`` - Java properties that can be updated to enable JMX monitoring over SSL. See *Security* / *JMX over SSL* section below.
+- ``conf/jndi-conf.xml`` - configuration of JNDI resources of Tomcat, is referenced from ``server.xml`` when running the container. See the commented ``<Resource>`` example on how to add a JNDI resource. We recommend to use JNDI to connect to server's system database.
 
 Examples of these files are in this repo (see ``public/tomcat/defaults`` directory) - the examples can be used as a starting point for the configuration files before the first start of the container.
 
-## Java Tuning
+## Java tuning
 
 The container starts two Java processes - one for Tomcat running CloverDX Server Core and one for Worker running jobs. The container sets good default options for Java. For additional tuning of the command line options, use the following environment variables:
 
-* ``SERVER_JAVA_OPTS`` - additional Java command line options for Server Core and Tomcat
-* ``WORKER_JAVA_OPTS`` - additional Java command line options for Worker
+- ``SERVER_JAVA_OPTS`` - additional Java command line options for Server Core and Tomcat
+- ``WORKER_JAVA_OPTS`` - additional Java command line options for Worker
 
 The command line options in the above environment variables are added to the options that the container sets by default. It's mostly meant for customizing garbage collector, Java performance logging, etc. Do not use this to extend the classpath - see *Libraries and Classpath* section above for that.
 
@@ -216,8 +216,8 @@ Then Server Core will have 1 GB heap, Worker will have 2 GB heap, and the rest i
 
 The automatic memory settings can be overridden by setting **BOTH** environment properties:
 
-* ``CLOVER_SERVER_HEAP_SIZE`` - heap size of Server Core (in MB)
-* ``CLOVER_WORKER_HEAP_SIZE``  - heap size of Worker (in MB)
+- ``CLOVER_SERVER_HEAP_SIZE`` - heap size of Server Core (in MB)
+- ``CLOVER_WORKER_HEAP_SIZE``  - heap size of Worker (in MB)
 
 Note that if the memory for the container is not limited with the ``--memory`` option, the memory settings will be calculated as though only 2 GB of memory were available (Server Core will have 0.5 GB heap, Worker will have 1 GB heap).
 
@@ -227,10 +227,10 @@ The docker image follows CPU constraints assigned to it, e.g. it sees just a lim
 
 Useful options of the ``docker run`` commands (see [documentation](https://docs.docker.com/config/containers/resource_constraints/)):
 
-* ``--cpus=<value>`` - portion of host CPUs the container can use. For example, ``--cpus=1.5`` allows at most one and a half CPU of all the host's CPUs. Available in Docker 1.13 and higher.
-* ``--cpu-shares=<value>`` - value is a weight of the container, and containers running on a host get their share of CPU cycles based on their weight. Default weight is ``1024``, which also translates into 1 CPU core from the point of view of Java. For example setting this to ``4096`` will cause Java to see 4 CPU cores.
+- ``--cpus=<value>`` - portion of host CPUs the container can use. For example, ``--cpus=1.5`` allows at most one and a half CPU of all the host's CPUs. Available in Docker 1.13 and higher.
+- ``--cpu-shares=<value>`` - value is a weight of the container, and containers running on a host get their share of CPU cycles based on their weight. Default weight is ``1024``, which also translates into 1 CPU core from the point of view of Java. For example, setting this to ``4096`` will cause Java to see 4 CPU cores.
 
-We recommend setting multiple CPU cores for the docker image, e.g. ``--cpus=4``.
+We recommend using multiple CPU cores for the docker image, e.g. ``--cpus=4``.
 
 ## Timezone
 
@@ -238,20 +238,20 @@ Default timezone of the container instance is UTC. The timezone is NOT inherited
 
 ``docker run -e TZ=Europe/Amsterdam ...``
 
-## Healthcheck
+## Health monitoring (Health check)
 
-The container reports its health via the Docker HEALTHCHECK instruction.
+The container reports its health via the Docker `HEALTHCHECK` instruction.
 
-The healthcheck periodically calls ``http://localhost:8080/clover/accessibilityTest.jsp`` to check the health of CloverDX Server. By default it is set-up to survive short restarts of the Worker.
+The health check periodically calls ``http://localhost:8080/clover/accessibilityTest.jsp`` to check the health of CloverDX Server. By default, it is set-up to survive short restarts of the Worker.
 
 Default setting in our container:
 
-* --start-period=120s - two minutes for the container to initialize
-* --interval=30s - thirty seconds between running the check
-* --timeout=5s
-* --retries=4 - four consecutive failures needed to set unhealthy state. In combination with thirty seconds interval above allows short Worker restarts.
+- --start-period=120s - two minutes for the container to initialize
+- --interval=30s - thirty seconds between running the check
+- --timeout=5s
+- --retries=4 - four consecutive failures needed to set unhealthy state. In combination with thirty seconds interval above allows short Worker restarts.
 
-## Custom Entrypoint Scripts
+## Custom entrypoint scripts
 
 If you need to run some script before CloverDX Server starts, but after ``$CLOVER_HOME_DIR`` directory is created, put your code into ``public/docker/hooks/init.sh`` file. Alternatively, you can also mount your own script as the ``init.sh`` file:
 
@@ -264,15 +264,15 @@ The docker container exposes ports by default for JMX monitoring via tools such 
 
 Exposed JMX ports:
 
-* ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyze behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc. Use this port when connecting a **JMX client to Server Core**.
-* ``8687`` - RMI port for the above JMX monitoring of Server Core. This port is a utility port transparently used by JMX client.
-* ``8688`` - JMX monitoring of Worker, use to monitor and analyze behavior of jobs, jobflows, etc. Use this port when connecting a **JMX client to Worker**.
-* ``8689`` - RMI port for the above JMX monitoring of Worker. This port is a utility port transparently used by JMX client.
+- ``8686`` - JMX monitoring of Server Core and Tomcat, use to monitor and analyze behavior of the core parts of server, i.e. scheduling, listeners, web UI, etc. Use this port when connecting a **JMX client to Server Core**.
+- ``8687`` - RMI port for the above JMX monitoring of Server Core. This port is a utility port transparently used by JMX client.
+- ``8688`` - JMX monitoring of Worker, use to monitor and analyze behavior of jobs, jobflows, etc. Use this port when connecting a **JMX client to Worker**.
+- ``8689`` - RMI port for the above JMX monitoring of Worker. This port is a utility port transparently used by JMX client.
 
 To enable JMX:
 
-1. set the ``RMI_HOSTNAME`` environment variable to the hostname or IP address of the running container instance (i.e. the instance must know its external address)
-1. make sure that the ports above are published. Container ports have to be mapped to the same ports on the Docker host (e.g. -p 8686:8686 -p 8687:8687...)
+1. Set the ``RMI_HOSTNAME`` environment variable to the hostname or IP address of the running container instance (i.e. the instance must know its external address).
+1. Make sure that the ports above are published. Container ports have to be mapped to the same ports on the Docker host (e.g. -p 8686:8686 -p 8687:8687...).
 
 See also [JMX over SSL](#jmx-over-ssl) section below.
 
@@ -280,41 +280,41 @@ See also [JMX over SSL](#jmx-over-ssl) section below.
 
 # Security
 
-This section describes security related aspects of the container. Some secure configuration cannot be enabled by default, because it requires additional information from the users (e.g. certificates for SSL) or 3rd party libraries that must be downloaded separately (e.g. Bouncy Castle for stronger cryptography).
+This section describes security related aspects of the container. Parts of the security configuration cannot be enabled by default, because they require additional information from users (e.g. certificates for SSL) or 3rd party libraries that must be downloaded separately (e.g., Bouncy Castle for stronger cryptography).
 
- By default, the ports exposed by the container do not use SSL. To secure them via SSL, additional configuration is needed - see subsection below.
+By default, the ports exposed by the container do not use SSL. To secure them via SSL, additional configuration is needed - see subsection below.
 
 ## HTTPS
 
 To enable HTTPS:
 
-1. place the keystore in ``conf/serverKS.jks`` file in the mounted volume
-1. modify the file ``conf/https-conf.xml`` in the mounted volume - uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 10.1 HTTPS connector (see [documentation](https://tomcat.apache.org/tomcat-10.1-doc/ssl-howto.html)).
-1. publish the HTTPS port (8443 be default) when running the container (e.g. ``docker run -p 8443:8443 ...``)
-1. we recommend not to publish the unsecured HTTP port (8080 by default) in case HTTPS is enabled.
+1. Place the keystore in ``conf/serverKS.jks`` file in the mounted volume.
+1. Modify the file ``conf/https-conf.xml`` in the mounted volume - uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 10.1 HTTPS connector (see [documentation](https://tomcat.apache.org/tomcat-10.1-doc/ssl-howto.html)).
+1. Publish the HTTPS port (8443 be default) when running the container (e.g. ``docker run -p 8443:8443 ...``).
+1. We recommend not publishing the unsecured HTTP port (8080 by default) in case HTTPS is enabled.
 
 ## JMX over SSL
 
-JMX monitoring over SSL is supported for both Server Core and Worker. To enable it:
+JMX monitoring over SSL is supported by both Server Core and Worker. To enable it:
 
-1. place the keystore in ``conf/serverKS.jks`` file in the mounted volume
-1. modify the file ``conf/jmx-conf.properties`` in the mounted volume
-1. publish the JMX ports (8686 and 8687 for Server Core, 8688 and 8689 for Worker) when running the container (e.g. ``docker run -p 8686:8686 -p 8687:8687 ...``)
+1. Place the keystore in ``conf/serverKS.jks`` file in the mounted volume.
+1. Modify the file ``conf/jmx-conf.properties`` in the mounted volume.
+1. Publish the JMX ports (8686 and 8687 for Server Core, 8688 and 8689 for Worker) when running the container (e.g. ``docker run -p 8686:8686 -p 8687:8687 ...``).
 
-## Stronger Cryptography
+## Stronger cryptography
 
-Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.cloverdx.com/latest/admin/secure-parameters.html) and [Secure Configuration Properties](https://doc.cloverdx.com/latest/admin/secure-configuration-properties.html). It is possible to use stronger cryptographic algorithms than those available in the JVM, by installing a custom JCE provider. We recommend using [Bouncy Castle](https://www.bouncycastle.org/). The steps below are a simplified version of our documentation, the only difference from non-Docker deployment is getting Bouncy Castle on classpath of the server.
+Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.cloverdx.com/latest/admin/secure-parameters.html) and [Secure Configuration Properties](https://doc.cloverdx.com/latest/admin/secure-configuration-properties.html). It is possible to use stronger cryptographic algorithms than those available in the JVM, by installing a custom JCE provider. We recommend using [Bouncy Castle](https://www.bouncycastle.org/). The steps below are a simplified version of our documentation, the only difference compared to non-Docker deployment is getting Bouncy Castle on classpath of the server.
 
 ### Install Bouncy Castle
 
-* Download Bouncy Castle JAR ( e.g. ``bcprov-jdk15on-1.70.jar`` from [here](https://www.bouncycastle.org/latest_releases.html)).
-* Place it in ``var/bouncy-castle`` before building the image and then build the image. Optionally, the ``gradlew`` build script in this repository downloads it.
+- Download Bouncy Castle JAR ( e.g. ``bcprov-jdk15on-1.70.jar`` from [here](https://www.bouncycastle.org/latest_releases.html)).
+- Place it in ``var/bouncy-castle`` before building the image and then build the image. Optionally, the ``gradlew`` build script in this repository downloads it.
 
-### Secure Configuration Properties
+### Secure configuration properties
 
 *Secure configuration properties* are server's configuration properties that have encrypted values. They are used to encrypt sensitive values in the configuration file, e.g. credentials used to connect Server to the system database.
 
-* select Bouncy Castle as encryption provider and select the encryption algorithm - configure this via configuration properties:
+- Select Bouncy Castle as an encryption provider and select the encryption algorithm - configure this via configuration properties:
 
     ```properties
     ...
@@ -323,15 +323,15 @@ Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.c
     ...
     ```
 
-* use the same encryption provider and algorithm when using ``encrypt.sh`` tool (from our ``secure-cfg-tool.zip`` package) to encrypt the configuration property values:
+- Use the same encryption provider and algorithm when using ``encrypt.sh`` tool (from our ``secure-cfg-tool.zip`` package) to encrypt the configuration property values:
 
     ``encrypt.sh -a PBEWITHMD5AND256BITAES-CBC-OPENSSL -c org.bouncycastle.jce.provider.BouncyCastleProvider -l bcprov-jdk15on-149.jar``
 
-### Secure Parameters
+### Secure parameters
 
 *Secure parameters* are graph parameters that have encrypted values. Typically they are used to store credentials used by jobs to connect to external systems and they prevent storage of the credentials in plain text.
 
-* select Bouncy Castle as encryption provider and select the encryption algorithm - configure this via configuration properties:
+- Select Bouncy Castle as an encryption provider and select the encryption algorithm - configure this via configuration properties:
 
     ```properties
     ...
@@ -340,7 +340,7 @@ Cryptography in CloverDX is used primarily for [Secure Parameters](https://doc.c
     ...
     ```
 
-* set the master password in Server Console (in *Configuration* > *Security* page) or use autoimport (below)
+- Set the master password in Server Console (in *Configuration* > *Security* page) or use autoimport (below).
 
 ### Master password autoimport
 
@@ -349,13 +349,13 @@ The file can be created manually. *The whole file content* is imported as the ne
 
 This feature is enabled by default in the container, not in vanilla CloverDX Server. It can be enabled/disabled via the `masterpassword.autoimport.file` configuration property.
 
-After server start, you can check that the password is set in *Configuration* > *Security* page.
+After the server starts, you can check that the password is set in *Configuration* > *Security* page.
 
-# Stack Deployment
+# Stack deployment
 
-You can deploy CloverDX Server and its system database together as a stack using [docker compose](https://github.com/docker/compose) or [stack deploy](https://docs.docker.com/engine/swarm/stack-deploy/) in swarm mode. There is a provided example of compose file in ``examples/compose`` for deployment of PostgreSQL database and CloverDX Server built from Dockerfile.
+You can deploy CloverDX Server and its system database together as a stack using [Docker Compose](https://github.com/docker/compose) or [stack deploy](https://docs.docker.com/engine/swarm/stack-deploy/) in swarm mode. An example of the compose file is provided in ``examples/compose``. This example deploys CloverDX Server built from Dockerfile and an instance of PostgreSQL database as its system database.
 
-To build and run the stack in docker compose, use:
+To build and run the stack in Docker Compose, use:
 
 ``docker compose -f examples/compose/stack.yml up -d``
 
@@ -365,44 +365,44 @@ or in a Docker swarm:
 
 # Kubernetes
 
-You can deploy CloverDX Server to Kubernetes. There are examples of deployment of a standalone CloverDX Server and a 3-node CloverDX Cluster in [examples/kubernetes](examples/kubernetes)
+You can deploy CloverDX Server to Kubernetes. You can find examples of deployment of a standalone CloverDX Server and a 3-node CloverDX Cluster in [examples/kubernetes](examples/kubernetes).
 
-# Building and Running the AI-Enabled Docker Image
+# Building and running the AI-Enabled Docker image
 
-[Dockerfile.AI](./Dockerfile.AI) allows to build an alternative Docker image that enables CloverDX Server to run AI components on systems with NVIDIA GPU support. This setup leverages an NVIDIA-provided base image that includes CUDA and related dependencies, allowing seamless execution of GPU-accelerated tasks. Note that only Linux x86_64 platform is currently supported.
+[Dockerfile.AI](./Dockerfile.AI) allows you to build an alternative Docker image that enables CloverDX Server to run AI components with GPU acceleration on systems with an NVIDIA GPU. This setup leverages an NVIDIA-provided base image that includes CUDA and related dependencies, allowing for seamless execution of GPU-accelerated tasks. Note that only Linux x86_64 platform is currently supported.
 
 ## Prerequisites
 
 To run the AI-enabled container, your host machine must meet the following requirements:
 
-* **NVIDIA GPU with compatible drivers** installed (see [installation guide](https://docs.nvidia.com/datacenter/tesla/driver-installation-guide/index.html))
-* **NVIDIA Container Toolkit** installed - this allows Docker to interface with the GPU hardware (see [installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html))
-* Docker runtime configured for GPU support (see [installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker))
+- **NVIDIA GPU with compatible drivers** installed (see [installation guide](https://docs.nvidia.com/datacenter/tesla/driver-installation-guide/index.html)).
+- **NVIDIA Container Toolkit** installed - this allows Docker to interface with the GPU hardware (see [installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)).
+- Docker runtime configured for GPU support (see [installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html#configuring-docker)).
 
-You can test if your setup is working with:
+You can test if your setup is working with the following command:
 
 ``docker run --rm --gpus all nvidia/cuda:12.4.0-base-ubuntu22.04 nvidia-smi``
 
 You should see details about the NVIDIA GPU(s) if everything is configured correctly.
 
-## Building the AI-Enabled Docker Image
+## Building the AI-Enabled Docker image
 
 From the root of the repository:
 
-* Optional: Run ``./gradlew`` to download additional dependencies, e.g. JDBC drivers, BouncyCastle.
-* Download DJL native PyTorch driver for GPU runtime support (note that the driver has ~2.3GiB):
+- Optional: Run ``./gradlew`` to download additional dependencies, e.g. JDBC drivers, BouncyCastle, etc.
+- Download DJL native PyTorch driver for GPU runtime support (note that the driver is about ~2.3GiB):
 
     ``./gradlew copyDjlPytorchLib``
 
-* Build the Docker image using Dockerfile.AI:
+- Build the Docker image using the `Dockerfile.AI`:
 
     ``docker build -f Dockerfile.AI -t cloverdx-server-ai:latest .``
 
-## Running the AI-Enabled Container
+## Running the AI-Enabled container
 
 Running the AI-enabled container is nearly identical to the standard CloverDX container, with one important addition:
 
-* Add the ``--gpus all`` option to enable GPU access.
+- Add the ``--gpus all`` option to enable GPU access.
 
 Example (on Linux):
 
@@ -412,15 +412,15 @@ docker run -d --name cloverdx-ai --gpus all --memory=32g -p 8080:8080 -e LOCAL_U
 
 **Note:** The ``--gpus all`` parameter enables the container to access all available NVIDIA GPUs. Without this flag, GPU acceleration will not be available, and AI components may fail to start. Learn more in the [Docker GPU runtime docs](https://docs.docker.com/reference/cli/docker/container/run/#gpus).
 
-## Verifying GPU Access
+## Verifying GPU access
 
-Once the container is running, you can verify that the GPU is visible to the AI components from within the container:
+Once the container is running, you can verify that the GPU is visible to the AI components from within the container. First, connect to the container:
 
 ```
 docker exec -it cloverdx-ai /bin/bash
 ```
 
-Then inside the container:
+Then, inside the container, run the following:
 
 ```
 nvidia-smi
@@ -428,15 +428,18 @@ nvidia-smi
 
 You should see details about the NVIDIA GPU(s) if everything is configured correctly.
 
-## Memory Configuration
+## Memory configuration
 
-AI workloads can be memory-intensive. To avoid out-of-memory errors or performance issues, it's recommended to manually set the JVM max heap size for both the CloverDX Server Core and Worker processes - refer to [the section about memory configuration](#memory).
+AI workloads can be memory intensive. To avoid out-of-memory errors or performance issues, it's recommended to manually set the JVM maximum heap size for both the CloverDX Server Core and Worker processes - refer to [the section about memory configuration](#memory).
 
 **Important:**
 
-* The AI models are loaded and held in native (non-JVM) memory. This means their memory usage does not count toward the heap memory allocated to the CloverDX Server or Worker processes.
-* If you allocate most or all of the container's memory to the JVM via ``CLOVER_SERVER_HEAP_SIZE`` and ``CLOVER_WORKER_HEAP_SIZE``, the container may run out of memory when loading AI models.
-* Always reserve a portion of the container’s total memory to remain unallocated to the JVM, so native libraries have sufficient room to operate.
+- The AI models are loaded and held in native (non-JVM) memory. This means their memory usage does not count towards the heap memory allocated to the CloverDX Server or Worker processes.
+- If you allocate most or all of the container's memory to the JVM via ``CLOVER_SERVER_HEAP_SIZE`` and ``CLOVER_WORKER_HEAP_SIZE``, the container may run out of memory when loading your AI models.
+- Always reserve a portion of the container’s total memory to remain unallocated to the JVM, so native libraries have sufficient room to operate.
 
-The optimal values for these settings depend on your specific use case — including the complexity of executed jobs, data volume, and the AI model being used.
+The optimal values for these settings depend on your specific use case - including the complexity of executed jobs, data volume, and the AI models being used.
+
 You may need to experiment and monitor memory usage to find the best configuration.
+
+Also note that the memory reserved by the AI engine is not released when graphs using the AI components end. The memory is kept and reused the next time you run AI components in your graphs.

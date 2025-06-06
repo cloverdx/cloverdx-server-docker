@@ -9,23 +9,23 @@ standalone CloverDX Server with good defaults, in a recommended environment.
  
 # Quick Start
  
-* Clone or download this repository and checkout the corresponding branch. For example, clone and checkout branch for release 6.4.0 via ``git clone https://github.com/cloverdx/cloverdx-server-docker.git -b release-6-4``.
-* Download `clover.war` for Tomcat from <https://www.cloverdx.com>
-* Put `clover.war` into `cloverdx-server-docker` directory (current working directory containing the `Dockerfile`).
-* Optional: run `gradlew` to download additional dependencies, e.g. JDBC drivers, BouncyCastle.
-* Build the Docker image:
+- Clone or download this repository and checkout the corresponding branch. For example, clone and checkout branch for release 6.4.0 via ``git clone https://github.com/cloverdx/cloverdx-server-docker.git -b release-6-4``.
+- Download `clover.war` for Tomcat from <https://www.cloverdx.com>
+- Put `clover.war` into `cloverdx-server-docker` directory (current working directory containing the `Dockerfile`).
+- Optional: run `gradlew` to download additional dependencies, e.g. JDBC drivers, BouncyCastle.
+- Build the Docker image:
 
     ```
     $ docker build -t cloverdx-server:latest .
     ```
 
-* Start CloverDX Server on Linux:
+- Start CloverDX Server on Linux:
 
     ```
     $ docker run -d --name cloverdx --memory=3g -p 8080:8080 -e LOCAL_USER_ID=`id -u $USER` --mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover cloverdx-server:latest
     ```  
     
-* Start CloverDX Server on Windows:
+- Start CloverDX Server on Windows:
 
     ```
     docker run -d --name cloverdx --memory=3g -p 8080:8080 --mount type=bind,source=C:/your-host-clover-home-dir,target=/var/clover cloverdx-server:latest
@@ -33,13 +33,13 @@ standalone CloverDX Server with good defaults, in a recommended environment.
 
     Explanation:
     
-    * ``-d`` - detached mode, the container exits when Server exits
-    * ``--name`` - name to identify the running container
-    * ``--memory=3g`` - allow 3 GB of memory for the container, the container requires at least 2 GB of memory.
-    * ``-p 8080:8080`` - publish exposed container port
-    * ```-e LOCAL_USER_ID=`id -u $USER``` - set an environment variable, in this case user ID to be used for permissions (only on Linux)
-    * ``--mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover`` - mount the ``/data/your-host-clover-home-dir`` directory from the host as a data volume into ``/var/clover`` path inside the container, this will contain the persistent data, configuration, etc.
-    * ``cloverdx-server:latest`` - name of the image to run as a container
+    - ``-d`` - detached mode, the container exits when Server exits
+    - ``--name`` - name to identify the running container
+    - ``--memory=3g`` - allow 3 GB of memory for the container, the container requires at least 2 GB of memory.
+    - ``-p 8080:8080`` - publish exposed container port
+    - ```-e LOCAL_USER_ID=`id -u $USER``` - set an environment variable, in this case user ID to be used for permissions (only on Linux)
+    - ``--mount type=bind,source=/data/your-host-clover-home-dir,target=/var/clover`` - mount the ``/data/your-host-clover-home-dir`` directory from the host as a data volume into ``/var/clover`` path inside the container, this will contain the persistent data, configuration, etc.
+    - ``cloverdx-server:latest`` - name of the image to run as a container
 
 **Success**. CloverDX Server is now available at <http://localhost:8080/clover>. The Server is running with default settings, and **should be configured further** to get it into production quality (i.e. it should use external database).
 
@@ -53,41 +53,41 @@ This Docker container is designed to run a standalone CloverDX Server instance.
 
 It has external dependencies:
 
-* *system database* - database for storing server's settings, state, history, etc. must be available somewhere. The container does not spin-up the database (except of the default embedded Derby that should be used only for evaluation).
-* *data sources/data targets* - the data sources/targets to be processed are expected to be outside of the container (temporary files will be inside)
+- *system database* - database for storing server's settings, state, history, etc. must be available somewhere. The container does not spin-up the database (except for the default embedded Derby that should only be used for evaluation).
+- *data sources/data targets* - the data sources/targets to be processed are expected to be outside of the container (temporary files will be inside).
 
 The container expects a mounted volume that will contain its state and configuration. The volume should be mounted into the ``/var/clover`` directory. Contents of the volume:
 
-* ``conf/`` - configuration of the server, e.g. connection to the system database
-* ``sandboxes/`` - sandboxes with jobs, metadata, data, etc.
-* ``cloverlogs/`` - server logs
-* ``tomcatlogs/`` - Tomcat logs
-* ``clover-lib/`` - libraries to add to Tomcat, Server Core classpath and Worker classpath 
-* ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath
-* ``worker-lib/`` - libraries to add to Worker classpath
+- ``conf/`` - configuration of the server, e.g. connection to the system database
+- ``sandboxes/`` - sandboxes with jobs, metadata, data, etc.
+- ``cloverlogs/`` - server logs
+- ``tomcatlogs/`` - Tomcat logs
+- ``clover-lib/`` - libraries to add to Tomcat, Server Core classpath and Worker classpath 
+- ``tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath
+- ``worker-lib/`` - libraries to add to Worker classpath
 
 Internal structure of the container:
 
-* ``/opt/tomcat/`` - installation directory of Tomcat running the server
-* ``/var/clover/`` - directory with persistent data, visible to users (config, jobs, logs, ...). It is expected that a volume is mounted into this directory from the host. See above for its structure
-* ``/var/cloverdata/`` - directory with non-persistent data, not visible to users
-* ``/var/clover-lib/`` - libraries to add to Tomcat, Server Core classpath and Worker classpath 
-* ``/var/tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath
-* ``/var/worker-lib/`` - libraries to add to Worker classpath
+- ``/opt/tomcat/`` - installation directory of Tomcat running the server
+- ``/var/clover/`` - directory with persistent data, visible to users (config, jobs, logs, ...). It is expected that a volume is mounted into this directory from the host. See above for its structure
+- ``/var/cloverdata/`` - directory with non-persistent data, not visible to users
+- ``/var/clover-lib/`` - libraries to add to Tomcat, Server Core classpath and Worker classpath 
+- ``/var/tomcat-lib/`` - libraries to add to Tomcat and Server Core classpath
+- ``/var/worker-lib/`` - libraries to add to Worker classpath
 
 Environment:
 
-* Ubuntu Linux
-* Eclipse Temurin JDK 17
-* Tomcat 10.1
+- Ubuntu Linux
+- Eclipse Temurin JDK 17
+- Tomcat 10.1
 
 Default exposed ports:
 
-* 8080 - HTTP port of the Server Console and Server's API
-* 8686 - JMX port for monitoring of Server Core
-* 8687 - RMI port for the above Server Core JMX monitoring
-* 8688 - JMX port for monitoring of Worker
-* 8689 - RMI port for the above Worker JMX monitoring
+- 8080 - HTTP port of the Server Console and Server's API
+- 8686 - JMX port for monitoring of Server Core
+- 8687 - RMI port for the above Server Core JMX monitoring
+- 8688 - JMX port for monitoring of Worker
+- 8689 - RMI port for the above Worker JMX monitoring
 
 Used ports need to be published when running the container via the ``-p HOST_PORT:CONTAINER_PORT`` (this maps the inside ``CONTAINER_PORT`` to be visible from the outside as ``HOST_PORT``). If you enable additional ports (e.g. 8443 for HTTPS), do not forget to publish them.
 
@@ -97,7 +97,7 @@ Used ports need to be published when running the container via the ``-p HOST_POR
 
 ## Data Volume
 
-CloverDX Server needs a persistent storage for its data and configuration, so that the files are not lost when the container is restarted or updated to a newer version. You should bind a host directory to `/var/clover/` inside the container as a mounted volume:
+CloverDX Server needs persistent storage for its data and configuration, so that the files are not lost when the container is restarted or updated to a newer version. You should bind a host directory to `/var/clover/` inside the container as a mounted volume:
 
 ```bash
 # bind host directory on Linux: 
@@ -109,7 +109,7 @@ CloverDX Server needs a persistent storage for its data and configuration, so th
 --mount type=bind,source=C:/your-host-clover-data-dir,target=/var/clover
 ```
 
-On Linux, if you bind a directory from the host OS, the data files will be owned by user with UID 1000. You should override this by setting `LOCAL_USER_ID` environment variable:
+On Linux, if you bind a directory from the host OS, the data files will be owned by the user with UID 1000. You should override this by setting `LOCAL_USER_ID` environment variable:
 
 ```bash
 -e LOCAL_USER_ID=`id -u $USER`
@@ -131,7 +131,7 @@ jdbc.password=pass
 jdbc.dialect=org.hibernate.dialect.MySQLDialect
 ```
 
-Put the ``clover.properties`` file in the ``conf`` directory of the data volume and it will be automatically recognized. If the file does not exist in the volume, server will create an empty one and use default settings. It is possible to modify the file via Setup page in Server Console.
+Put the ``clover.properties`` file in the ``conf`` directory of the data volume and it will be automatically recognized. If the file does not exist in the volume, the server will create an empty one and use the default settings. It is possible to modify the file via Setup page in Server Console.
 
 ### Configuration via environment variables
 
@@ -147,7 +147,7 @@ Environment variable values are set when running the container:
 
 By default, CloverDX Server will use an embedded Derby database. In order to use an external database, the container needs a JDBC driver and a configuration file:
 
-1. If necessary, put additional JDBC drivers to `var/dbdrivers/` before building the image and then build the image. The ``gradlew`` build script in this repository downloads some default JDBC drivers.
+1. If necessary, put additional JDBC drivers to `var/dbdrivers/` before building the image. The ``gradlew`` build script in this repository downloads default JDBC drivers.
 2. Put [database configuration properties](https://doc.cloverdx.com/latest/admin/examples-db-connection-configuration.html) into `clover.properties` configuration file and place it into `/data/your-host-clover-data-dir/conf/` directory in your host file system.
 3. Bind `/data/your-host-clover-data-dir/` to `/var/clover/` (see above) and start the container.
 
@@ -180,8 +180,8 @@ To activate CloverDX Server, the container by default searches for a license fil
 
 Alternative options:
 
-* activate the server via the Server Console in the browser
-* modify the ``license.file`` configuration property and set a different path to the license file, e.g. to a different volume
+- activate the server via the Server Console in the browser
+- modify the ``license.file`` configuration property and set a different path to the license file, e.g. to a different volume
 
 ## Tomcat Configuration
 

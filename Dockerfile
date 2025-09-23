@@ -1,6 +1,6 @@
 FROM eclipse-temurin:17.0.15_6-jdk-noble
 
-ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.40/bin/apache-tomcat-10.1.40.tar.gz"
+ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.46/bin/apache-tomcat-10.1.46.tar.gz"
 
 # Tomcat home directory
 ENV CATALINA_HOME /opt/tomcat

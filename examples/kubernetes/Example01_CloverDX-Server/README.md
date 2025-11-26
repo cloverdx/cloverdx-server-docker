@@ -19,6 +19,7 @@ kubectl create -f example01-deployment.yaml
 * Persistent storage:
     * `example01-postgres-pvc` volume: CloverDX system database ([Longhorn block storage](https://longhorn.io/))
     * `example01-sandboxes-pvc` volume: CloverDX sandboxes ([Longhorn block storage](https://longhorn.io/))
+    * `example01-cloverlogs-pvc` volume: CloverDX logs ([Longhorn block storage](https://longhorn.io/))
 * License: Not included. Use the REST API to load the license.
 
 ## Configuring external database

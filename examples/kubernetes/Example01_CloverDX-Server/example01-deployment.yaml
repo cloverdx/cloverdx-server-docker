@@ -41,6 +41,19 @@ spec:
   storageClassName: example01-sc
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: example01-cloverlogs-pvc
+  namespace: example01-ns
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: example01-sc
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: example01-app-svc
@@ -156,7 +169,13 @@ spec:
         - name: example01-sandboxes-volume
           mountPath: /var/clover/sandboxes
           subPath: sandboxes
+        - name: example01-cloverlogs-volume
+          mountPath: /var/clover/cloverlogs
+          subPath: cloverlogs
       volumes:
       - name: example01-sandboxes-volume
         persistentVolumeClaim:
           claimName: example01-sandboxes-pvc
+      - name: example01-cloverlogs-volume
+        persistentVolumeClaim:
+          claimName: example01-cloverlogs-pvc

@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.17_10-jdk-noble
+FROM eclipse-temurin:21.0.10_7-jdk-noble
 
 ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.50/bin/apache-tomcat-10.1.50.tar.gz"
 

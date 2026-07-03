@@ -3,24 +3,24 @@ FROM eclipse-temurin:21.0.10_7-jdk-noble
 ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.55/bin/apache-tomcat-10.1.55.tar.gz"
 
 # Tomcat home directory
-ENV CATALINA_HOME /opt/tomcat
+ENV CATALINA_HOME=/opt/tomcat
 
 # Directory with persistent data, visible to users (sandboxes, logs, configuration files)
-ENV CLOVER_HOME_DIR /var/clover
+ENV CLOVER_HOME_DIR=/var/clover
 # Directory with persistent data, invisible to users (tempspaces)
-ENV CLOVER_DATA_DIR /var/cloverdata
+ENV CLOVER_DATA_DIR=/var/cloverdata
 # Shared libraries for both Tomcat and worker
-ENV CLOVER_LIB_DIR /var/clover-lib
+ENV CLOVER_LIB_DIR=/var/clover-lib
 
 # Default directories for configuration files
-ENV CLOVER_CONF_DIR $CLOVER_HOME_DIR/conf
-ENV CATALINA_CONF_DIR $CATALINA_HOME/conf
+ENV CLOVER_CONF_DIR=$CLOVER_HOME_DIR/conf
+ENV CATALINA_CONF_DIR=$CATALINA_HOME/conf
 
 # Configuration files
-ENV CLOVER_CONF_FILE $CLOVER_CONF_DIR/clover.properties
-ENV JNDI_CONF_FILE $CLOVER_CONF_DIR/jndi-conf.xml
-ENV JMX_CONF_FILE $CLOVER_CONF_DIR/jmx-conf.properties
-ENV HTTPS_CONF_FILE $CLOVER_CONF_DIR/https-conf.xml
+ENV CLOVER_CONF_FILE=$CLOVER_CONF_DIR/clover.properties
+ENV JNDI_CONF_FILE=$CLOVER_CONF_DIR/jndi-conf.xml
+ENV JMX_CONF_FILE=$CLOVER_CONF_DIR/jmx-conf.properties
+ENV HTTPS_CONF_FILE=$CLOVER_CONF_DIR/https-conf.xml
 
 # Set default locale to en_US; see also 'locale-gen' command below
 ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'

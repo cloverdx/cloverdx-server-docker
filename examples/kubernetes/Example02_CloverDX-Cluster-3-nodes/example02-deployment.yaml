@@ -209,43 +209,64 @@ spec:
         requests:
           storage: 1Gi
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata: 
-  name: example02-tls-ingress
-  namespace: example02-ns
-  annotations:
-    nginx.ingress.kubernetes.io/affinity: "cookie"
-    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
-spec:
-  tls:
-    - hosts:
-      - <your-domain>
-      secretName: example02-tls-secret
-  ingressClassName: nginx
-  rules:
-  - host: <your-domain>
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: example02-app-svc
-            port:
-              number: 8080
----
-apiVersion: v1
-kind: Secret
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
-  name: example02-tls-secret
+  name: example02-https-redirect
   namespace: example02-ns
-type: kubernetes.io/tls
-data:
-  tls.crt: |
-    <your-tls-crt>
-  tls.key: |
-    <your-tls-key>
+spec:
+  parentRefs:
+    - name: public
+      namespace: envoy-gateway
+      sectionName: http
+  hostnames:
+    - <your-domain>
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: example02-route
+  namespace: example02-ns
+spec:
+  parentRefs:
+    - name: public
+      namespace: envoy-gateway
+      sectionName: https
+  hostnames:
+    - <your-domain>
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: example02-app-svc
+          port: 8080
+---
+# CloverDX Server console requires sticky sessions across cluster nodes.
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: BackendTrafficPolicy
+metadata:
+  name: example02-session-affinity
+  namespace: example02-ns
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: example02-route
+  loadBalancer:
+    type: ConsistentHash
+    consistentHash:
+      type: Cookie
+      cookie:
+        name: example02-affinity
+        ttl: 48h
 ---
 apiVersion: v1
 kind: Secret

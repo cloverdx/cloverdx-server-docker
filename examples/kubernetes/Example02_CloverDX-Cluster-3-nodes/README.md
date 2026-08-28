@@ -4,11 +4,16 @@ A 3-node CloverDX Cluster with PostgreSQL database.
 
 ## How to create this deployment
 
-First, edit the [example02-deployment.yaml](example02-deployment.yaml) file to replace the following placeholders:
+This example expects the cluster to be configured with an Envoy Gateway that has:
 
-* `<your-domain>`: Domain name of your deployment
-* `<your-tls-crt>`: TLS certificate
-* `<your-tls-key>`: Key of TLS certificate
+* A `GatewayClass` named `envoy`.
+* A shared `public` Gateway in the `envoy-gateway` namespace with `http` and `https` listeners.
+* TLS configured on the `https` listener for the deployment domain.
+* Permission for HTTPRoutes from the `example02-ns` namespace.
+
+Edit the [example02-deployment.yaml](example02-deployment.yaml) file and replace:
+
+* `<your-domain>`: Domain name covered by the TLS certificate configured on the `public` Gateway.
 * `<your-base64-license.dat>` (use if you want to load a license during deployment): CloverDX license in base64 format (see instructions below under Inserting CloverDX license to YAML configuration file).
 
 To deploy the Cluster, use the following command:
@@ -23,7 +28,7 @@ kubectl create -f example02-deployment.yaml
 * Default admin user: `clover` (password: `clover`) with built-in user management available.
 * Resource limits: 8 GiB memory for CloverDX, 2 GiB for PostgreSQL.
 * Apache Tomcat web server hosting CloverDX instance on internal HTTP port.
-* Ingress providing load balancing and TLS termination. CloverDX Server console will be accessible on `https://<your-domain>/clover`
+* [Envoy Gateway](https://gateway.envoyproxy.io/) providing load balancing and session affinity through the existing `public` Gateway. TLS termination is configured by that Gateway. CloverDX Server console will be accessible on `https://<your-domain>/clover`.
 * Persistent storage:
     * `example02-postgres-pvc` for CloverDX system database ([Longhorn block storage](https://longhorn.io/))
     * `example02-sandboxes-pvc` for CloverDX sandboxes ([Longhorn block storage](https://longhorn.io/))

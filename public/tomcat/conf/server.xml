@@ -170,6 +170,12 @@
                showReport="true"
                showServerInfo="false" />
 
+        <!-- CloverDX modification: redirects the OAuth2 well-known documents from the root of the host into
+             the servlet context, where MCP clients cannot reach them on their own; rules in
+             conf/Catalina/localhost/rewrite.config.
+             Has to be on the Host: the request never reaches a context. -->
+        <Valve className="org.apache.catalina.valves.rewrite.RewriteValve" />
+
         <!-- CloverDX modification: add configurable jndi config -->
         <Context path="/clover">
              &jndi-conf;

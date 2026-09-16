@@ -212,9 +212,9 @@ metadata:
   namespace: example02-ns
 spec:
   parentRefs:
-    - name: public
-      namespace: envoy-gateway
-      sectionName: http
+    - name: <your-gateway-name>
+      namespace: <your-gateway-namespace>
+      sectionName: <your-gateway-http-listener>
   hostnames:
     - <your-domain>
   rules:
@@ -231,9 +231,9 @@ metadata:
   namespace: example02-ns
 spec:
   parentRefs:
-    - name: public
-      namespace: envoy-gateway
-      sectionName: https
+    - name: <your-gateway-name>
+      namespace: <your-gateway-namespace>
+      sectionName: <your-gateway-https-listener>
   hostnames:
     - <your-domain>
   rules:

@@ -68,12 +68,8 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 8080
-      nodePort: 30002
-    - name: jgroups
-      protocol: TCP
-      port: 7800
-      targetPort: 7800
-  type: NodePort
+  clusterIP: None
+  type: ClusterIP
 ---
 apiVersion: v1
 kind: Service
@@ -248,6 +244,10 @@ spec:
       backendRefs:
         - name: example02-app-svc
           port: 8080
+      timeouts:
+        request: 600s
+        backendRequest: 600s
+
 ---
 # CloverDX Server console requires sticky sessions across cluster nodes.
 apiVersion: gateway.envoyproxy.io/v1alpha1
@@ -267,6 +267,9 @@ spec:
       cookie:
         name: example02-affinity
         ttl: 48h
+        attributes:
+          Secure: ""
+          SameSite: Lax
 ---
 apiVersion: v1
 kind: Secret

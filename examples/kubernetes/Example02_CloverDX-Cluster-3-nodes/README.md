@@ -11,6 +11,8 @@ This example expects the cluster to be configured with an Envoy Gateway that has
 * TLS configured on the `https` listener for the deployment domain.
 * Permission for HTTPRoutes from the `example02-ns` namespace.
 
+The deployment domain must have a DNS record pointing to the address of the `public` Gateway.
+
 Edit the [example02-deployment.yaml](example02-deployment.yaml) file and replace:
 
 * `<your-domain>`: Domain name covered by the TLS certificate configured on the `public` Gateway.
@@ -28,7 +30,9 @@ kubectl create -f example02-deployment.yaml
 * Default admin user: `clover` (password: `clover`) with built-in user management available.
 * Resource limits: 8 GiB memory for CloverDX, 2 GiB for PostgreSQL.
 * Apache Tomcat web server hosting CloverDX instance on internal HTTP port.
-* [Envoy Gateway](https://gateway.envoyproxy.io/) providing load balancing and session affinity through the existing `public` Gateway. TLS termination is configured by that Gateway. CloverDX Server console will be accessible on `https://<your-domain>/clover`.
+* [Envoy Gateway](https://gateway.envoyproxy.io/) providing load balancing and session affinity through the existing `public` Gateway. TLS termination is configured by that Gateway. HTTP requests are redirected to HTTPS. CloverDX Server console will be accessible on `https://<your-domain>/clover`.
+    * Session affinity: the `example02-session-affinity` policy pins each browser session to a single cluster node using the `example02-affinity` cookie, with a lifetime of 48 hours. The cookie is marked `Secure`, so session affinity works over HTTPS only.
+    * Request timeout: 600 seconds, configured on the `example02-route` HTTPRoute. Without it, Envoy applies its default timeout of 15 seconds and long-running jobs or transfers of large sandbox files might fail with HTTP 504.
 * Persistent storage:
     * `example02-postgres-pvc` for CloverDX system database ([Longhorn block storage](https://longhorn.io/))
     * `example02-sandboxes-pvc` for CloverDX sandboxes ([Longhorn block storage](https://longhorn.io/))
@@ -36,6 +40,16 @@ kubectl create -f example02-deployment.yaml
 * License: Included in deployment if added to the yaml file prior to deployment (alternative: use REST API after deployment as in [Example 1](../Example01_CloverDX-Server/README.md#inserting-license-with-rest-api)).
 * External database support: See Example 1 for [instructions](../Example01_CloverDX-Server/README.md#configuring-external-database).
 
+
+## Connecting to a specific cluster node
+
+The console is served through the `public` Gateway, which balances requests across all cluster nodes, so `https://<your-domain>/clover` does not target a particular node. To reach one node directly, for example for administration or troubleshooting, forward its port to your machine:
+
+```
+kubectl port-forward -n example02-ns pod/example02-app-0 8080:8080
+```
+
+The console of that node is then available on `http://localhost:8080/clover`. Use `example02-app-1` or `example02-app-2` to reach the remaining nodes.
 
 ## Inserting CloverDX license to YAML configuration file
 

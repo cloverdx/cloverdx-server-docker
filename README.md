@@ -78,8 +78,8 @@ Internal structure of the container:
 Environment:
 
 - Ubuntu Linux
-- Eclipse Temurin JDK 17
-- Tomcat 10.1
+- Eclipse Temurin JDK 21
+- Tomcat 11.0
 
 Default exposed ports:
 
@@ -289,7 +289,7 @@ By default, the ports exposed by the container do not use SSL. To secure them vi
 To enable HTTPS:
 
 1. Place the keystore in ``conf/serverKS.jks`` file in the mounted volume.
-1. Modify the file ``conf/https-conf.xml`` in the mounted volume - uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 10.1 HTTPS connector (see [documentation](https://tomcat.apache.org/tomcat-10.1-doc/ssl-howto.html)).
+1. Modify the file ``conf/https-conf.xml`` in the mounted volume - uncomment the ``<Connector>...`` XML element and update the configuration as a standard Tomcat 11.0 HTTPS connector (see [documentation](https://tomcat.apache.org/tomcat-11.0-doc/ssl-howto.html)).
 1. Publish the HTTPS port (8443 be default) when running the container (e.g. ``docker run -p 8443:8443 ...``).
 1. We recommend not publishing the unsecured HTTP port (8080 by default) in case HTTPS is enabled.
 

@@ -1,6 +1,6 @@
 FROM nvidia/cuda:12.4.0-runtime-ubuntu22.04
 
-ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-10/v10.1.55/bin/apache-tomcat-10.1.55.tar.gz"
+ARG TOMCAT_URL="https://archive.apache.org/dist/tomcat/tomcat-11/v11.0.22/bin/apache-tomcat-11.0.22.tar.gz"
 
 # Tomcat home directory
 ENV CATALINA_HOME=/opt/tomcat
